@@ -13,7 +13,7 @@
 
         <!-- Divider -->
         <hr class="sidebar-divider my-0">
-
+        
         <!-- Nav Item - Dashboard -->
         <li class="nav-item active">
             <a class="nav-link" href="index.html">
@@ -40,6 +40,7 @@
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">Custom Components:</h6>
                     <a class="collapse-item" href="buttons.html">Buttons</a>
+                    <RouterLink class="collapse-item" to="tabela">Tabela</RouterLink>
                     <a class="collapse-item" href="cards.html">Cards</a>
                 </div>
             </div>
