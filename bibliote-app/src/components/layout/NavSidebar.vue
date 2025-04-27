@@ -4,12 +4,12 @@
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
         <!-- Sidebar - Brand -->
-        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+        <RouterLink class="sidebar-brand d-flex align-items-center justify-content-center" to="/">
             <div class="sidebar-brand-icon rotate-n-15">
                 <i class="fas fa-laugh-wink"></i>
             </div>
             <div class="sidebar-brand-text mx-3">SB Admin <sup>2</sup></div>
-        </a>
+        </RouterLink>
 
         <!-- Divider -->
         <hr class="sidebar-divider my-0">
@@ -102,9 +102,10 @@
 
         <!-- Nav Item - Tables -->
         <li class="nav-item">
-            <a class="nav-link" href="tables.html">
+            <RouterLink class="nav-link" to="tabela">
                 <i class="fas fa-fw fa-table"></i>
-                <span>Tables</span></a>
+                Tabelas
+            </RouterLink>
         </li>
 
         <!-- Divider -->
@@ -123,6 +124,6 @@
 import { defineComponent } from "vue";
 
 export default defineComponent({
-  name: 'NavSidebar'
+    name: 'NavSidebar'
 })
 </script>
