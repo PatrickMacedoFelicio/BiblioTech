@@ -13,6 +13,11 @@ const router = createRouter({
       name: 'tabela',
       component: () => import('../views/Servidor/TabelaView.vue'),
     },
+    {
+      path: '/testes',
+      name: 'testes',
+      component: () => import('../views/Servidor/teste.vue'),
+    },
   ],
 })
 

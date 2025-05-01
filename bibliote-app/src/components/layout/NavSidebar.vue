@@ -90,6 +90,7 @@
                     <h6 class="collapse-header">Other Pages:</h6>
                     <a class="collapse-item" href="404.html">404 Page</a>
                     <RouterLink class="collapse-item" to="/">Blank Page</RouterLink>
+                    <RouterLink class="collapse-item" to="testes">Páginas de testes</RouterLink>
                 </div>
             </div>
         </li>
