@@ -1,7 +1,7 @@
 <template>
 
     <div class="page-header">
-        <h3 class="page-title"> Basic Tables </h3>
+        <h3 class="page-title"> Consultar Leitores </h3>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="#">Tables</a></li>
@@ -13,49 +13,28 @@
         <div class="col-lg-12 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">Basic Table</h4>
-                    <p class="card-description"> Add class <code>.table</code>
-                    </p>
+                    <h4 class="card-title">Leitores</h4>
+                    <p class="card-description">Abaixo estão os leitores cadastrados</p>
                     <div class="table-responsive">
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th>Profile</th>
-                                    <th>VatNo.</th>
-                                    <th>Created</th>
-                                    <th>Status</th>
+                                    <th>Nome</th>
+                                    <th>CPF</th>
+                                    <th>Telefone</th>
+                                    <th>E-mail</th>
+                                    <th>Endereço</th>
+                                    <th>Data de Nascimento</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>Jacob</td>
-                                    <td>53275531</td>
-                                    <td>12 May 2017</td>
-                                    <td><label class="badge badge-danger">Pending</label></td>
-                                </tr>
-                                <tr>
-                                    <td>Messsy</td>
-                                    <td>53275532</td>
-                                    <td>15 May 2017</td>
-                                    <td><label class="badge badge-warning">In progress</label></td>
-                                </tr>
-                                <tr>
-                                    <td>John</td>
-                                    <td>53275533</td>
-                                    <td>14 May 2017</td>
-                                    <td><label class="badge badge-info">Fixed</label></td>
-                                </tr>
-                                <tr>
-                                    <td>Peter</td>
-                                    <td>53275534</td>
-                                    <td>16 May 2017</td>
-                                    <td><label class="badge badge-success">Completed</label></td>
-                                </tr>
-                                <tr>
-                                    <td>Dave</td>
-                                    <td>53275535</td>
-                                    <td>20 May 2017</td>
-                                    <td><label class="badge badge-warning">In progress</label></td>
+                                <tr v-for="(leitor, index) in listaLeitor" :key="index">
+                                    <td>{{ leitor.nome }}</td>
+                                    <td>{{ leitor.cpf }}</td>
+                                    <td>{{ leitor.telefone }}</td>
+                                    <td>{{ leitor.email }}</td>
+                                    <td>{{ leitor.endereco }}</td>
+                                    <td>{{ leitor.dataNascimento.toLocaleDateString('pt-BR') }}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -70,6 +49,55 @@
 import { defineComponent } from "vue";
 
 export default defineComponent({
-    name: 'TabelaView'
+    name: 'TabelaView',
+
+    data(){
+        return{
+            listaLeitor: [] as Array<{
+                nome: string,
+                email: string,
+                telefone: string,
+                cpf: string,
+                endereco: string,
+                dataNascimento: Date,
+            }>,
+        }
+    },
+
+    mounted(){
+        this.buscarLeitor();
+    },
+
+    methods: {
+        buscarLeitor(){
+            this.listaLeitor.push({
+                nome: 'Patrick Felicio',
+                email: 'patrickmac@gmail.com',
+                telefone: '(69) 99255-0726',
+                cpf: '123.452.541-56',
+                endereco: 'Rua Colorado do oeste, 3164, Cafezinho',
+                dataNascimento: new Date('2004-10-23')
+            });
+
+            this.listaLeitor.push({
+                nome: 'Lucas Semeler',
+                email: 'Semelerzinho12@gmail.com',
+                telefone: '(69) 98354-4466',
+                cpf: '017.456.270-57',
+                endereco: 'Rua Albino Germano Roth, 762, Lomba Grande',
+                dataNascimento: new Date('2004-07-02')
+            });
+
+            this.listaLeitor.push({
+                nome: 'Samuel Felipe',
+                email: 'samZic402@gmail.com',
+                telefone: '(69) 99153-3946',
+                cpf: '477.501.238-06',
+                endereco: 'Rua Moisés Caroso, 200, Jequiezinho',
+                dataNascimento: new Date('2004-02-12')
+            });
+        }
+    }
+    
 });
 </script>
