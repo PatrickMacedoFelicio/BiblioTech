@@ -9,9 +9,9 @@ const router = createRouter({
       component: () => import('../views/HomeView.vue'),
     },
     {
-      path: '/tabela',
-      name: 'tabela',
-      component: () => import('../views/Servidor/TabelaView.vue'),
+      path: '/viewLeitor',
+      name: 'viewLeitor',
+      component: () => import('../views/Consultar/ViewLeitor.vue'),
     },
   ],
 })

@@ -68,25 +68,77 @@
                     <span class="menu-title">Dashboard</span>
                 </a>
             </li>
-            <li class="nav-item menu-items">
-                <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false"
-                    aria-controls="ui-basic">
+
+             <li class="nav-item menu-items">
+                <a class="nav-link" data-toggle="collapse" href="#cadastrar" aria-expanded="false"
+                    aria-controls="cadastrar">
                     <span class="menu-icon">
-                        <i class="mdi mdi-laptop"></i>
+                        <i class="mdi mdi mdi-plus-circle"></i>
                     </span>
-                    <span class="menu-title">Basic UI Elements</span>
+                    <span class="menu-title">Cadastrar</span>
                     <i class="menu-arrow"></i>
                 </a>
-                <div class="collapse" id="ui-basic">
+
+                <div class="collapse" id="cadastrar">
                     <ul class="nav flex-column sub-menu">
-                        <li class="nav-item"> <a class="nav-link" href="pages/ui-features/buttons.html">Buttons</a></li>
-                        <li class="nav-item"> <a class="nav-link" href="pages/ui-features/dropdowns.html">Dropdowns</a>
+
+                        <li class="nav-item">
+                            <RouterLink class="nav-link" to=""> <span class="menu-icon">
+                                    <i class="mdi mdi-book-plus"></i>
+                                </span>Livros</RouterLink>
                         </li>
-                        <li class="nav-item"> <a class="nav-link"
-                                href="pages/ui-features/typography.html">Typography</a></li>
+
+                        <li class="nav-item">
+                            <RouterLink class="nav-link" to="/viewLeitor"><span class="menu-icon">
+                                    <i class="mdi mdi-account-plus"></i>
+                                </span>Leitores</RouterLink>
+                        </li>
+
+                        <li class="nav-item">
+                            <RouterLink class="nav-link" to=""><span class="menu-icon">
+                                    <i class="mdi mdi-book-open"></i>
+                                </span>Emprestimos</RouterLink>
+                        </li>
+
                     </ul>
                 </div>
             </li>
+
+            <li class="nav-item menu-items">
+                <a class="nav-link" data-toggle="collapse" href="#consultar" aria-expanded="false"
+                    aria-controls="consultar">
+                    <span class="menu-icon">
+                        <i class="mdi mdi-magnify"></i>
+                    </span>
+                    <span class="menu-title">Consultar</span>
+                    <i class="menu-arrow"></i>
+                </a>
+
+                <div class="collapse" id="consultar">
+                    <ul class="nav flex-column sub-menu">
+
+                        <li class="nav-item">
+                            <RouterLink class="nav-link" to=""> <span class="menu-icon">
+                                    <i class="mdi mdi-book-open-variant"></i>
+                                </span>Livros</RouterLink>
+                        </li>
+
+                        <li class="nav-item">
+                            <RouterLink class="nav-link" to="/viewLeitor"><span class="menu-icon">
+                                    <i class="mdi mdi-account"></i>
+                                </span>Leitores</RouterLink>
+                        </li>
+
+                        <li class="nav-item">
+                            <RouterLink class="nav-link" to=""><span class="menu-icon">
+                                    <i class="mdi mdi-book-open"></i>
+                                </span>Emprestimos</RouterLink>
+                        </li>
+
+                    </ul>
+                </div>
+            </li>
+
             <li class="nav-item menu-items">
                 <a class="nav-link" href="pages/forms/basic_elements.html">
                     <span class="menu-icon">
@@ -95,8 +147,9 @@
                     <span class="menu-title">Form Elements</span>
                 </a>
             </li>
+
             <li class="nav-item menu-items">
-                <RouterLink class="nav-link" to="/tabela">
+                <RouterLink class="nav-link" to="/viewLeitor">
                     <span class="menu-icon">
                         <i class="mdi mdi-table-large"></i>
                     </span>

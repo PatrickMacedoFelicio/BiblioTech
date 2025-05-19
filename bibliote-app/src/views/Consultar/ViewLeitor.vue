@@ -49,7 +49,7 @@
 import { defineComponent } from "vue";
 
 export default defineComponent({
-    name: 'TabelaView',
+    name: 'ViewLeitor',
 
     data(){
         return{
