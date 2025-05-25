@@ -100,6 +100,12 @@
                                 </span>Emprestimos</RouterLink>
                         </li>
 
+                        <li class="nav-item">
+                            <RouterLink class="nav-link" to=""><span class="menu-icon">
+                                    <i class="mdi mdi-book-open"></i>
+                                </span>Emprestimos</RouterLink>
+                        </li>
+
                     </ul>
                 </div>
             </li>
