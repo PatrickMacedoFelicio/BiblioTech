@@ -13,6 +13,11 @@ const router = createRouter({
       name: 'viewLeitor',
       component: () => import('../views/Consultar/ViewLeitor.vue'),
     },
+    {
+      path: '/cadastrar/leitor',
+      name: 'cadastrar-leitor',
+      component: () => import('../views/Cadastrar/Cad-Leitor.vue'),
+    },
   ],
 })
 

@@ -89,7 +89,7 @@
                         </li>
 
                         <li class="nav-item">
-                            <RouterLink class="nav-link" to="/viewLeitor"><span class="menu-icon">
+                            <RouterLink class="nav-link" to="/cadastrar/leitor"><span class="menu-icon">
                                     <i class="mdi mdi-account-plus"></i>
                                 </span>Leitores</RouterLink>
                         </li>
