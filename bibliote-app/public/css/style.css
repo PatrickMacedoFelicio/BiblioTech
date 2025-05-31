@@ -7682,6 +7682,17 @@ input[type="checkbox"] {
   box-sizing: border-box;
   padding: 0; }
 
+input::placeholder,
+textarea::placeholder {
+  color: #c4c4c4 !important; /* Clareia o texto do placeholder */
+}
+
+input:focus,
+textarea:focus {
+  outline: none;
+  border-color: #c4c4c4; /* Ou qualquer cor de destaque */
+}
+
 textarea {
   overflow: auto;
   resize: vertical; }
@@ -8862,7 +8873,7 @@ pre {
   .jsgrid .jsgrid-table .jsgrid-filter-row select:focus, .jsgrid .jsgrid-table .jsgrid-filter-row input:focus[type=number], .select2-container--default .select2-selection--single:focus, .select2-container--default .select2-selection--single .select2-search__field:focus, .typeahead:focus,
   .tt-query:focus,
   .tt-hint:focus {
-    color: #495057;
+    color: #e2e2e2;
     background-color: #fff;
     border-color: #80bdff;
     outline: 0;
