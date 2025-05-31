@@ -1,5 +1,4 @@
 <template>
-
   <div class="grid-margin stretch-card">
     <div class="card">
       <div class="card-body">
@@ -27,7 +26,7 @@
                 <input class="typeahead form-control form-control-lg" type="text" placeholder="Digite o e-mail"
                   v-model="CadLivro.email">
 
-                <div class="text-danger" v-if="v$.CadLivro.email.$errors.length && v$.CadLivro.nome.$dirty">
+                <div class="text-danger" v-if="v$.CadLivro.email.$errors.length && v$.CadLivro.email.$dirty">
                   <p v-for="error of v$.CadLivro.email.$errors" :key="error.$uid">
                     <small>{{ error.$message }}</small>
                   </p>
@@ -40,10 +39,10 @@
             <div class="col">
               <label>CPF</label>
               <div id="bloodhound">
-                <the-mask class="typeahead form-control form-control-lg" placeholder="Digite o CPF"
-                  v-model="CadLivro.cpf" :mask="['###.###.###-##']" />
+                <input class="typeahead form-control form-control-lg" type="text" placeholder="xxx.xxx.xxx-xx"
+                  v-model="CadLivro.cpf">
 
-                <div class="text-danger" v-if="v$.CadLivro.cpf.$errors.length">
+                <div class="text-danger" v-if="v$.CadLivro.cpf.$errors.length && v$.CadLivro.cpf.$dirty">
                   <p v-for="error of v$.CadLivro.cpf.$errors" :key="error.$uid">
                     <small>{{ error.$message }}</small>
                   </p>
@@ -57,7 +56,7 @@
                 <input class="typeahead form-control form-control-lg" type="text" placeholder="Digite o Telefone"
                   v-model="CadLivro.telefone">
 
-                <div class="text-danger" v-if="v$.CadLivro.telefone.$errors.length && v$.CadLivro.nome.$dirty">
+                <div class="text-danger" v-if="v$.CadLivro.telefone.$errors.length && v$.CadLivro.telefone.$dirty">
                   <p v-for="error of v$.CadLivro.telefone.$errors" :key="error.$uid">
                     <small>{{ error.$message }}</small>
                   </p>
@@ -70,7 +69,7 @@
               <div id="the-basics">
                 <input class="typeahead form-control form-control-lg" type="date" placeholder="States of USA"
                   v-model="CadLivro.dataNasc">
-                <div class="text-danger" v-if="v$.CadLivro.dataNasc.$errors.length && v$.CadLivro.nome.$dirty">
+                <div class="text-danger" v-if="v$.CadLivro.dataNasc.$errors.length && v$.CadLivro.dataNasc.$dirty">
                   <p v-for="error of v$.CadLivro.dataNasc.$errors" :key="error.$uid">
                     <small>{{ error.$message }}</small>
                   </p>
@@ -82,10 +81,32 @@
           <h4 class="card-title">Endereço</h4>
           <div class="form-group row">
             <div class="col">
+              <label>CEP</label>
+              <div id="bloodhound">
+                <input class="typeahead form-control-lg" type="text" placeholder="CEP" v-model="CadLivro.cep"
+                  @blur="buscarCep">
+
+                <div class="text-danger" v-if="v$.CadLivro.cep.$errors.length && v$.CadLivro.cep.$dirty">
+                  <p v-for="error of v$.CadLivro.cep.$errors" :key="error.$uid">
+                    <small>{{ error.$message }}</small>
+                  </p>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="col">
               <label>Rua</label>
               <div id="the-basics">
                 <input class="typeahead form-control form-control-lg" type="text" placeholder="Nome da rua"
                   v-model="CadLivro.Rua">
+
+                <div class="text-danger" v-if="v$.CadLivro.Rua.$errors.length && v$.CadLivro.Rua.$dirty">
+                  <p v-for="error of v$.CadLivro.Rua.$errors" :key="error.$uid">
+                    <small>{{ error.$message }}</small>
+                  </p>
+                </div>
+
               </div>
             </div>
             <div class="col">
@@ -93,6 +114,13 @@
               <div id="bloodhound">
                 <input class="typeahead form-control form-control-lg" type="text" placeholder="Digite o bairro"
                   v-model="CadLivro.Bairro">
+
+                <div class="text-danger" v-if="v$.CadLivro.Bairro.$errors.length && v$.CadLivro.Bairro.$dirty">
+                  <p v-for="error of v$.CadLivro.Bairro.$errors" :key="error.$uid">
+                    <small>{{ error.$message }}</small>
+                  </p>
+                </div>
+
               </div>
             </div>
             <div class="col">
@@ -100,15 +128,9 @@
               <div id="bloodhound">
                 <input class="typeahead form-control form-control-lg" type="text" placeholder="Número da casa"
                   v-model="CadLivro.Numero">
-              </div>
-            </div>
-            <div class="col">
-              <label>CEP</label>
-              <div id="bloodhound">
-                <input class="typeahead form-control-lg" type="text" placeholder="CEP" v-model="CadLivro.cep">
 
-                <div class="text-danger" v-if="v$.CadLivro.cep.$errors.length && v$.CadLivro.nome.$dirty">
-                  <p v-for="error of v$.CadLivro.cep.$errors" :key="error.$uid">
+                <div class="text-danger" v-if="v$.CadLivro.Numero.$errors.length && v$.CadLivro.Numero.$dirty">
+                  <p v-for="error of v$.CadLivro.Numero.$errors" :key="error.$uid">
                     <small>{{ error.$message }}</small>
                   </p>
                 </div>
@@ -150,16 +172,31 @@
                 <option value="SE">Sergipe</option>
                 <option value="TO">Tocantins</option>
               </select>
-            </div>
-            <div class="col">
-              <label>Cidade</label>
-              <div id="bloodhound">
-                <input class="typeahead form-control form-control-lg" type="text" placeholder="Cidade"
-                  v-model="CadLivro.cidade">
+
+              <div class="text-danger" v-if="v$.CadLivro.estado.$errors.length && v$.CadLivro.estado.$dirty">
+                <p v-for="error of v$.CadLivro.estado.$errors" :key="error.$uid">
+                  <small>{{ error.$message }}</small>
+                </p>
               </div>
             </div>
-          </div>
 
+            <div class="col">
+              <label>Cidade</label>
+              <select class="form-control form-control-lg" v-model="CadLivro.cidade">
+                <option value="" disabled selected>Selecione sua cidade...</option>
+                <option v-for="cidade in cidades" :key="cidade" :value="cidade">
+                  {{ cidade }}
+                </option>
+              </select>
+
+              <div class="text-danger" v-if="v$.CadLivro.cidade.$errors.length && v$.CadLivro.nome.$dirty">
+                <p v-for="error of v$.CadLivro.cidade.$errors" :key="error.$uid">
+                  <small>{{ error.$message }}</small>
+                </p>
+              </div>
+            </div>
+
+          </div>
           <div class="form-group row">
             <div class="col">
               <button type="submit" class="btn btn-success btn-fw btn-lg">Cadastrar</button>
@@ -174,29 +211,22 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { TheMask } from 'vue-the-mask'
+import { useVuelidate } from '@vuelidate/core';
+import { required, email, minLength, helpers } from '@vuelidate/validators';
 
-import { useVuelidate } from '@vuelidate/core'
-import { required, email, minLength, helpers } from '@vuelidate/validators'
-
-// Regra personalizada para data não futura
-const notFutureDate = helpers.withMessage(
+const dataFuturo = helpers.withMessage(
   'Data de nascimento não pode ser no futuro',
   (value: string) => {
-    if (!value) return true
-    return new Date(value) <= new Date()
+    if (!value) return true;
+    return new Date(value) <= new Date();
   }
-)
+);
 
 export default defineComponent({
   name: 'CadLeitor',
 
-  components: {
-    TheMask // registra o componente da máscara
-  },
-
   setup() {
-    return { v$: useVuelidate() }
+    return { v$: useVuelidate() };
   },
 
   data() {
@@ -213,40 +243,105 @@ export default defineComponent({
         cep: '',
         estado: '',
         cidade: '',
-      }
+      },
+      cidades: [] as string[],
+      estadoPorCep: '' // Usado para armazenar temporariamente o estado vindo do CEP
+    };
+  },
+
+  watch: {
+    'CadLivro.estado': {
+      handler: async function (uf: string) {
+        if (!uf) return;
+
+        try {
+          const response = await fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${uf}/municipios`);
+          const data = await response.json();
+          this.cidades = data.map((cidade: any) => cidade.nome);
+
+          // Preenche a cidade automaticamente se já veio do CEP
+          if (this.CadLivro.cidade && this.estadoPorCep === uf) {
+            // cidade já preenchida via CEP, mantem
+          } else {
+            this.CadLivro.cidade = ''; // reseta cidade ao mudar estado manualmente
+          }
+        } catch (error) {
+          console.error('Erro ao buscar cidades:', error);
+        }
+      },
+      immediate: false
     }
   },
 
   validations() {
     return {
       CadLivro: {
-        nome: { minLength: helpers.withMessage('O nome deve ter no mínimo 8 carácteres!', minLength(8)), required: helpers.withMessage('Nome é obrigatorio!', required) },
-        email: { email: helpers.withMessage('Este e-mail não é considerado valido!', email), required: helpers.withMessage('E-mail é obrigatorio', required) },
-        cpf: { required: helpers.withMessage('CPF é obrigatório', required), minLength: helpers.withMessage('CPF deve ter pelo menos 11 dígitos', minLength(11)) },
-        telefone: { required: helpers.withMessage('Telefone é obrigatório', required), minLength: helpers.withMessage('Telefone deve ter ao menos 10 dígitos', minLength(10)) },
-        dataNasc: { required: helpers.withMessage('Data de nascimento é obrigatória', required), notFutureDate },
-        Rua: { required },
-        Bairro: { required },
-        Numero: { required },
-        cep: { required: helpers.withMessage('CEP é obrigatório', required), minLength: helpers.withMessage('CEP deve conter 8 números', minLength(8)) },
-        estado: { required },
-        cidade: { required },
+        nome: {
+          minLength: helpers.withMessage('O nome deve ter no mínimo 8 carácteres!', minLength(8)),
+          required: helpers.withMessage('Nome é obrigatorio!', required)
+        },
+        email: {
+          email: helpers.withMessage('Este e-mail não é considerado valido!', email),
+          required: helpers.withMessage('E-mail é obrigatorio', required)
+        },
+        cpf: {
+          required: helpers.withMessage('CPF é obrigatório', required),
+          minLength: helpers.withMessage('CPF deve ter pelo menos 11 dígitos', minLength(11))
+        },
+        telefone: {
+          required: helpers.withMessage('Telefone é obrigatório', required),
+          minLength: helpers.withMessage('Telefone deve ter ao menos 10 dígitos', minLength(10))
+        },
+        dataNasc: {
+          required: helpers.withMessage('Data de nascimento é obrigatória', required),
+          dataFuturo
+        },
+        Rua: { required: helpers.withMessage('Rua é obrigatório', required) },
+        Bairro: { required: helpers.withMessage('Bairro é obrigatório', required) },
+        Numero: { required: helpers.withMessage('Número da casa é obrigatório', required) },
+        cep: {},
+        estado: { required: helpers.withMessage('Estado é obrigatório', required) },
+        cidade: { required: helpers.withMessage('Cidade é obrigatório', required) },
       }
-    }
+    };
   },
 
-
   methods: {
+    async buscarCep() {
+      const cep = this.CadLivro.cep.replace(/\D/g, '');
+      if (cep.length !== 8) return;
+
+      try {
+        const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+        const data = await response.json();
+
+        if (data.erro) {
+          console.error('CEP não encontrado');
+          return;
+        }
+
+        this.CadLivro.Rua = data.logradouro;
+        this.CadLivro.Bairro = data.bairro;
+        this.CadLivro.cidade = data.localidade;
+        this.CadLivro.estado = data.uf;
+        this.estadoPorCep = data.uf; // Guarda para saber que foi via CEP
+
+        // Força a atualização do array de cidades
+        await this.$nextTick();
+
+      } catch (error) {
+        console.error('Erro ao buscar CEP:', error);
+      }
+    },
+
     async salvar() {
       const result = await this.v$.$validate();
 
-      console.log(this.v$.$errors)
+      console.log(this.v$.$errors);
 
-      if (!result) {
-        return;
-      }
+      if (!result) return;
 
-      console.log('Dados do formulario', this.CadLivro)
+      console.log('Dados do formulário', this.CadLivro);
     }
   }
 });
