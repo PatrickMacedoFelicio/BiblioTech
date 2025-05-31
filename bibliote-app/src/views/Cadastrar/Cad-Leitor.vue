@@ -10,7 +10,7 @@
             <div class="col">
               <label>Nome Completo</label>
               <div id="the-basics">
-                <input class="typeahead form-control form-control-lg" type="text" placeholder="States of USA"
+                <input class="typeahead form-control form-control-lg" type="text" placeholder="Digite o nome completo"
                   v-model="CadLivro.nome">
                 
                 <div class="text-danger" v-if="v$.CadLivro.nome.$errors.length">
@@ -24,7 +24,7 @@
             <div class="col">
               <label>E-mail</label>
               <div id="bloodhound">
-                <input class="typeahead form-control form-control-lg" type="text" placeholder="States of USA"
+                <input class="typeahead form-control form-control-lg" type="text" placeholder="Digite o e-mail"
                   v-model="CadLivro.email">
               </div>
             </div>
@@ -33,14 +33,14 @@
             <div class="col">
               <label>CPF</label>
               <div id="bloodhound">
-                <input class="typeahead form-control form-control-lg" type="text" placeholder="States of USA"
+                <input class="typeahead form-control form-control-lg" type="text" placeholder="CPF do leitor"
                   v-model="CadLivro.cpf">
               </div>
             </div>
             <div class="col">
               <label>Telefone</label>
               <div id="the-basics">
-                <input class="typeahead form-control form-control-lg" type="text" placeholder="States of USA"
+                <input class="typeahead form-control form-control-lg" type="text" placeholder="Digite o Telefone"
                   v-model="CadLivro.telefone">
               </div>
             </div>
@@ -58,28 +58,28 @@
             <div class="col">
               <label>Rua</label>
               <div id="the-basics">
-                <input class="typeahead form-control form-control-lg" type="text" placeholder="States of USA"
+                <input class="typeahead form-control form-control-lg" type="text" placeholder="Nome da rua"
                   v-model="CadLivro.Rua">
               </div>
             </div>
             <div class="col">
               <label>Bairro</label>
               <div id="bloodhound">
-                <input class="typeahead form-control form-control-lg" type="text" placeholder="States of USA"
+                <input class="typeahead form-control form-control-lg" type="text" placeholder="Digite o bairro"
                   v-model="CadLivro.Bairro">
               </div>
             </div>
             <div class="col">
               <label>Número</label>
               <div id="bloodhound">
-                <input class="typeahead form-control form-control-lg" type="text" placeholder="States of USA"
+                <input class="typeahead form-control form-control-lg" type="text" placeholder="Número da casa"
                   v-model="CadLivro.Numero">
               </div>
             </div>
             <div class="col">
               <label>CEP</label>
               <div id="bloodhound">
-                <input class="typeahead form-control-lg" type="text" placeholder="States of USA" v-model="CadLivro.cep">
+                <input class="typeahead form-control-lg" type="text" placeholder="CEP" v-model="CadLivro.cep">
               </div>
             </div>
           </div>
