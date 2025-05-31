@@ -1,5 +1,5 @@
 <template>
-  
+  <h1>cuzinho seco</h1>
 </template>
 
 <script lang="ts">
