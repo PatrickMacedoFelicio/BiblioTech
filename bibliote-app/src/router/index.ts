@@ -18,6 +18,11 @@ const router = createRouter({
       name: 'cadastrar-leitor',
       component: () => import('../views/Cadastrar/Cad-Leitor.vue'),
     },
+    {
+      path: '/Emprestimo',
+      name: 'emprestimo',
+      component: () => import('../views/Emprestar.vue'),
+    },
   ],
 })
 

@@ -1,11 +1,11 @@
 <template>
-  <h1>cuzinho seco</h1>
+  <h1>Área de realizar emprestimos</h1>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
 
 export default defineComponent({
-  name: 'CadEmprestimo'
+  name: 'IndexView'
 });
 </script>
