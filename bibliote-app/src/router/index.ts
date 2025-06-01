@@ -23,6 +23,11 @@ const router = createRouter({
       name: 'emprestimo',
       component: () => import('../views/Emprestar.vue'),
     },
+    {
+      path: '/cadastrar/livro',
+      name: 'cadastrar-livro',
+      component: () => import('../views/Cadastrar/Cad-Livro.vue'),
+    },
   ],
 })
 

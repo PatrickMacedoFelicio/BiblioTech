@@ -12,9 +12,18 @@
             </li>
 
             <li class="nav-item menu-items">
+                <RouterLink class="nav-link" to="/">
+                    <span class="menu-icon">
+                        <i class="mdi mdi-home"></i>
+                    </span>
+                    Página Inicial
+                </RouterLink>
+            </li>
+
+            <li class="nav-item menu-items">
                 <RouterLink class="nav-link" to="/Emprestimo">
                     <span class="menu-icon">
-                        <i class="mdi mdi-speedometer"></i>
+                        <i class="mdi mdi-book-open"></i>
                     </span>
                     Emprestimo
                 </RouterLink>
@@ -34,7 +43,7 @@
                     <ul class="nav flex-column sub-menu">
 
                         <li class="nav-item">
-                            <RouterLink class="nav-link" to=""> <span class="menu-icon">
+                            <RouterLink class="nav-link" to="/cadastrar/livro"> <span class="menu-icon">
                                     <i class="mdi mdi-book-plus"></i>
                                 </span>Livros</RouterLink>
                         </li>
@@ -44,12 +53,30 @@
                                     <i class="mdi mdi-account-plus"></i>
                                 </span>Leitores</RouterLink>
                         </li>
+
                         <li class="nav-item">
                             <RouterLink class="nav-link" to=""><span class="menu-icon">
-                                    <i class="mdi mdi-book-open"></i>
+                                    <i class="mdi mdi-clipboard-account"></i>
+                                </span>Funcionário</RouterLink>
+                        </li>
+
+                        <li class="nav-item">
+                            <RouterLink class="nav-link" to=""><span class="menu-icon">
+                                    <i class="mdi mdi-cart-plus"></i>
                                 </span>Fornecedor</RouterLink>
                         </li>
 
+                        <li class="nav-item">
+                            <RouterLink class="nav-link" to=""><span class="menu-icon">
+                                    <i class="mdi mdi-hexagon-outline"></i>
+                                </span>Estoque</RouterLink>
+                        </li>
+
+                        <li class="nav-item">
+                            <RouterLink class="nav-link" to=""><span class="menu-icon">
+                                    <i class="mdi mdi-code-equal"></i>
+                                </span>Categoria</RouterLink>
+                        </li>
                     </ul>
                 </div>
             </li>
@@ -69,20 +96,38 @@
 
                         <li class="nav-item">
                             <RouterLink class="nav-link" to=""> <span class="menu-icon">
-                                    <i class="mdi mdi-book-open-variant"></i>
+                                    <i class="mdi mdi-book-open-page-variant"></i>
                                 </span>Livros</RouterLink>
                         </li>
 
                         <li class="nav-item">
-                            <RouterLink class="nav-link" to="/viewLeitor"><span class="menu-icon">
+                            <RouterLink class="nav-link" to=""><span class="menu-icon">
                                     <i class="mdi mdi-account"></i>
                                 </span>Leitores</RouterLink>
                         </li>
 
                         <li class="nav-item">
                             <RouterLink class="nav-link" to=""><span class="menu-icon">
-                                    <i class="mdi mdi-book-open"></i>
-                                </span>Emprestimos</RouterLink>
+                                    <i class="mdi mdi-clipboard-account"></i>
+                                </span>Funcionário</RouterLink>
+                        </li>
+
+                        <li class="nav-item">
+                            <RouterLink class="nav-link" to=""><span class="menu-icon">
+                                    <i class="mdi mdi-cart"></i>
+                                </span>Fornecedor</RouterLink>
+                        </li>
+
+                        <li class="nav-item">
+                            <RouterLink class="nav-link" to=""><span class="menu-icon">
+                                    <i class="mdi mdi-hexagon"></i>
+                                </span>Estoque</RouterLink>
+                        </li>
+
+                        <li class="nav-item">
+                            <RouterLink class="nav-link" to=""><span class="menu-icon">
+                                    <i class="mdi mdi-code-equal"></i>
+                                </span>Categoria</RouterLink>
                         </li>
 
                     </ul>
