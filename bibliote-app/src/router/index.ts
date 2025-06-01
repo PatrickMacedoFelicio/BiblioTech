@@ -14,20 +14,26 @@ const router = createRouter({
       component: () => import('../views/Consultar/ViewLeitor.vue'),
     },
     {
+      path: '/consultar/livro',
+      name: 'viewLivro',
+      component: () => import('../views/Consultar/View-Livro.vue'),
+    },
+    {
       path: '/cadastrar/leitor',
       name: 'cadastrar-leitor',
       component: () => import('../views/Cadastrar/Cad-Leitor.vue'),
-    },
-    {
-      path: '/Emprestimo',
-      name: 'emprestimo',
-      component: () => import('../views/Emprestar.vue'),
     },
     {
       path: '/cadastrar/livro',
       name: 'cadastrar-livro',
       component: () => import('../views/Cadastrar/Cad-Livro.vue'),
     },
+    {
+      path: '/Emprestimo',
+      name: 'emprestimo',
+      component: () => import('../views/Emprestar.vue'),
+    },
+
   ],
 })
 

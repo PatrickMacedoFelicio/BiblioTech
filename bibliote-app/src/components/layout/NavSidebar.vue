@@ -95,7 +95,7 @@
                     <ul class="nav flex-column sub-menu">
 
                         <li class="nav-item">
-                            <RouterLink class="nav-link" to=""> <span class="menu-icon">
+                            <RouterLink class="nav-link" to="/consultar/livro"> <span class="menu-icon">
                                     <i class="mdi mdi-book-open-page-variant"></i>
                                 </span>Livros</RouterLink>
                         </li>
