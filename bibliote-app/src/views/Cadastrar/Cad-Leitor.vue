@@ -39,8 +39,8 @@
             <div class="col">
               <label>CPF</label>
               <div id="bloodhound">
-                <input class="typeahead form-control form-control-lg" type="text" placeholder="xxx.xxx.xxx-xx"
-                  v-model="CadLivro.cpf">
+                <input class="form-control form-control-lg" type="text" v-model="CadLivro.cpf" v-mask="'###.###.###-##'"
+                  placeholder="Digite o CPF" />
 
                 <div class="text-danger" v-if="v$.CadLivro.cpf.$errors.length && v$.CadLivro.cpf.$dirty">
                   <p v-for="error of v$.CadLivro.cpf.$errors" :key="error.$uid">
@@ -53,7 +53,7 @@
             <div class="col">
               <label>Telefone</label>
               <div id="the-basics">
-                <input class="typeahead form-control form-control-lg" type="text" placeholder="Digite o Telefone"
+                <input class="typeahead form-control form-control-lg" type="text" v-mask="'(##) #####-####'" placeholder="Digite o Telefone"
                   v-model="CadLivro.telefone">
 
                 <div class="text-danger" v-if="v$.CadLivro.telefone.$errors.length && v$.CadLivro.telefone.$dirty">
@@ -67,7 +67,7 @@
             <div class="col">
               <label>Data de Nascimento</label>
               <div id="the-basics">
-                <input class="typeahead form-control form-control-lg" type="date" placeholder="States of USA"
+                <input class="typeahead form-control form-control-lg" type="date"
                   v-model="CadLivro.dataNasc">
                 <div class="text-danger" v-if="v$.CadLivro.dataNasc.$errors.length && v$.CadLivro.dataNasc.$dirty">
                   <p v-for="error of v$.CadLivro.dataNasc.$errors" :key="error.$uid">
@@ -83,7 +83,7 @@
             <div class="col">
               <label>CEP</label>
               <div id="bloodhound">
-                <input class="typeahead form-control-lg" type="text" placeholder="CEP" v-model="CadLivro.cep"
+                <input class="typeahead form-control-lg" type="text" v-mask="'#####-###'" placeholder="CEP" v-model="CadLivro.cep"
                   @blur="buscarCep">
 
                 <div class="text-danger" v-if="v$.CadLivro.cep.$errors.length && v$.CadLivro.cep.$dirty">
@@ -112,7 +112,7 @@
             <div class="col">
               <label>Bairro</label>
               <div id="bloodhound">
-                <input class="typeahead form-control form-control-lg" type="text" placeholder="Digite o bairro"
+                <input class="typeahead form-control form-control-lg" type="text"  placeholder="Digite o bairro"
                   v-model="CadLivro.Bairro">
 
                 <div class="text-danger" v-if="v$.CadLivro.Bairro.$errors.length && v$.CadLivro.Bairro.$dirty">
@@ -212,8 +212,8 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { useVuelidate } from '@vuelidate/core';
-import { required, email, minLength, helpers } from '@vuelidate/validators';
-
+import { required, email, minLength, helpers, maxLength } from '@vuelidate/validators';
+import { mask } from 'vue-the-mask'
 
 const dataFuturo = helpers.withMessage(
   'Data de nascimento não pode ser no futuro',
@@ -287,7 +287,7 @@ export default defineComponent({
         },
         cpf: {
           required: helpers.withMessage('CPF é obrigatório', required),
-          minLength: helpers.withMessage('CPF deve ter pelo menos 11 dígitos', minLength(11))
+          minLength: helpers.withMessage('CPF deve ter pelo menos 11 dígitos', minLength(14))
         },
         telefone: {
           required: helpers.withMessage('Telefone é obrigatório', required),
