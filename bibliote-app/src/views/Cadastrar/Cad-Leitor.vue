@@ -214,6 +214,7 @@ import { defineComponent } from "vue";
 import { useVuelidate } from '@vuelidate/core';
 import { required, email, minLength, helpers } from '@vuelidate/validators';
 
+
 const dataFuturo = helpers.withMessage(
   'Data de nascimento não pode ser no futuro',
   (value: string) => {
