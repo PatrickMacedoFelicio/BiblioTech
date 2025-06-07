@@ -296,7 +296,7 @@ export default defineComponent({
         },
         cpf: {
           required: helpers.withMessage('CPF é obrigatório', required),
-          cpfValido
+          
         },
         telefone: {
           required: helpers.withMessage('Telefone é obrigatório', required),
