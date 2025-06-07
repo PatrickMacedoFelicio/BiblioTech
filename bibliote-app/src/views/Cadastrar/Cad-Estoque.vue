@@ -2,49 +2,45 @@
   <div class="grid-margin stretch-card">
     <div class="card">
       <div class="card-body">
-        <form @submit.prevent="confirmarSalvar">
-          <h3 class="card-title">Cadastro de Estoque de Livro</h3>
+        <h3 class="card-title">Cadastro de Estoque</h3>
 
+        <form @submit.prevent="salvar">
           <div class="form-group row">
-            <div class="col">
-              <label>Título do Livro</label>
-              <select class="form-control form-control-lg" v-model="estoque.livroId">
-                <option disabled value=""></option>
-                <option v-for="livro in livros" :key="livro.id" :value="livro.id">
-                  {{ livro.titulo }}
-                </option>
-              </select>
-              <div class="text-danger" v-if="v$.estoque.livroId.$error">
-                <small>{{ v$.estoque.livroId.$errors[0].$message }}</small>
-              </div>
-            </div>
             <div class="col">
               <label>Código de Barras</label>
               <input
                 class="form-control form-control-lg"
                 type="text"
-                placeholder="Digite o código de barras"
                 v-model="estoque.codigoBarras"
+                placeholder="Digite o código de barras"
               />
               <div class="text-danger" v-if="v$.estoque.codigoBarras.$error">
                 <small>{{ v$.estoque.codigoBarras.$errors[0].$message }}</small>
               </div>
             </div>
-          </div>
 
-          <div class="form-group row">
             <div class="col">
-              <label>Quantidade em Estoque</label>
+              <label>Quantidade</label>
               <input
                 class="form-control form-control-lg"
                 type="number"
-                placeholder="Informe a quantidade"
                 v-model="estoque.quantidade"
+                placeholder="Digite a quantidade"
               />
               <div class="text-danger" v-if="v$.estoque.quantidade.$error">
                 <small>{{ v$.estoque.quantidade.$errors[0].$message }}</small>
               </div>
             </div>
+          </div>
+
+          <div class="form-group">
+            <label>Título do Livro</label>
+            <input
+              class="form-control form-control-lg bg-light text-dark"
+              type="text"
+              :value="estoque.tituloLivro"
+              readonly
+            />
           </div>
 
           <div class="form-group row mt-4">
@@ -56,10 +52,13 @@
             </div>
           </div>
         </form>
+
+        <div v-if="dialog" class="alert alert-success mt-4" role="alert">
+          Estoque salvo com sucesso!
+        </div>
       </div>
     </div>
   </div>
-
 </template>
 
 <script lang="ts">
@@ -77,54 +76,44 @@ export default defineComponent({
   data() {
     return {
       estoque: {
-        livroId: '',
         codigoBarras: '',
-        quantidade: 1,
+        quantidade: 0,
+        tituloLivro: 'O Pequeno Príncipe'
       },
-      livros: [
-        { id: '1', titulo: 'Dom Casmurro' },
-        { id: '2', titulo: 'O Pequeno Príncipe' },
-        { id: '3', titulo: '1984' },
-        // Substitua pelos dados reais da sua API ou store
-      ],
-      mostrarDialogo: false,
+      dialog: false
     };
   },
 
   validations() {
     return {
       estoque: {
-        livroId: { required: helpers.withMessage('Livro é obrigatório', required) },
-        codigoBarras: { required: helpers.withMessage('Código de barras é obrigatório', required) },
+        codigoBarras: {
+          required: helpers.withMessage('Código de barras é obrigatório', required)
+        },
         quantidade: {
           required: helpers.withMessage('Quantidade é obrigatória', required),
-          minValue: helpers.withMessage('Quantidade deve ser maior que zero', minValue(1)),
+          minValue: helpers.withMessage('Deve ser no mínimo 1', minValue(1))
         },
-      },
+        tituloLivro: {}
+      }
     };
   },
 
   methods: {
-    confirmarSalvar() {
-      this.v$.$validate().then((valid) => {
-        if (valid) {
-          this.mostrarDialogo = true;
-        }
-      });
-    },
-    salvar() {
+    async salvar() {
+      const valido = await this.v$.$validate();
+      if (!valido) return;
+
+      this.dialog = true;
+      setTimeout(() => (this.dialog = false), 3000);
       console.log('Estoque salvo:', this.estoque);
-      this.mostrarDialogo = false;
-      this.limparCampos();
     },
+
     limparCampos() {
-      this.estoque = {
-        livroId: '',
-        codigoBarras: '',
-        quantidade: 1,
-      };
+      this.estoque.codigoBarras = '';
+      this.estoque.quantidade = 0;
       this.v$.$reset();
-    },
-  },
+    }
+  }
 });
 </script>

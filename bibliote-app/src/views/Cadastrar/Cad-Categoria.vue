@@ -5,7 +5,6 @@
         <form @submit.prevent="salvar">
           <h3 class="card-title mb-4">Cadastro de Categoria</h3>
 
-          <!-- Nome -->
           <div class="form-group mb-3">
             <label>Nome da Categoria</label>
             <input
@@ -19,7 +18,6 @@
             </div>
           </div>
 
-          <!-- Descrição -->
           <div class="form-group mb-4">
             <label>Descrição</label>
             <textarea
@@ -73,7 +71,7 @@ export default defineComponent({
           required: helpers.withMessage('Nome é obrigatório!', required),
           minLength: helpers.withMessage('Mínimo de 3 caracteres', minLength(3))
         },
-        descricao: {} // opcional
+        descricao: {}
       },
     };
   },
@@ -86,7 +84,6 @@ export default defineComponent({
       const confirmado = confirm('Deseja realmente cadastrar esta categoria?');
 
       if (confirmado) {
-        // Aqui você pode substituir por uma chamada real à API
         console.log('Categoria cadastrada:', this.categoria);
         alert('Categoria cadastrada com sucesso!');
         this.limparCampos();
