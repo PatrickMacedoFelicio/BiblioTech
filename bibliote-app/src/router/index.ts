@@ -19,6 +19,16 @@ const router = createRouter({
       component: () => import('../views/Consultar/View-Livro.vue'),
     },
     {
+      path: '/consultar/Estoque',
+      name: 'viewEstoque',
+      component: () => import('../views/Consultar/View-Estoque.vue'),
+    },
+    {
+      path: '/consultar/Categoria',
+      name: 'viewCategoria',
+      component: () => import('../views/Consultar/View-Categoria.vue'),
+    },
+    {
       path: '/cadastrar/leitor',
       name: 'cadastrar-leitor',
       component: () => import('../views/Cadastrar/Cad-Leitor.vue'),
@@ -37,6 +47,16 @@ const router = createRouter({
       path: '/Emprestimo',
       name: 'emprestimo',
       component: () => import('../views/Emprestar.vue'),
+    },
+    {
+      path: '/cadastrar/categoria',
+      name: 'categoria',
+      component: () => import('../views/Cadastrar/Cad-Categoria.vue'),
+    },
+    {
+      path: '/cadastrar/estoque',
+      name: 'estoque',
+      component: () => import('../views/Cadastrar/Cad-Estoque.vue'),
     },
 
   ],
