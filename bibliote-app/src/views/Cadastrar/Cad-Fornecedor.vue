@@ -57,12 +57,19 @@
             <div class="col">
               <label>Rua</label>
               <input class="form-control form-control-lg" type="text" v-model="fornecedor.rua" placeholder="Rua" />
+              <div class="text-danger" v-if="v$.fornecedor.rua.$error">
+                <small>{{ v$.fornecedor.rua.$errors[0].$message }}</small>
+              </div>
             </div>
             <div class="col">
               <label>Bairro</label>
               <input class="form-control form-control-lg" type="text" v-model="fornecedor.bairro"
                 placeholder="Bairro" />
+              <div class="text-danger" v-if="v$.fornecedor.bairro.$error">
+                <small>{{ v$.fornecedor.bairro.$errors[0].$message }}</small>
+              </div>
             </div>
+
           </div>
 
 
@@ -75,6 +82,9 @@
                   {{ estado.nome }}
                 </option>
               </select>
+              <div class="text-danger" v-if="v$.fornecedor.estado.$error">
+                <small>{{ v$.fornecedor.estado.$errors[0].$message }}</small>
+              </div>
             </div>
             <div class="col">
               <label>Cidade</label>
@@ -82,6 +92,9 @@
                 <option value="" disabled>Selecione sua cidade...</option>
                 <option v-for="cidade in cidades" :key="cidade">{{ cidade }}</option>
               </select>
+              <div class="text-danger" v-if="v$.fornecedor.cidade.$error">
+                <small>{{ v$.fornecedor.cidade.$errors[0].$message }}</small>
+              </div>
             </div>
           </div>
 
@@ -176,7 +189,7 @@ export default defineComponent({
   validations() {
     return {
       fornecedor: {
-         nome: {
+        nome: {
           minLength: helpers.withMessage('O nome deve ter no mínimo 8 carácteres!', minLength(8)),
           required: helpers.withMessage('Nome é obrigatorio!', required)
         },
@@ -192,9 +205,9 @@ export default defineComponent({
           required: helpers.withMessage('Telefone é obrigatório', required),
           minLength: helpers.withMessage('Telefone deve ter ao menos 10 dígitos', minLength(10))
         },
-        Rua: { required: helpers.withMessage('Rua é obrigatório', required) },
-        Bairro: { required: helpers.withMessage('Bairro é obrigatório', required) },
-        cep: {},
+        rua: { required: helpers.withMessage('Rua é obrigatório', required) },
+        bairro: { required: helpers.withMessage('Bairro é obrigatório', required) },
+        cep: { required: helpers.withMessage('CEP é obrigatório', required) },
         estado: { required: helpers.withMessage('Estado é obrigatório', required) },
         cidade: { required: helpers.withMessage('Cidade é obrigatório', required) },
       }
