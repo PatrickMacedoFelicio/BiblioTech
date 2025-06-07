@@ -53,8 +53,8 @@
             <div class="col">
               <label>Telefone</label>
               <div id="the-basics">
-                <input class="typeahead form-control form-control-lg" type="text" v-mask="'(##) #####-####'" placeholder="Digite o Telefone"
-                  v-model="CadLivro.telefone">
+                <input class="typeahead form-control form-control-lg" type="text" v-mask="'(##) #####-####'"
+                  placeholder="Digite o Telefone" v-model="CadLivro.telefone">
 
                 <div class="text-danger" v-if="v$.CadLivro.telefone.$errors.length && v$.CadLivro.telefone.$dirty">
                   <p v-for="error of v$.CadLivro.telefone.$errors" :key="error.$uid">
@@ -67,8 +67,7 @@
             <div class="col">
               <label>Data de Nascimento</label>
               <div id="the-basics">
-                <input class="typeahead form-control form-control-lg" type="date"
-                  v-model="CadLivro.dataNasc">
+                <input class="typeahead form-control form-control-lg" type="date" v-model="CadLivro.dataNasc">
                 <div class="text-danger" v-if="v$.CadLivro.dataNasc.$errors.length && v$.CadLivro.dataNasc.$dirty">
                   <p v-for="error of v$.CadLivro.dataNasc.$errors" :key="error.$uid">
                     <small>{{ error.$message }}</small>
@@ -83,8 +82,8 @@
             <div class="col">
               <label>CEP</label>
               <div id="bloodhound">
-                <input class="typeahead form-control-lg" type="text" v-mask="'#####-###'" placeholder="CEP" v-model="CadLivro.cep"
-                  @blur="buscarCep">
+                <input class="typeahead form-control-lg" type="text" v-mask="'#####-###'" placeholder="CEP"
+                  v-model="CadLivro.cep" @blur="buscarCep">
 
                 <div class="text-danger" v-if="v$.CadLivro.cep.$errors.length && v$.CadLivro.cep.$dirty">
                   <p v-for="error of v$.CadLivro.cep.$errors" :key="error.$uid">
@@ -112,7 +111,7 @@
             <div class="col">
               <label>Bairro</label>
               <div id="bloodhound">
-                <input class="typeahead form-control form-control-lg" type="text"  placeholder="Digite o bairro"
+                <input class="typeahead form-control form-control-lg" type="text" placeholder="Digite o bairro"
                   v-model="CadLivro.Bairro">
 
                 <div class="text-danger" v-if="v$.CadLivro.Bairro.$errors.length && v$.CadLivro.Bairro.$dirty">
@@ -260,11 +259,9 @@ export default defineComponent({
           const data = await response.json();
           this.cidades = data.map((cidade: any) => cidade.nome);
 
-          // Preenche a cidade automaticamente se já veio do CEP
           if (this.CadLivro.cidade && this.estadoPorCep === uf) {
-            // cidade já preenchida via CEP, mantem
           } else {
-            this.CadLivro.cidade = ''; // reseta cidade ao mudar estado manualmente
+            this.CadLivro.cidade = '';
           }
         } catch (error) {
           console.error('Erro ao buscar cidades:', error);
@@ -274,7 +271,19 @@ export default defineComponent({
     }
   },
 
+
+
   validations() {
+
+    cpfValido: helpers.withMessage(
+      'CPF deve ter 11 dígitos',
+      (value: string) => {
+        if (!value) return false;
+        const somenteNumeros = value.replace(/\D/g, '');
+        return somenteNumeros.length === 11;
+      }
+    )
+
     return {
       CadLivro: {
         nome: {
@@ -287,7 +296,7 @@ export default defineComponent({
         },
         cpf: {
           required: helpers.withMessage('CPF é obrigatório', required),
-          minLength: helpers.withMessage('CPF deve ter pelo menos 11 dígitos', minLength(14))
+          cpfValido
         },
         telefone: {
           required: helpers.withMessage('Telefone é obrigatório', required),
