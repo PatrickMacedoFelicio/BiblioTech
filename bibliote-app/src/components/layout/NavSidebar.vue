@@ -119,7 +119,7 @@
                         </li>
 
                         <li class="nav-item">
-                            <RouterLink class="nav-link" to=""><span class="menu-icon">
+                            <RouterLink class="nav-link" to="/consultar/estoque"><span class="menu-icon">
                                     <i class="mdi mdi-hexagon"></i>
                                 </span>Estoque</RouterLink>
                         </li>
