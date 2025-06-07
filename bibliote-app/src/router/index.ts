@@ -18,10 +18,15 @@ const router = createRouter({
       name: 'viewLivro',
       component: () => import('../views/Consultar/View-Livro.vue'),
     },
-        {
+    {
       path: '/consultar/Estoque',
       name: 'viewEstoque',
       component: () => import('../views/Consultar/View-Estoque.vue'),
+    },
+    {
+      path: '/consultar/Categoria',
+      name: 'viewCategoria',
+      component: () => import('../views/Consultar/View-Categoria.vue'),
     },
     {
       path: '/cadastrar/leitor',

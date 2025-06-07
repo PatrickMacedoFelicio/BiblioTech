@@ -125,7 +125,7 @@
                         </li>
 
                         <li class="nav-item">
-                            <RouterLink class="nav-link" to=""><span class="menu-icon">
+                            <RouterLink class="nav-link" to="/consultar/categoria"><span class="menu-icon">
                                     <i class="mdi mdi-code-equal"></i>
                                 </span>Categoria</RouterLink>
                         </li>
