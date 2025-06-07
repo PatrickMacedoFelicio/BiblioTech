@@ -67,13 +67,13 @@
                         </li>
 
                         <li class="nav-item">
-                            <RouterLink class="nav-link" to=""><span class="menu-icon">
+                            <RouterLink class="nav-link" to="/cadastrar/estoque"><span class="menu-icon">
                                     <i class="mdi mdi-hexagon-outline"></i>
                                 </span>Estoque</RouterLink>
                         </li>
 
                         <li class="nav-item">
-                            <RouterLink class="nav-link" to=""><span class="menu-icon">
+                            <RouterLink class="nav-link" to="/cadastrar/categoria"><span class="menu-icon">
                                     <i class="mdi mdi-code-equal"></i>
                                 </span>Categoria</RouterLink>
                         </li>

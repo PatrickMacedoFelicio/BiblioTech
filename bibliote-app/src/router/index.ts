@@ -38,6 +38,16 @@ const router = createRouter({
       name: 'emprestimo',
       component: () => import('../views/Emprestar.vue'),
     },
+    {
+      path: '/cadastrar/categoria',
+      name: 'categoria',
+      component: () => import('../views/Cadastrar/Cad-Categoria.vue'),
+    },
+    {
+      path: '/cadastrar/estoque',
+      name: 'estoque',
+      component: () => import('../views/Cadastrar/Cad-Estoque.vue'),
+    },
 
   ],
 })
