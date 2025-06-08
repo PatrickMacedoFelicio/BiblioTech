@@ -1,7 +1,14 @@
 <template>
   <div class="row">
     <div class="col-sm-4 grid-margin">
-      <h2>Bem-vindo {user}!</h2>
+      <div class="d-flex">
+        <div>
+          <h2>Bem-vindo </h2>
+        </div>
+        <div class="text-success" style="margin-left: 0.5rem">
+          <h2>{user}!</h2>
+        </div>
+      </div>
     </div>
   </div>
   <div class="row">
@@ -63,75 +70,234 @@
       </div>
     </div>
   </div>
+
+  <!-- Gráfico de pizza com legenda -->
   <div class="row">
     <div class="col-md-4 grid-margin stretch-card">
       <div class="card">
-        <div class="card-body">
-          <h4 class="card-title">Transaction History</h4>
-          <canvas id="grafico-generos" class="transaction-chart"></canvas>
-          <div class="bg-gray-dark d-flex d-md-block d-xl-flex flex-row py-3 px-4 px-md-3 px-xl-4 rounded mt-3">
-            <div class="text-md-center text-xl-left">
-              <h6 class="mb-1">Transfer to Paypal</h6>
-              <p class="text-muted mb-0">07 Jan 2019, 09:12AM</p>
-            </div>
-            <div class="align-self-center flex-grow text-right text-md-center text-xl-right py-md-2 py-xl-0">
-              <h6 class="font-weight-bold mb-0">$236</h6>
+        <div class="card-body text-center">
+          <h4 class="card-title">10 Gêneros Mais Emprestados</h4>
+          <div class="chart-container">
+            <canvas id="transaction-history"></canvas>
+          </div>
+
+          <div class="custom-legend">
+            <div class="legend-item" v-for="(label, index) in labels" :key="index">
+              <span class="legend-color" :style="{ backgroundColor: colors[index] }"></span>
+              <span class="legend-text">{{ label }}</span>
             </div>
           </div>
-          <div class="bg-gray-dark d-flex d-md-block d-xl-flex flex-row py-3 px-4 px-md-3 px-xl-4 rounded mt-3">
-            <div class="text-md-center text-xl-left">
-              <h6 class="mb-1">Tranfer to Stripe</h6>
-              <p class="text-muted mb-0">07 Jan 2019, 09:12AM</p>
-            </div>
-            <div class="align-self-center flex-grow text-right text-md-center text-xl-right py-md-2 py-xl-0">
-              <h6 class="font-weight-bold mb-0">$593</h6>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-8 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex flex-row justify-content-between">
+            <h4 class="card-title mb-1">Verificações Rápidas</h4>
+            <p class="text-muted mb-1">--- Your data status</p>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <div class="preview-list">
+                <div class="preview-item border-bottom">
+                  <div class="preview-thumbnail">
+                    <div class="preview-icon bg-primary">
+                      <i class="mdi mdi-file-document"></i>
+                    </div>
+                  </div>
+                  <div class="preview-item-content d-sm-flex flex-grow">
+                    <div class="flex-grow">
+                      <h6 class="preview-subject">Livros Emprestados Atrasados!</h6>
+                      <p class="text-muted mb-0">Broadcast web app mockup</p>
+                    </div>
+                    <div class="mr-auto text-sm-right pt-2 pt-sm-0">
+                      <p class="text-muted">15 minutes ago</p>
+                      <p class="text-muted mb-0">30 tasks, 5 issues </p>
+                    </div>
+                  </div>
+                </div>
+                <div class="preview-item border-bottom">
+                  <div class="preview-thumbnail">
+                    <div class="preview-icon bg-success">
+                      <i class="mdi mdi-cloud-download"></i>
+                    </div>
+                  </div>
+                  <div class="preview-item-content d-sm-flex flex-grow">
+                    <div class="flex-grow">
+                      <h6 class="preview-subject">Wordpress Development</h6>
+                      <p class="text-muted mb-0">Upload new design</p>
+                    </div>
+                    <div class="mr-auto text-sm-right pt-2 pt-sm-0">
+                      <p class="text-muted">1 hour ago</p>
+                      <p class="text-muted mb-0">23 tasks, 5 issues </p>
+                    </div>
+                  </div>
+                </div>
+                <div class="preview-item border-bottom">
+                  <div class="preview-thumbnail">
+                    <div class="preview-icon bg-info">
+                      <i class="mdi mdi-clock"></i>
+                    </div>
+                  </div>
+                  <div class="preview-item-content d-sm-flex flex-grow">
+                    <div class="flex-grow">
+                      <h6 class="preview-subject">Project meeting</h6>
+                      <p class="text-muted mb-0">New project discussion</p>
+                    </div>
+                    <div class="mr-auto text-sm-right pt-2 pt-sm-0">
+                      <p class="text-muted">35 minutes ago</p>
+                      <p class="text-muted mb-0">15 tasks, 2 issues</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="preview-item border-bottom">
+                  <div class="preview-thumbnail">
+                    <div class="preview-icon bg-danger">
+                      <i class="mdi mdi-email-open"></i>
+                    </div>
+                  </div>
+                  <div class="preview-item-content d-sm-flex flex-grow">
+                    <div class="flex-grow">
+                      <h6 class="preview-subject">Broadcast Mail</h6>
+                      <p class="text-muted mb-0">Sent release details to team</p>
+                    </div>
+                    <div class="mr-auto text-sm-right pt-2 pt-sm-0">
+                      <p class="text-muted">55 minutes ago</p>
+                      <p class="text-muted mb-0">35 tasks, 7 issues </p>
+                    </div>
+                  </div>
+                </div>
+                <div class="preview-item">
+                  <div class="preview-thumbnail">
+                    <div class="preview-icon bg-warning">
+                      <i class="mdi mdi-chart-pie"></i>
+                    </div>
+                  </div>
+                  <div class="preview-item-content d-sm-flex flex-grow">
+                    <div class="flex-grow">
+                      <h6 class="preview-subject">UI Design</h6>
+                      <p class="text-muted mb-0">New application planning</p>
+                    </div>
+                    <div class="mr-auto text-sm-right pt-2 pt-sm-0">
+                      <p class="text-muted">50 minutes ago</p>
+                      <p class="text-muted mb-0">27 tasks, 4 issues </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+
+
+
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted } from 'vue';
-import Chart from 'chart.js/auto';
+import { defineComponent, onMounted, ref } from 'vue'
+import Chart from 'chart.js/auto'
 
 export default defineComponent({
   name: 'IndexView',
 
   setup() {
+    const labels = [
+      'Ficção', 'Suspense', 'Romance', 'Ação',
+      'Fantasia', 'Biografia', 'Ciência', 'História',
+      'Terror', 'Comédia'
+    ]
+
+    const valores = [236, 593, 371, 190, 420, 155, 288, 300, 110, 260]
+
+    const colors = [
+      '#4CAF50', '#FFC107', '#E0E0E0', '#32CD32',
+      '#FF5733', '#8E44AD', '#3498DB', '#E91E63',
+      '#F39C12', '#00BCD4'
+    ]
+
+
     onMounted(() => {
-      const ctx = document.getElementById('grafico-generos') as HTMLCanvasElement
-      if (ctx) {
-        new Chart(ctx, {
-          type: 'doughnut', // ou 'bar', 'pie', 'line'
-          data: {
-            labels: ['Romance', 'Aventura', 'Terror', 'Ficção'], // gêneros
-            datasets: [{
-              label: 'Livros Emprestados',
-              data: [20, 15, 10, 5], // valores para cada gênero
-              backgroundColor: ['#4CAF50', '#FFC107', '#F44336', '#2196F3']
-            }]
-          },
-          options: {
-            plugins: {
-              legend: {
-                position: 'bottom'
+      const canvas = document.getElementById('transaction-history') as HTMLCanvasElement | null
+      if (!canvas) return
+
+      new Chart(canvas, {
+        type: 'doughnut',
+        data: {
+          labels,
+          datasets: [{
+            data: valores,
+            backgroundColor: colors,
+            borderWidth: 0
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false, // permite usar altura fixa
+          cutout: '70%',
+          plugins: {
+            legend: {
+              display: false
+            },
+            tooltip: {
+              callbacks: {
+                label: (context) => {
+                  const label = context.label || ''
+                  const value = context.formattedValue || ''
+                  return `${label}: ${value} empréstimos`
+                }
               }
             }
           }
-        })
-      }
+        }
+      })
     })
+
+    return { labels, colors }
   }
 })
 </script>
 
-<style>
-.transaction-chart {
+<style scoped>
+.chart-container {
+  position: relative;
   width: 100%;
-  max-width: 400px;
-  height: 300px;
+  max-width: 300px;
+  height: 200px;
+  margin: 0 auto;
+}
+
+.card {
+  background-color: #1e1e2f;
+  color: white;
+}
+
+.custom-legend {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+}
+
+.legend-color {
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.legend-text {
+  font-size: 14px;
 }
 </style>
