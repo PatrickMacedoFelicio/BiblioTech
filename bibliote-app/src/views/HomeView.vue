@@ -1,7 +1,7 @@
 <template>
   <div class="row">
     <div class="col-sm-4 grid-margin">
-      <h2>Bem-vindo</h2>
+      <h2>Bem-vindo {user}!</h2>
     </div>
   </div>
   <div class="row">
