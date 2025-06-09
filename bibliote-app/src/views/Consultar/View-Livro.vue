@@ -49,10 +49,10 @@
                                             <RouterLink class="btn btn-info btn-sm" to="/">
                                                 <i class="mdi mdi-magnify"></i>
                                             </RouterLink>
-                                            <RouterLink class="btn btn-success btn-sm" to="/" style="margin-left: 0.5rem">
+                                            <RouterLink class="btn btn-success btn-sm gap1" to="/">
                                                 <i class="mdi mdi-pencil"></i>
                                             </RouterLink>
-                                            <RouterLink class="btn btn-danger btn-sm" to="/" style="margin-left: 0.5rem">
+                                            <RouterLink class="btn btn-danger btn-sm gap1" to="/">
                                                 <i class="mdi mdi-delete"></i>
                                             </RouterLink>
                                         </div>

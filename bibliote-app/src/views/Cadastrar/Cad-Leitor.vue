@@ -2,7 +2,6 @@
   <div class="grid-margin stretch-card">
     <div class="card">
       <div class="card-body">
-
         <form @submit.prevent="salvar">
           <h3 class="card-title">Cadastro de leitor</h3>
           <div class="form-group row">
