@@ -53,10 +53,10 @@
                       <RouterLink class="btn btn-info btn-sm" to="/">
                         <i class="mdi mdi-magnify"></i>
                       </RouterLink>
-                      <RouterLink class="btn btn-success btn-sm ms-2" to="/">
+                      <RouterLink class="btn btn-success btn-sm ms-2 gap1" to="/">
                         <i class="mdi mdi-pencil"></i>
                       </RouterLink>
-                      <RouterLink class="btn btn-danger btn-sm ms-2" to="/">
+                      <RouterLink class="btn btn-danger btn-sm ms-2 gap1" to="/">
                         <i class="mdi mdi-delete"></i>
                       </RouterLink>
                     </div>

@@ -9,7 +9,7 @@ const router = createRouter({
       component: () => import('../views/HomeView.vue'),
     },
     {
-      path: '/viewLeitor',
+      path: '/consultar/leitor',
       name: 'viewLeitor',
       component: () => import('../views/Consultar/ViewLeitor.vue'),
     },
@@ -46,7 +46,7 @@ const router = createRouter({
     {
       path: '/Emprestimo',
       name: 'emprestimo',
-      component: () => import('../views/Emprestar.vue'),
+      component: () => import('../views/Cadastrar/Emprestar.vue'),
     },
     {
       path: '/cadastrar/categoria',

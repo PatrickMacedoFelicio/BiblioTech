@@ -1,11 +1,10 @@
 <template>
-
-    <div class="page-header">
-        <h3 class="page-title"> Consultar Leitores </h3>
+<div class="page-header">
+        <h3 class="card-title">Consulta de Leitores</h3>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="#">Tables</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Basic tables</li>
+                <li class="breadcrumb-item"><a href="#">Consultar</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Estoque</li>
             </ol>
         </nav>
     </div>
@@ -13,8 +12,18 @@
         <div class="col-lg-12 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">Leitores</h4>
-                    <p class="card-description">Abaixo estão os leitores cadastrados</p>
+                    <div class="form-group row">
+                        <div class="col-5">
+                            <label>Nome</label>
+                            <div id="the-basics">
+                                <input class="typeahead form-control form-control-lg" type="text"
+                                    placeholder="Digite o nome do leitor...">
+                            </div>
+                        </div>
+                        <div class="col col-lg-2 d-flex align-items-end">
+                            <button class="btn btn-success btn-fw btn-lg w-100 btn-icon-text">Buscar</button>
+                        </div>
+                    </div>
                     <div class="table-responsive">
                         <table class="table">
                             <thead>
@@ -23,8 +32,6 @@
                                     <th>CPF</th>
                                     <th>Telefone</th>
                                     <th>E-mail</th>
-                                    <th>Endereço</th>
-                                    <th>Data de Nascimento</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -33,8 +40,19 @@
                                     <td>{{ leitor.cpf }}</td>
                                     <td>{{ leitor.telefone }}</td>
                                     <td>{{ leitor.email }}</td>
-                                    <td>{{ leitor.endereco }}</td>
-                                    <td>{{ leitor.dataNascimento.toLocaleDateString('pt-BR') }}</td>
+                                    <td>
+                                        <div class="d-flex justify-content-center">
+                                            <RouterLink class="btn btn-info btn-sm" to="/">
+                                                <i class="mdi mdi-magnify"></i>
+                                            </RouterLink>
+                                            <RouterLink class="btn btn-success btn-sm ms-2 gap1" to="/">
+                                                <i class="mdi mdi-pencil"></i>
+                                            </RouterLink>
+                                            <RouterLink class="btn btn-danger btn-sm ms-2 gap1" to="/">
+                                                <i class="mdi mdi-delete"></i>
+                                            </RouterLink>
+                                        </div>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
