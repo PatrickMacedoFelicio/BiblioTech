@@ -32,7 +32,6 @@
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
                                     <th>Título</th>
                                     <th>Código de Barras</th>
                                     <th class="text-center">Quantidade</th>
@@ -41,7 +40,6 @@
                             </thead>
                             <tbody>
                                 <tr v-for="(item, index) in estoqueFiltrado" :key="index">
-                                    <td>{{ item.id }}</td>
                                     <td>{{ item.titulo }}</td>
                                     <td>{{ item.codigoBarras }}</td>
                                     <td class="text-center">{{ item.quantidade }}</td>
@@ -80,7 +78,6 @@ export default defineComponent({
         return {
             filtro: '',
             estoque: [] as Array<{
-                id: number;
                 titulo: string;
                 codigoBarras: string;
                 quantidade: number;
@@ -105,19 +102,16 @@ export default defineComponent({
         buscarEstoque() {
             this.estoque = [
                 {
-                    id: 1,
                     titulo: 'Jogos Vorazes',
                     codigoBarras: '9781234567897',
                     quantidade: 12
                 },
                 {
-                    id: 2,
                     titulo: 'Tudo é Rio',
                     codigoBarras: '9789876543210',
                     quantidade: 5
                 },
                 {
-                    id: 3,
                     titulo: 'A Culpa É das Estrelas',
                     codigoBarras: '9780123456789',
                     quantidade: 9

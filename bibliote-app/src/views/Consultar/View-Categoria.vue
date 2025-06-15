@@ -16,18 +16,11 @@
           <div class="form-group row">
             <div class="col-5">
               <label>Nome da Categoria</label>
-              <input
-                class="form-control form-control-lg"
-                type="text"
-                v-model="filtro"
-                placeholder="Digite o nome da categoria..."
-              />
+              <input class="form-control form-control-lg" type="text" v-model="filtro"
+                placeholder="Digite o nome da categoria..." />
             </div>
             <div class="col col-lg-2 d-flex align-items-end">
-              <button
-                class="btn btn-success btn-fw btn-lg w-100 btn-icon-text"
-                @click="buscarCategorias"
-              >
+              <button class="btn btn-success btn-fw btn-lg w-100 btn-icon-text" @click="buscarCategorias">
                 Buscar
               </button>
             </div>
@@ -37,7 +30,6 @@
             <table class="table">
               <thead>
                 <tr>
-                  <th>ID</th>
                   <th>Nome</th>
                   <th>Descrição</th>
                   <th class="text-center">Ações</th>
@@ -45,7 +37,6 @@
               </thead>
               <tbody>
                 <tr v-for="(categoria, index) in categoriasFiltradas" :key="index">
-                  <td>{{ categoria.id }}</td>
                   <td>{{ categoria.nome }}</td>
                   <td>{{ categoria.descricao }}</td>
                   <td>
@@ -82,7 +73,6 @@ export default defineComponent({
     return {
       filtro: '',
       categorias: [] as Array<{
-        id: number;
         nome: string;
         descricao: string;
       }>
@@ -105,9 +95,9 @@ export default defineComponent({
   methods: {
     buscarCategorias() {
       this.categorias = [
-        { id: 1, nome: 'Ficção Científica', descricao: 'Livros com temáticas futuristas e tecnológicas' },
-        { id: 2, nome: 'Romance', descricao: 'Narrativas centradas em relações amorosas' },
-        { id: 3, nome: 'Biografia', descricao: 'Histórias de vida de pessoas reais' }
+        { nome: 'Ficção Científica', descricao: 'Livros com temáticas futuristas e tecnológicas' },
+        { nome: 'Romance', descricao: 'Narrativas centradas em relações amorosas' },
+        { nome: 'Biografia', descricao: 'Histórias de vida de pessoas reais' }
       ];
     }
   }
