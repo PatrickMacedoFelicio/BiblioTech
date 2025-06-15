@@ -47,7 +47,6 @@
               </thead>
               <tbody>
                 <tr v-for="(fornecedor, index) in fornecedoresFiltrados" :key="index">
-                  <td>{{ fornecedor.id }}</td>
                   <td>{{ fornecedor.nome }}</td>
                   <td>{{ fornecedor.cnpj }}</td>
                   <td>{{ fornecedor.telefone }}</td>
@@ -86,7 +85,6 @@ export default defineComponent({
     return {
       filtro: '',
       fornecedores: [] as Array<{
-        id: number;
         nome: string;
         cnpj: string;
         telefone: string;
@@ -112,21 +110,18 @@ export default defineComponent({
     buscarFornecedores() {
       this.fornecedores = [
         {
-          id: 1,
           nome: 'Editora ALT',
           cnpj: '12.345.678/0001-90',
           telefone: '(11) 3333-4444',
           email: 'contato@livrosbr.com'
         },
         {
-          id: 2,
           nome: 'Editora Alfa',
           cnpj: '98.765.432/0001-21',
           telefone: '(21) 2222-1111',
           email: 'vendas@editoraalfa.com'
         },
         {
-          id: 3,
           nome: 'Grupo Beta Books',
           cnpj: '45.678.901/0001-55',
           telefone: '(31) 9999-8888',

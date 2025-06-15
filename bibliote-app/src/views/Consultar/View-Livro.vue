@@ -30,7 +30,6 @@
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
                                     <th>Título</th>
                                     <th>ISBN</th>
                                     <th>Autor</th>
@@ -39,7 +38,6 @@
                             </thead>
                             <tbody>
                                 <tr v-for="(livro, index) in listarLivro" :key="index">
-                                    <td>{{ livro.id }}</td>
                                     <td>{{ livro.titulo }}</td>
                                     <td>{{ livro.isbn }}</td>
                                     <td>{{ livro.autor }}</td>
@@ -76,7 +74,6 @@ export default defineComponent({
     data() {
         return {
             listarLivro: [] as Array<{
-                id: number,
                 titulo: string,
                 isbn: string,
                 ano_publicacao: string,
@@ -92,7 +89,6 @@ export default defineComponent({
     methods: {
         buscarLivro() {
             this.listarLivro.push({
-                id: 1,
                 titulo: 'Jogos Vorazes',
                 isbn: '1-232-21-31231212',
                 autor: 'Suzanne Collins',
@@ -100,7 +96,6 @@ export default defineComponent({
             });
 
             this.listarLivro.push({
-                id: 2,
                 titulo: 'Tudo é Rio',
                 isbn: '4-765-45-123123151',
                 autor: 'Carla Madeiras',
@@ -108,7 +103,6 @@ export default defineComponent({
             });
 
             this.listarLivro.push({
-                id: 3,
                 titulo: 'A Culpa É das Estrelas',
                 isbn: '7-246-87-098098898',
                 autor: 'John Green',
