@@ -37,7 +37,6 @@
             <table class="table">
               <thead>
                 <tr>
-                  <th>ID</th>
                   <th>Nome</th>
                   <th>CNPJ</th>
                   <th>Telefone</th>
