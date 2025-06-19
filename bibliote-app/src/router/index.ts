@@ -14,6 +14,11 @@ const router = createRouter({
       component: () => import('../views/Consultar/ViewLeitor.vue'),
     },
     {
+      path: '/consultar/funcionario',
+      name: 'viewFuncionario',
+      component: () => import('../views/Consultar/View-Funcionario.vue'),
+    },
+    {
       path: '/consultar/livro',
       name: 'viewLivro',
       component: () => import('../views/Consultar/View-Livro.vue'),
@@ -23,7 +28,7 @@ const router = createRouter({
       name: 'viewEstoque',
       component: () => import('../views/Consultar/View-Estoque.vue'),
     },
-        {
+    {
       path: '/consultar/Fornecedor',
       name: 'viewFornecedor',
       component: () => import('../views/Consultar/View-Fornecedor.vue'),
@@ -60,8 +65,13 @@ const router = createRouter({
     },
     {
       path: '/cadastrar/estoque',
-      name: 'estoque',
+      name: 'cadastrar-estoque',
       component: () => import('../views/Cadastrar/Cad-Estoque.vue'),
+    },
+    {
+      path: '/cadastrar/funcionario',
+      name: 'funcionario',
+      component: () => import('../views/Cadastrar/Cad-Funcionario.vue'),
     },
 
   ],

@@ -55,7 +55,7 @@
                         </li>
 
                         <li class="nav-item">
-                            <RouterLink class="nav-link" to=""><span class="menu-icon">
+                            <RouterLink class="nav-link" to="/cadastrar/funcionario"><span class="menu-icon">
                                     <i class="mdi mdi-clipboard-account"></i>
                                 </span>Funcionário</RouterLink>
                         </li>
@@ -107,7 +107,7 @@
                         </li>
 
                         <li class="nav-item">
-                            <RouterLink class="nav-link" to=""><span class="menu-icon">
+                            <RouterLink class="nav-link" to="/consultar/funcionario"><span class="menu-icon">
                                     <i class="mdi mdi-clipboard-account"></i>
                                 </span>Funcionário</RouterLink>
                         </li>
