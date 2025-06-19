@@ -8,11 +8,13 @@
           <div class="form-group row">
             <div class="col">
               <label>Nome</label>
-              <input class="form-control form-control-lg" v-model="funcionario.nome" type="text" placeholder="Nome completo">
+              <input class="form-control form-control-lg" v-model="funcionario.nome" type="text"
+                placeholder="Nome completo">
             </div>
             <div class="col">
               <label>CPF</label>
-              <input class="form-control form-control-lg" v-mask="'###.###.###-##'" v-model="funcionario.cpf" type="text" placeholder="CPF">
+              <input class="form-control form-control-lg" v-mask="'###.###.###-##'" v-model="funcionario.cpf"
+                type="text" placeholder="CPF">
             </div>
             <div class="col">
               <label>Cargo</label>
@@ -23,7 +25,8 @@
           <div class="form-group row">
             <div class="col">
               <label>Telefone</label>
-              <input class="form-control form-control-lg" v-mask="'(##) #####-####'" v-model="funcionario.telefone" type="text" placeholder="Telefone">
+              <input class="form-control form-control-lg" v-mask="'(##) #####-####'" v-model="funcionario.telefone"
+                type="text" placeholder="Telefone">
             </div>
             <div class="col">
               <label>Email</label>
@@ -39,7 +42,8 @@
           <div class="form-group row">
             <div class="col">
               <label>CEP</label>
-              <input class="form-control form-control-lg" v-model="funcionario.cep" v-mask="'#####-###'" @blur="buscarCep" type="text" placeholder="CEP">
+              <input class="form-control form-control-lg" v-model="funcionario.cep" v-mask="'#####-###'"
+                @blur="buscarCep" type="text" placeholder="CEP">
             </div>
             <div class="col">
               <label>Rua</label>
@@ -89,9 +93,15 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { mask } from 'vue-the-mask';
+import { required, minLength, helpers } from '@vuelidate/validators';
+import { useVuelidate } from '@vuelidate/core';
 
 export default defineComponent({
   name: 'CadastroFuncionario',
+
+  setup() {
+    return { v$: useVuelidate() };
+  },
 
   data() {
     return {
@@ -157,8 +167,22 @@ export default defineComponent({
       console.log('Funcionário cadastrado:', this.funcionario);
     },
 
+
+
     limparCampos() {
-      Object.keys(this.funcionario).forEach(k => this.funcionario[k] = '');
+      this.funcionario.nome = '';
+      this.funcionario.cpf = '';
+      this.funcionario.cargo = '';
+      this.funcionario.telefone = '';
+      this.funcionario.email = '';
+      this.funcionario.data_admissao = '';
+      this.funcionario.cep = '';
+      this.funcionario.rua = '';
+      this.funcionario.bairro = '';
+      this.funcionario.numero = '';
+      this.funcionario.estado = '';
+      this.funcionario.cidade = '';
+      this.v$.$reset();
     }
   }
 });
