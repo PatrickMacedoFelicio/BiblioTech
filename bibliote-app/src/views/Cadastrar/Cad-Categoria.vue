@@ -7,27 +7,16 @@
             <div class="col-sm-10">
               <h3 class="m-0">Cadastro de Categoria</h3>
             </div>
-            <div class="col-sm-2 d-grid">
-              <RouterLink class="btn btn-secondary" to="/categorias">
-                <i class="fas fa-arrow-left me-2"></i>Voltar
-              </RouterLink>
-            </div>
           </div>
         </div>
+
         <div class="card-body">
-          <div class="alert alert-warning" v-if="v$.$errors.length">
-            <p class="m-0 p-0" v-for="error of v$.$errors" :key="error.$uid">
-              {{ error.$property }}: {{ error.$message }}
-            </p>
-          </div>
+
+          <!-- FORMULÁRIO -->
           <form @submit.prevent="salvar">
             <div class="mb-3">
               <label class="form-label">Nome da Categoria</label>
-              <input
-                type="text"
-                class="form-control"
-                v-model="categoria.nome"
-              />
+              <input type="text" class="form-control" v-model="categoria.nome" />
               <div class="text-danger" v-if="v$.categoria.nome.$errors.length">
                 <p v-for="error of v$.categoria.nome.$errors" :key="error.$uid">
                   <small>{{ error.$message }}</small>
@@ -37,20 +26,18 @@
 
             <div class="mb-3">
               <label class="form-label">Descrição</label>
-              <textarea
-                class="form-control"
-                rows="4"
-                v-model="categoria.descricao"
-              ></textarea>
+              <textarea class="form-control" rows="4" v-model="categoria.descricao"></textarea>
             </div>
 
             <div class="d-flex gap-2">
-              <button type="submit" class="btn btn-success">
-                <i class="fas fa-save me-2"></i>Salvar
-              </button>
-              <button type="button" class="btn btn-secondary gap1" @click="limparCampos">
-                Limpar
-              </button>
+              <div class="form-group row mt-4">
+                <div class="col-auto">
+                  <button type="submit" class="btn btn-success btn-lg">Salvar</button>
+                </div>
+                <div class="col-auto">
+                  <button type="button" class="btn btn-secondary btn-lg" @click="limparCampos">Limpar</button>
+                </div>
+              </div>
             </div>
           </form>
         </div>
@@ -64,7 +51,15 @@ import { defineComponent } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
 import { required, minLength, helpers } from '@vuelidate/validators';
 import axios from 'axios';
-import { Toast } from '@/common/toast'; 
+import Swal from 'sweetalert2';
+import { Toast } from '@/common/toast';
+
+
+interface Categoria {
+  id: string;
+  nome: string;
+  descricao: string;
+}
 
 export default defineComponent({
   name: 'CadastroCategoria',
@@ -76,9 +71,12 @@ export default defineComponent({
   data() {
     return {
       categoria: {
+        id: '',
         nome: '',
         descricao: ''
-      }
+      } as Categoria,
+
+      categorias: [] as Categoria[]
     };
   },
 
@@ -96,41 +94,73 @@ export default defineComponent({
 
   methods: {
     async salvar() {
-      const valid = await this.v$.$validate();
-      if (!valid) return;
+      const valido = await this.v$.$validate();
+      if (!valido) return;
 
-      const dados = {
+      const confirmado = await Swal.fire({
+        title: 'Confirmar cadastro?',
+        text: 'Deseja realmente cadastrar esta categoria?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#28a745',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Sim, cadastrar!',
+        cancelButtonText: 'Cancelar'
+      });
+
+      if (!confirmado.isConfirmed) return;
+
+
+      const novaCategoria = {
         ...this.categoria,
-        id: Math.random().toString(36).substring(2, 8) 
-      };
-
-      const headers = {
-        'Content-Type': 'application/json',
-        'ngrok-skip-browser-warning': '69420'
+        id: Math.random().toString(36).substring(2, 8)
       };
 
       try {
-        const response = await axios.post('http://localhost:3000/categorias', dados, { headers });
-        if (response.status === 201) {
-          Toast.fire({
-            icon: 'success',
-            title: 'Categoria cadastrada com sucesso!'
-          });
-          this.$router.push('/categorias');
-        }
-      } catch (error) {
+        await axios.post('http://localhost:3000/categorias', novaCategoria);
         Toast.fire({
-          icon: 'error',
-          title: 'Erro ao cadastrar categoria'
+          icon: 'success',
+          title: 'Categoria cadastrada com sucesso!'
         });
+        this.limparCampos();
+        await this.carregarCategorias();
+      } catch (erro: any) {
+        let mensagemErro = 'Não foi possível salvar a categoria.';
+
+        if (erro.response) {
+          mensagemErro = `Erro ${erro.response.status}: ${erro.response.statusText}`;
+        } else if (erro.request) {
+          mensagemErro = 'Sem resposta do servidor. Verifique sua conexão.';
+        } else if (erro.message) {
+          mensagemErro = erro.message;
+        }
+        Swal.fire({
+          icon: 'error',
+          title: 'Erro ao cadastrar',
+          text: mensagemErro
+        });
+        console.error('Erro completo:', erro);
+      }
+
+    },
+
+    async carregarCategorias() {
+      try {
+        const resposta = await axios.get('http://localhost:3000/categorias');
+        this.categorias = resposta.data;
+      } catch (erro) {
+        console.error('Erro ao carregar categorias:', erro);
       }
     },
 
     limparCampos() {
-      this.categoria.nome = '';
-      this.categoria.descricao = '';
+      this.categoria = { id: '', nome: '', descricao: '' };
       this.v$.$reset();
     }
+  },
+
+  async mounted() {
+    await this.carregarCategorias();
   }
 });
 </script>

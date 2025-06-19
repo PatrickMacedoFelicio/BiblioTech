@@ -36,7 +36,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(categoria, index) in categoriasFiltradas" :key="index">
+                <tr v-for="(categoria, index) in categoriasFiltradas" :key="categoria.id">
                   <td>{{ categoria.nome }}</td>
                   <td>{{ categoria.descricao }}</td>
                   <td>
@@ -47,16 +47,13 @@
                       </button>
 
                       <!-- Editar -->
-                      <RouterLink
-                        class="btn btn-success btn-sm ms-2"
-                        :to="{
-                          name: 'EditarCategoria',
-                          query: {
-                            nome: categoria.nome,
-                            descricao: categoria.descricao
-                          }
-                        }"
-                      >
+                      <RouterLink class="btn btn-success btn-sm ms-2" :to="{
+                        name: 'EditarCategoria',
+                        query: {
+                          nome: categoria.nome,
+                          descricao: categoria.descricao
+                        }
+                      }">
                         <i class="mdi mdi-pencil"></i>
                       </RouterLink>
 
@@ -80,8 +77,10 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import Swal from 'sweetalert2';
+import axios from 'axios';
 
 interface Categoria {
+  id: string;
   nome: string;
   descricao: string;
 }
@@ -110,13 +109,21 @@ export default defineComponent({
   },
 
   methods: {
-    buscarCategorias() {
-      this.categorias = [
-        { nome: 'Ficção Científica', descricao: 'Livros com temáticas futuristas e tecnológicas' },
-        { nome: 'Romance', descricao: 'Narrativas centradas em relações amorosas' },
-        { nome: 'Biografia', descricao: 'Histórias de vida de pessoas reais' }
-      ];
-    },
+    async buscarCategorias() {
+      try {
+        const response = await axios.get('http://localhost:3000/categorias');
+        console.log('Categorias recebidas:', response.data);
+        this.categorias = response.data;
+      } catch (erro: any) {
+        console.error('Erro ao buscar categorias:', erro);
+        Swal.fire({
+          icon: 'error',
+          title: 'Erro ao carregar categorias',
+          text: erro.message || 'Erro inesperado. Verifique a conexão.'
+        });
+      }
+    }
+    ,
 
     visualizar(categoria: Categoria) {
       Swal.fire({
@@ -139,14 +146,24 @@ export default defineComponent({
         cancelButtonText: 'Cancelar'
       }).then((result) => {
         if (result.isConfirmed) {
-          this.excluirCategoria(categoria);
+          this.excluirCategoria(categoria.id);
         }
       });
     },
 
-    excluirCategoria(categoria: Categoria) {
-      this.categorias = this.categorias.filter(c => c !== categoria);
-      Swal.fire('Excluído!', 'A categoria foi removida.', 'success');
+    async excluirCategoria(id: string) {
+      try {
+        await axios.delete(`http://localhost:3000/categorias/${id}`);
+        this.categorias = this.categorias.filter(c => c.id !== id);
+        Swal.fire('Excluído!', 'A categoria foi removida.', 'success');
+      } catch (erro: any) {
+        console.error('Erro ao excluir:', erro);
+        Swal.fire({
+          icon: 'error',
+          title: 'Erro ao excluir',
+          text: erro.message || 'Erro inesperado.'
+        });
+      }
     }
   }
 });
