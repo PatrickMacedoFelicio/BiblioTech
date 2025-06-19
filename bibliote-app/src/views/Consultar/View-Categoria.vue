@@ -41,15 +41,29 @@
                   <td>{{ categoria.descricao }}</td>
                   <td>
                     <div class="d-flex justify-content-center">
-                      <RouterLink class="btn btn-info btn-sm" to="/">
+                      <!-- Visualizar -->
+                      <button class="btn btn-info btn-sm" @click="visualizar(categoria)">
                         <i class="mdi mdi-magnify"></i>
-                      </RouterLink>
-                      <RouterLink class="btn btn-success btn-sm ms-2 gap1" to="/">
+                      </button>
+
+                      <!-- Editar -->
+                      <RouterLink
+                        class="btn btn-success btn-sm ms-2"
+                        :to="{
+                          name: 'EditarCategoria',
+                          query: {
+                            nome: categoria.nome,
+                            descricao: categoria.descricao
+                          }
+                        }"
+                      >
                         <i class="mdi mdi-pencil"></i>
                       </RouterLink>
-                      <RouterLink class="btn btn-danger btn-sm ms-2 gap1" to="/">
+
+                      <!-- Excluir -->
+                      <button class="btn btn-danger btn-sm ms-2" @click="confirmarExclusao(categoria)">
                         <i class="mdi mdi-delete"></i>
-                      </RouterLink>
+                      </button>
                     </div>
                   </td>
                 </tr>
@@ -65,6 +79,12 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import Swal from 'sweetalert2';
+
+interface Categoria {
+  nome: string;
+  descricao: string;
+}
 
 export default defineComponent({
   name: 'ConsultaCategoria',
@@ -72,15 +92,12 @@ export default defineComponent({
   data() {
     return {
       filtro: '',
-      categorias: [] as Array<{
-        nome: string;
-        descricao: string;
-      }>
+      categorias: [] as Categoria[]
     };
   },
 
   computed: {
-    categoriasFiltradas() {
+    categoriasFiltradas(): Categoria[] {
       const texto = this.filtro.toLowerCase();
       return this.categorias.filter(cat =>
         cat.nome.toLowerCase().includes(texto)
@@ -99,6 +116,37 @@ export default defineComponent({
         { nome: 'Romance', descricao: 'Narrativas centradas em relações amorosas' },
         { nome: 'Biografia', descricao: 'Histórias de vida de pessoas reais' }
       ];
+    },
+
+    visualizar(categoria: Categoria) {
+      Swal.fire({
+        title: categoria.nome,
+        text: categoria.descricao,
+        icon: 'info',
+        confirmButtonText: 'Fechar'
+      });
+    },
+
+    confirmarExclusao(categoria: Categoria) {
+      Swal.fire({
+        title: 'Tem certeza?',
+        text: `Deseja excluir a categoria "${categoria.nome}"?`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Sim, excluir!',
+        cancelButtonText: 'Cancelar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.excluirCategoria(categoria);
+        }
+      });
+    },
+
+    excluirCategoria(categoria: Categoria) {
+      this.categorias = this.categorias.filter(c => c !== categoria);
+      Swal.fire('Excluído!', 'A categoria foi removida.', 'success');
     }
   }
 });
