@@ -43,7 +43,7 @@
                   <td>{{ item.descricao.length > 50 ? item.descricao.slice(0, 80) + '...' : item.descricao }}</td>
                   <td>
                     <div class="d-flex justify-content-center">
-                      <button class="btn btn-info btn-sm" to="">
+                      <button class="btn btn-info btn-sm" @click="visualizarCategoria(item)">
                         <i class="mdi mdi-magnify"></i>
                       </button>
                       <button class="btn btn-success btn-sm ms-2 gap1">
@@ -56,6 +56,8 @@
                   </td>
                 </tr>
               </tbody>
+              <!-- DENTRO da <template>, mas FORA da tabela -->
+              <ModalCategoria :visivel="mostrarModal" :categoria="categoriaSelecionada" @fechar="fecharModal" />
             </table>
           </div>
         </div>
@@ -68,6 +70,7 @@
 import { defineComponent } from 'vue';
 import Swal from 'sweetalert2';
 import axios from 'axios';
+import ModalCategoria from '@/components/modals/ModalCategoria.vue';
 
 interface Categoria {
   id: string;
@@ -77,11 +80,14 @@ interface Categoria {
 
 export default defineComponent({
   name: 'ConsultarCategoria',
+  components: { ModalCategoria },
 
   data() {
     return {
       filtro: '',
-      categoria: [] as Categoria[]
+      categoria: [] as Categoria[],
+      mostrarModal: false,
+      categoriaSelecionada: { nome: '', descricao: '' }
     };
   },
 
@@ -151,8 +157,17 @@ export default defineComponent({
       }
     },
 
+    //consultar as categorias com modal
+    visualizarCategoria(cat: Categoria) {
+      this.categoriaSelecionada = cat;
+      this.mostrarModal = true;
+    },
+    fecharModal() {
+      this.mostrarModal = false;
+    }
+
     // Edição das coisas
-    
+
   }
 });
 </script>
