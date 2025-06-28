@@ -95,7 +95,7 @@ export default defineComponent({
     categoriaFiltrado() {
       const texto = this.filtro.toLowerCase();
       return this.categoria.filter(item =>
-        item.nome.toLowerCase().includes(texto)
+        item.nome?.toLowerCase().includes(texto)
       );
     }
   },

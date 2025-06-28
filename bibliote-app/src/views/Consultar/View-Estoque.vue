@@ -58,6 +58,7 @@
                                     </td>
                                 </tr>
                             </tbody>
+
                         </table>
                     </div>
                     <ModalEstoque :visivel="mostrarModal" :categoria="estoqueSelecionada" @fechar="fecharModal" />
