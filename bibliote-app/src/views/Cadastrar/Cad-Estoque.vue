@@ -33,14 +33,19 @@
             </div>
           </div>
 
-          <div class="form-group">
-            <label>Título do Livro</label>
-            <input
-              class="form-control form-control-lg bg-light text-dark"
-              type="text"
-              :value="estoque.tituloLivro"
-              readonly
-            />
+          <div class="form-group row">
+            <div class="col">
+              <label>Título do Livro</label>
+               <input
+                class="form-control form-control-lg"
+                type="text"
+                v-model="estoque.tituloLivro"
+                placeholder="Digite o titulo do livro..."
+              />
+              <div class="text-danger" v-if="v$.estoque.tituloLivro.$error">
+                <small>{{ v$.estoque.tituloLivro.$errors[0].$message }}</small>
+              </div>
+            </div>             
           </div>
 
           <div class="form-group row mt-4">
@@ -52,10 +57,6 @@
             </div>
           </div>
         </form>
-
-        <div v-if="dialog" class="alert alert-success mt-4" role="alert">
-          Estoque salvo com sucesso!
-        </div>
       </div>
     </div>
   </div>
@@ -65,6 +66,9 @@
 import { defineComponent } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
 import { required, minValue, helpers } from '@vuelidate/validators';
+import axios from 'axios';
+import Swal from 'sweetalert2';
+import { Toast } from '@/common/toast';
 
 export default defineComponent({
   name: 'CadastroEstoque',
@@ -76,9 +80,10 @@ export default defineComponent({
   data() {
     return {
       estoque: {
+        id: '',
         codigoBarras: '',
         quantidade: 0,
-        tituloLivro: 'O Pequeno Príncipe'
+        tituloLivro: ''
       },
       dialog: false
     };
@@ -94,7 +99,9 @@ export default defineComponent({
           required: helpers.withMessage('Quantidade é obrigatória', required),
           minValue: helpers.withMessage('Deve ser no mínimo 1', minValue(1))
         },
-        tituloLivro: {}
+        tituloLivro: {
+          required: helpers.withMessage('Escolher um livro é obrigatorio!', required)
+        }
       }
     };
   },
@@ -104,16 +111,72 @@ export default defineComponent({
       const valido = await this.v$.$validate();
       if (!valido) return;
 
-      this.dialog = true;
-      setTimeout(() => (this.dialog = false), 3000);
-      console.log('Estoque salvo:', this.estoque);
+      const confirmado = await Swal.fire({
+        title: 'Confirmar cadastro?',
+        text: 'Deseja realmente cadastrar ao estoque?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#28a745',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Sim, cadastrar!',
+        cancelButtonText: 'Cancelar'
+      });
+
+      if (!confirmado.isConfirmed) return;
+
+
+      const novoEstoque = {
+        ...this.estoque,
+        id: Math.random().toString(36).substring(2, 8)
+      };
+
+      try {
+        await axios.post('http://localhost:3000/estoques', novoEstoque);
+        Toast.fire({
+          icon: 'success',
+          title: 'Estoque cadastrado com sucesso!'
+        });
+        this.limparCampos();
+        await this.carregarEstoque();
+      } catch (erro: any) {
+        let mensagemErro = 'Não foi possível salvar a categoria.';
+
+        if (erro.response) {
+          mensagemErro = `Erro ${erro.response.status}: ${erro.response.statusText}`;
+        } else if (erro.request) {
+          mensagemErro = 'Sem resposta do servidor. Verifique sua conexão.';
+        } else if (erro.message) {
+          mensagemErro = erro.message;
+        }
+        Swal.fire({
+          icon: 'error',
+          title: 'Erro ao cadastrar ao estoque',
+          text: mensagemErro
+        });
+        console.error('Erro completo:', erro);
+      }
     },
+
+    async carregarEstoque() {
+      try {
+        const resposta = await axios.get('http://localhost:3000/estoques');
+        this.estoque = resposta.data;
+      } catch (erro) {
+        console.error('Erro ao carregar estoque:', erro);
+      }
+    },
+
 
     limparCampos() {
       this.estoque.codigoBarras = '';
+      this.estoque.tituloLivro = '';
       this.estoque.quantidade = 0;
       this.v$.$reset();
     }
+  },
+
+  async mounted() {
+    await this.carregarEstoque();
   }
 });
 </script>

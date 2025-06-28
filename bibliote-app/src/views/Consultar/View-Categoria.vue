@@ -56,9 +56,9 @@
                   </td>
                 </tr>
               </tbody>
-              <!-- DENTRO da <template>, mas FORA da tabela -->
-              <ModalCategoria :visivel="mostrarModal" :categoria="categoriaSelecionada" @fechar="fecharModal" />
             </table>
+            <!-- DENTRO da <template>, mas FORA da tabela -->
+              <ModalCategoria :visivel="mostrarModal" :categoria="categoriaSelecionada" @fechar="fecharModal" />
           </div>
         </div>
       </div>

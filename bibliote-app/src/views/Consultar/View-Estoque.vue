@@ -45,23 +45,22 @@
                                     <td class="text-center">{{ item.quantidade }}</td>
                                     <td>
                                         <div class="d-flex justify-content-center">
-                                            <RouterLink class="btn btn-info btn-sm" to="/">
+                                            <button class="btn btn-info btn-sm" @click="visualizarCategoria(item)">
                                                 <i class="mdi mdi-magnify"></i>
-                                            </RouterLink>
-                                            <RouterLink class="btn btn-success btn-sm ms-2 gap1" to="/">
+                                            </button>
+                                            <button class="btn btn-success btn-sm ms-2 gap1">
                                                 <i class="mdi mdi-pencil"></i>
-                                            </RouterLink>
-                                            <RouterLink class="btn btn-danger btn-sm ms-2 gap1" to="/">
+                                            </button>
+                                            <button class="btn btn-danger btn-sm ms-2 gap1">
                                                 <i class="mdi mdi-delete"></i>
-                                            </RouterLink>
+                                            </button>
                                         </div>
                                     </td>
                                 </tr>
                             </tbody>
-
                         </table>
                     </div>
-
+                    <ModalEstoque :visivel="mostrarModal" :categoria="estoqueSelecionada" @fechar="fecharModal" />
                 </div>
             </div>
         </div>
@@ -70,18 +69,27 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import Swal from 'sweetalert2';
+import axios from 'axios';
+import ModalEstoque from '@/components/modals/ModalEstoque.vue';
+
+interface Estoque {
+    id: string;
+    titulo: string;
+    codigoBarras: string;
+    quantidade: number;
+}
 
 export default defineComponent({
     name: 'ConsultaEstoque',
+    components: { ModalEstoque },
 
     data() {
         return {
             filtro: '',
-            estoque: [] as Array<{
-                titulo: string;
-                codigoBarras: string;
-                quantidade: number;
-            }>
+            estoque: [] as Estoque[],
+            mostrarModal: false,
+            estoqueSelecionada: { titulo: '', codigoBarras: '', quantidade: 0, }
         };
     },
 
@@ -99,25 +107,69 @@ export default defineComponent({
     },
 
     methods: {
-        buscarEstoque() {
-            this.estoque = [
-                {
-                    titulo: 'Jogos Vorazes',
-                    codigoBarras: '9781234567897',
-                    quantidade: 12
-                },
-                {
-                    titulo: 'Tudo é Rio',
-                    codigoBarras: '9789876543210',
-                    quantidade: 5
-                },
-                {
-                    titulo: 'A Culpa É das Estrelas',
-                    codigoBarras: '9780123456789',
-                    quantidade: 9
+        async buscarEstoque() {
+            try {
+                const response = await axios.get('http://localhost:3000/estoques');
+                this.estoque = response.data;
+                console.log('Dados recebidos:', this.estoque);
+            } catch (erro: any) {
+                console.error('Erro ao buscar no estoque:', erro);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erro ao buscar no estoque',
+                    text: erro.message || 'Verifique se o servidor está rodando.'
+                });
+            }
+        },
+
+        //Exclução das coisas
+        confirmarExclusao(item: Estoque) {
+            Swal.fire({
+                title: 'Tem certeza?',
+                text: `Deseja excluir o livro "${item.titulo}" do estoque?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Sim, excluir!',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    this.excluirCategoria(item.id);
                 }
-            ];
+            });
+        },
+
+        async excluirCategoria(id: string) {
+            try {
+                await axios.delete(`http://localhost:3000/estoques/${id}`);
+                this.estoque = this.estoque.filter(cat => cat.id !== id);
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Excluído!',
+                    text: 'Livro do estoque removido com sucesso.'
+                });
+            } catch (erro: any) {
+                console.error('Erro ao excluir:', erro);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erro ao excluir livro do estoque',
+                    text: erro.message || 'Tente novamente mais tarde.'
+                });
+            }
+        },
+
+        //consultar as categorias com modal
+        visualizarCategoria(cat: Estoque) {
+            this.estoqueSelecionada = cat;
+            this.mostrarModal = true;
+        },
+        fecharModal() {
+            this.mostrarModal = false;
         }
+
+        // Edição das coisas
     }
 });
 </script>

@@ -20,5 +20,13 @@
       "nome": "bosta",
       "descricao": "esaçdkbjfsd~çfolgjsçdfhgsfdkjhgçggggçgçhsdõlçgsjedf9gopsdfçlg]"
     }
+  ],
+  "estoques": [
+    {
+      "id": "iwv6kt",
+      "codigoBarras": "Teste",
+      "quantidade": 1,
+      "tituloLivro": "patrick"
+    }
   ]
 }
