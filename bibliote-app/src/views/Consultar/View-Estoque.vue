@@ -45,7 +45,7 @@
                                     <td class="text-center">{{ item.quantidade }}</td>
                                     <td>
                                         <div class="d-flex justify-content-center">
-                                            <button class="btn btn-info btn-sm" @click="visualizarCategoria(item)">
+                                            <button class="btn btn-info btn-sm" @click="visualizarEstoque(item)">
                                                 <i class="mdi mdi-magnify"></i>
                                             </button>
                                             <button class="btn btn-success btn-sm ms-2 gap1">
@@ -98,7 +98,7 @@ export default defineComponent({
         estoqueFiltrado() {
             const texto = this.filtro.toLowerCase();
             return this.estoque.filter(item =>
-                item.titulo.toLowerCase().includes(texto)
+            item.titulo && item.titulo.toLowerCase().includes(texto)
             );
         }
     },
@@ -111,8 +111,8 @@ export default defineComponent({
         async buscarEstoque() {
             try {
                 const response = await axios.get('http://localhost:3000/estoques');
+                console.log('Resposta recebida:', response.data); 
                 this.estoque = response.data;
-                console.log('Dados recebidos:', this.estoque);
             } catch (erro: any) {
                 console.error('Erro ao buscar no estoque:', erro);
                 Swal.fire({
@@ -162,7 +162,7 @@ export default defineComponent({
         },
 
         //consultar as categorias com modal
-        visualizarCategoria(cat: Estoque) {
+        visualizarEstoque(cat: Estoque) {
             this.estoqueSelecionada = cat;
             this.mostrarModal = true;
         },
