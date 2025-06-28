@@ -59,13 +59,13 @@ p{
   background: #191C24;
   border-radius: 8px;
   padding: 1.5rem;
-  width: 500px;
-  max-width: 90vw; /* Máximo de 90% da largura da tela */
-  max-height: 90vh; /* Máximo de 90% da altura da tela */
+  width: 700px;
+  height: 350px;
+  max-width: 96vw;
+  max-height: 96vh; 
   overflow-y: auto;
 }
 
-/* Responsividade para telas menores */
 @media (max-width: 600px) {
   .modal-content {
     width: 90%;
