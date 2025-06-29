@@ -69,15 +69,13 @@
                 <small>{{ v$.fornecedor.bairro.$errors[0].$message }}</small>
               </div>
             </div>
-
           </div>
-
 
           <div class="form-group row">
             <div class="col">
               <label>Estado</label>
               <select class="form-control form-control-lg" v-model="fornecedor.estado">
-                <option value="" disabled>Selecione seu estado...</option>
+                <option :value="null" disabled>Selecione seu estado...</option>
                 <option v-for="estado in estados" :key="estado.uf" :value="estado.uf">
                   {{ estado.nome }}
                 </option>
@@ -89,7 +87,7 @@
             <div class="col">
               <label>Cidade</label>
               <select class="form-control form-control-lg" v-model="fornecedor.cidade">
-                <option value="" disabled>Selecione sua cidade...</option>
+                <option :value="null" disabled>Selecione sua cidade...</option>
                 <option v-for="cidade in cidades" :key="cidade">{{ cidade }}</option>
               </select>
               <div class="text-danger" v-if="v$.fornecedor.cidade.$error">
@@ -98,11 +96,12 @@
             </div>
           </div>
 
-
-
-          <div class="form-group row">
-            <div class="col">
-              <button type="submit" class="btn btn-success btn-fw btn-lg">Cadastrar</button>
+          <div class="form-group row mt-4">
+            <div class="col-auto">
+              <button type="submit" class="btn btn-success btn-lg">Salvar</button>
+            </div>
+            <div class="col-auto">
+              <button type="button" class="btn btn-secondary btn-lg" @click="limparCampos">Limpar</button>
             </div>
           </div>
 
@@ -112,11 +111,15 @@
   </div>
 </template>
 
+
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
 import { required, email, minLength, helpers } from '@vuelidate/validators';
 import { mask } from 'vue-the-mask';
+import axios from 'axios';
+import Swal from 'sweetalert2';
+import { Toast } from '@/common/toast';
 
 export default defineComponent({
   name: 'CadastroFornecedor',
@@ -167,7 +170,9 @@ export default defineComponent({
         { uf: 'SE', nome: 'Sergipe' },
         { uf: 'TO', nome: 'Tocantins' },
       ],
-      cidades: [] as string[]
+      cidades: [] as string[],
+      fornecedores: [] as any[],
+      dialog: false
     };
   },
 
@@ -198,8 +203,8 @@ export default defineComponent({
           required: helpers.withMessage('E-mail é obrigatorio', required)
         },
         cnpj: {
-          required: helpers.withMessage('CPF é obrigatório', required),
-          minLength: helpers.withMessage('CPF deve ter pelo menos 11 dígitos', minLength(14))
+          required: helpers.withMessage('CNPJ é obrigatório', required),
+          minLength: helpers.withMessage('CNPJ deve ter pelo menos 14 dígitos', minLength(14))
         },
         telefone: {
           required: helpers.withMessage('Telefone é obrigatório', required),
@@ -234,11 +239,90 @@ export default defineComponent({
     },
 
     async salvar() {
-      const valid = await this.v$.$validate();
-      if (!valid) return;
+      const valido = await this.v$.$validate();
+      if (!valido) return;
 
-      console.log('Fornecedor cadastrado:', this.fornecedor);
+      const confirmado = await Swal.fire({
+        title: 'Confirmar cadastro?',
+        text: 'Deseja realmente cadastrar este fornecedor?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#28a745',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Sim, cadastrar!',
+        cancelButtonText: 'Cancelar'
+      });
+
+      if (!confirmado.isConfirmed) return;
+
+      const novoFornecedor = {
+        id: Math.random().toString(36).substring(2, 8),
+        nome: this.fornecedor.nome,
+        cnpj: this.fornecedor.cnpj,
+        cep: this.fornecedor.cep,
+        rua: this.fornecedor.rua,
+        bairro: this.fornecedor.bairro,
+        estado: this.fornecedor.estado,
+        cidade: this.fornecedor.cidade,
+        telefone: this.fornecedor.telefone,
+        email: this.fornecedor.email,
+      };
+
+      try {
+        await axios.post('http://localhost:3000/fornecedores', novoFornecedor);
+        Toast.fire({
+          icon: 'success',
+          title: 'Fornecedor cadastrado com sucesso!'
+        });
+        this.limparCampos();
+        await this.carregarFornecedor();
+      } catch (erro: any) {
+        let mensagemErro = 'Não foi possível salvar fornecedor.';
+
+        if (erro.response) {
+          mensagemErro = `Erro ${erro.response.status}: ${erro.response.statusText}`;
+        } else if (erro.request) {
+          mensagemErro = 'Sem resposta do servidor. Verifique sua conexão.';
+        } else if (erro.message) {
+          mensagemErro = erro.message;
+        }
+
+        Swal.fire({
+          icon: 'error',
+          title: 'Erro ao cadastrar o fornecedor',
+          text: mensagemErro
+        });
+        console.error('Erro completo:', erro);
+      }
+    },
+
+    async carregarFornecedor() {
+      try {
+        const resposta = await axios.get('http://localhost:3000/fornecedores');
+        this.fornecedor = resposta.data;
+      } catch (erro) {
+        console.error('Erro ao carregar fornecedor:', erro);
+      }
+    },
+
+    limparCampos() {
+      this.fornecedor = {
+        nome: '',
+        cnpj: '',
+        cep: '',
+        rua: '',
+        bairro: '',
+        estado: '',
+        cidade: '',
+        telefone: '',
+        email: '',
+      };
+      this.v$.$reset();
     }
+  },
+
+  async mounted() {
+    await this.carregarFornecedor();
   }
 });
 </script>

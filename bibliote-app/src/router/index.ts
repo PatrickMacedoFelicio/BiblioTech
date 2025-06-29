@@ -11,7 +11,7 @@ const router = createRouter({
     {
       path: '/consultar/leitor',
       name: 'viewLeitor',
-      component: () => import('../views/Consultar/ViewLeitor.vue'),
+      component: () => import('../views/Consultar/View-Leitor.vue'),
     },
     {
       path: '/consultar/funcionario',

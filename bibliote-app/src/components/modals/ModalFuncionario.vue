@@ -22,7 +22,7 @@ import type { PropType } from 'vue';
 
 
 export default defineComponent({
-  name: 'ModalCategoria',
+  name: 'ModalFuncionario',
   props: {
     visivel: Boolean,
     categoria: {

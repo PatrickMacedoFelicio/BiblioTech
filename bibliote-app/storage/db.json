@@ -1,24 +1,99 @@
 {
   "categorias": [
     {
-      "id": "abc123",
+      "id": "c1",
       "nome": "Terror",
-      "descricao": "Livros assustadores"
+      "descricao": "Livros que exploram o medo, o sobrenatural e o suspense."
     },
     {
-      "id": "def456",
+      "id": "c2",
       "nome": "Fantasia",
-      "descricao": "Mundos mágicos e épicos"
+      "descricao": "Histórias com elementos mágicos, mundos fictícios e criaturas lendárias."
     },
     {
-      "id": "nqg3je",
-      "nome": "Dramático",
-      "descricao": "O gênero dramático está relacionado a textos produzidos para serem interpretados por atores. Tais textos são compostos por atos, cenas, rubricas (instruções do dramaturgo) e falas."
+      "id": "c3",
+      "nome": "Romance",
+      "descricao": "Foca nas emoções e nos relacionamentos amorosos entre os personagens."
     },
     {
-      "id": "osjtdv",
-      "nome": "bosta",
-      "descricao": "esaçdkbjfsd~çfolgjsçdfhgsfdkjhgçggggçgçhsdõlçgsjedf9gopsdfçlg]"
+      "id": "c4",
+      "nome": "Drama",
+      "descricao": "Enredos emocionantes que retratam conflitos profundos da vida."
+    },
+    {
+      "id": "c5",
+      "nome": "Comédia",
+      "descricao": "Narrativas leves e engraçadas que visam entreter e divertir."
+    },
+    {
+      "id": "c6",
+      "nome": "Ficção Científica",
+      "descricao": "Histórias com base científica, muitas vezes envolvendo o futuro, tecnologia e espaço."
+    },
+    {
+      "id": "c7",
+      "nome": "Aventura",
+      "descricao": "Protagonistas em jornadas épicas, cheias de ação e perigos."
+    },
+    {
+      "id": "c8",
+      "nome": "Suspense",
+      "descricao": "Narrativas que mantêm o leitor na expectativa com reviravoltas e mistérios."
+    },
+    {
+      "id": "c9",
+      "nome": "Biografia",
+      "descricao": "Relatos sobre a vida de pessoas reais, famosas ou anônimas."
+    },
+    {
+      "id": "c10",
+      "nome": "Histórico",
+      "descricao": "Ambientações em períodos históricos com eventos e personagens reais ou fictícios."
+    },
+    {
+      "id": "c11",
+      "nome": "Autoajuda",
+      "descricao": "Livros com conselhos sobre comportamento, saúde emocional e sucesso pessoal."
+    },
+    {
+      "id": "c12",
+      "nome": "Infantil",
+      "descricao": "Obras voltadas para crianças, com linguagens e temas apropriados para a idade."
+    },
+    {
+      "id": "c13",
+      "nome": "Juvenil",
+      "descricao": "Histórias voltadas para o público adolescente com temas de transição e descobertas."
+    },
+    {
+      "id": "c14",
+      "nome": "Poesia",
+      "descricao": "Textos em verso que expressam sentimentos, ideias e beleza estética."
+    },
+    {
+      "id": "c15",
+      "nome": "Didático",
+      "descricao": "Material voltado para o aprendizado em escolas e cursos."
+    },
+    {
+      "id": "c17",
+      "nome": "Policial",
+      "descricao": "Mistérios e investigações geralmente com detetives e crimes."
+    },
+    {
+      "id": "c18",
+      "nome": "Erótico",
+      "descricao": "Exploração de temáticas sensuais e sexuais em narrativas literárias."
+    },
+    {
+      "id": "c19",
+      "nome": "Clássico",
+      "descricao": "Obras consagradas da literatura que marcaram época."
+    },
+    {
+      "id": "c20",
+      "nome": "Tecnologia",
+      "descricao": "Livros sobre avanços, conceitos e aplicações tecnológicas."
     }
   ],
   "estoques": [
@@ -203,16 +278,32 @@
       "tituloLivro": "Meu pequeno Guaraná"
     },
     {
-      "id": "wogmlb",
-      "codigoBarras": "12312312",
-      "quantidade": 12,
-      "tituloLivro": "Pequeno principe"
-    },
-    {
       "id": "gv1n08",
       "codigoBarras": "2309120391",
       "quantidade": 11,
       "tituloLivro": "fala serio mae"
+    },
+    {
+      "id": "glph0i",
+      "codigoBarras": "1203018301821",
+      "quantidade": 12,
+      "tituloLivro": "Patrick MAasdas"
     }
-  ]
+  ],
+  "fornecedores": [
+    {
+      "id": "k59ar1",
+      "nome": "Patrick Macêdo LTDA",
+      "cnpj": "12.031.023/0123-32",
+      "cep": "12312-312",
+      "rua": "asdasdasd",
+      "bairro": "asdasd",
+      "estado": "AM",
+      "cidade": "Anori",
+      "telefone": "(12) 31231-2312",
+      "email": "patrickLTDA@gmail.com"
+    }
+  ],
+  "funcionarios": [],
+  "livros":[]
 }

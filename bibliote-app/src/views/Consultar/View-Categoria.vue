@@ -33,12 +33,12 @@
               <thead>
                 <tr>
                   <th>Título</th>
-                  <th>Código de Barras</th>
+                  <th>Descrição</th>
                   <th class="text-center">Ações</th>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(item, index) in categoriaFiltrado" :key="index">
+                <tr v-for="(item, index) in categoriaPaginado" :key="index">
                   <td>{{ item.nome }}</td>
                   <td>{{ item.descricao.length > 50 ? item.descricao.slice(0, 80) + '...' : item.descricao }}</td>
                   <td>
@@ -57,8 +57,24 @@
                 </tr>
               </tbody>
             </table>
-            <!-- DENTRO da <template>, mas FORA da tabela -->
-              <ModalCategoria :visivel="mostrarModal" :categoria="categoriaSelecionada" @fechar="fecharModal" />
+          </div>
+          <!-- Caso não tenha nenhuma info -->
+          <div v-if="categoriaFiltrado.length === 0">
+            <p class="text-center text-muted">Nenhum item encontrado.</p>
+          </div>
+
+          <!-- DENTRO da <template>, mas FORA da tabela -->
+          <ModalCategoria :visivel="mostrarModal" :categoria="categoriaSelecionada" @fechar="fecharModal" />
+          <!-- Paginação -->
+          <div class="pagination mt-4">
+            <button class="page-link" :disabled="paginaAtual === 1" @click="paginaAtual--">Anterior</button>
+
+            <button v-for="pagina in totalPaginas" :key="pagina" class="page-link"
+              :class="{ active: pagina === paginaAtual }" @click="irParaPagina(pagina)">
+              {{ pagina }}
+            </button>
+
+            <button class="page-link" :disabled="paginaAtual === totalPaginas" @click="paginaAtual++">Próxima</button>
           </div>
         </div>
       </div>
@@ -87,7 +103,9 @@ export default defineComponent({
       filtro: '',
       categoria: [] as Categoria[],
       mostrarModal: false,
-      categoriaSelecionada: { nome: '', descricao: '' }
+      categoriaSelecionada: { nome: '', descricao: '' },
+      paginaAtual: 1,
+      itensPorPagina: 8,
     };
   },
 
@@ -97,7 +115,14 @@ export default defineComponent({
       return this.categoria.filter(item =>
         item.nome?.toLowerCase().includes(texto)
       );
-    }
+    },
+    totalPaginas(): number {
+      return Math.ceil(this.categoriaFiltrado.length / this.itensPorPagina);
+    },
+    categoriaPaginado(): Categoria[] {
+      const inicio = (this.paginaAtual - 1) * this.itensPorPagina;
+      return this.categoriaFiltrado.slice(inicio, inicio + this.itensPorPagina);
+    },
   },
 
   mounted() {
@@ -106,6 +131,7 @@ export default defineComponent({
 
   methods: {
     async buscarCategoria() {
+      this.paginaAtual = 1;
       try {
         const response = await axios.get('http://localhost:3000/categorias');
         this.categoria = response.data;
@@ -164,7 +190,10 @@ export default defineComponent({
     },
     fecharModal() {
       this.mostrarModal = false;
-    }
+    },
+    irParaPagina(pagina: number) {
+      this.paginaAtual = pagina;
+    },
 
     // Edição das coisas
 

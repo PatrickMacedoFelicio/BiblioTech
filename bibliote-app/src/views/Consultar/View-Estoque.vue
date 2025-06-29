@@ -51,17 +51,22 @@
                                         <button class="btn btn-success btn-sm ms-2 gap1">
                                             <i class="mdi mdi-pencil"></i>
                                         </button>
-                                        <button class="btn btn-danger btn-sm ms-2 gap1" @click="confirmarExclusao(item)">
+                                        <button class="btn btn-danger btn-sm ms-2 gap1"
+                                            @click="confirmarExclusao(item)">
                                             <i class="mdi mdi-delete"></i>
                                         </button>
                                     </td>
                                 </tr>
-                                <tr v-if="estoqueFiltrado.length === 0">
-                                    <td colspan="4" class="text-center text-muted">Nenhum item encontrado.</td>
-                                </tr>
                             </tbody>
                         </table>
                     </div>
+                    <!-- Caso não tenha nenhuma info -->
+                    <div v-if="estoqueFiltrado.length === 0">
+                        <p class="text-center text-muted">Nenhum item encontrado.</p>
+                    </div>
+
+                    <!-- Para mostrar o Modal -->
+                    <ModalEstoque :visivel="mostrarModal" :estoque="estoqueSelecionado" @fechar="fecharModal" />
 
                     <!-- Paginação -->
                     <div class="pagination mt-4">
@@ -75,7 +80,6 @@
                         <button class="page-link" :disabled="paginaAtual === totalPaginas"
                             @click="paginaAtual++">Próxima</button>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -86,6 +90,7 @@
 import { defineComponent } from 'vue';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import ModalEstoque from '@/components/modals/ModalEstoque.vue';
 
 interface Estoque {
     id: string;
@@ -96,11 +101,14 @@ interface Estoque {
 
 export default defineComponent({
     name: 'ViewEstoque',
+    components: { ModalEstoque },
+
     data() {
         return {
             estoque: [] as Estoque[],
             filtro: '',
             paginaAtual: 1,
+            mostrarModal: false,
             itensPorPagina: 8,
             estoqueSelecionado: { tituloLivro: '', codigoBarras: '', quantidade: 0 }
         };
@@ -184,9 +192,13 @@ export default defineComponent({
         irParaPagina(pagina: number) {
             this.paginaAtual = pagina;
         },
-        visualizarEstoque(item: Estoque) {
-            this.estoqueSelecionado = item;
-        }
+        visualizarEstoque(cat: Estoque) {
+            this.estoqueSelecionado = cat;
+            this.mostrarModal = true;
+        },
+        fecharModal() {
+            this.mostrarModal = false;
+        },
     }
 });
 </script>

@@ -141,7 +141,6 @@ export default defineComponent({
         });
         console.error('Erro completo:', erro);
       }
-
     },
 
     async carregarCategorias() {

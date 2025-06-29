@@ -6,9 +6,9 @@
         <button class="btn-close" @click="$emit('fechar')">&times;</button>
       </div>
       <div class="modal-body">
-        <p><strong class="cor">Nome: </strong> {{ categoria.titulo }}</p>
-        <p><strong class="cor">Descrição: </strong> {{ categoria.codigoBarras }}</p>
-        <p><strong class="cor">Descrição: </strong> {{ categoria.quantidade }}</p>
+        <p><strong class="cor">Titulo do Livro: </strong> {{ estoque.tituloLivro }}</p>
+        <p><strong class="cor">Código de Barras: </strong> {{ estoque.codigoBarras }}</p>
+        <p><strong class="cor">Quantidade: </strong> {{ estoque.quantidade }}</p>
       </div>
       <div class="modal-footer">
         <button class="btn btn-secondary" @click="$emit('fechar')">Fechar</button>
@@ -25,9 +25,9 @@ export default defineComponent({
   name: 'ModalEstoque',
   props: {
     visivel: Boolean,
-    categoria: {
+    estoque: {
       type: Object as PropType<{
-        titulo: string;
+        tituloLivro: string;
         codigoBarras: string;
         quantidade: number;
       }>,
@@ -36,3 +36,60 @@ export default defineComponent({
   }
 });
 </script>
+
+
+<style scoped>
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.cor {
+  color: #c3a3ff;
+}
+
+p {
+  font-size: 1rem;
+}
+
+.modal-content {
+  background: #191C24;
+  border-radius: 8px;
+  padding: 1.5rem;
+  width: 700px;
+  height: 350px;
+  max-width: 96vw;
+  max-height: 96vh;
+  overflow-y: auto;
+}
+
+@media (max-width: 600px) {
+  .modal-content {
+    width: 90%;
+    padding: 1rem;
+  }
+}
+
+.modal-header,
+.modal-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.btn-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #fff;
+}
+</style>
