@@ -16,12 +16,8 @@
           <div class="form-group row">
             <div class="col-5">
               <label>Nome</label>
-              <input
-                class="typeahead form-control form-control-lg"
-                type="text"
-                v-model="filtro"
-                placeholder="Digite o nome do funcionário..."
-              />
+              <input class="typeahead form-control form-control-lg" type="text" v-model="filtro"
+                placeholder="Digite o nome do funcionário..." />
             </div>
             <div class="col col-lg-2 d-flex align-items-end">
               <button class="btn btn-success btn-fw btn-lg w-100" @click="buscarFuncionarios">
@@ -43,30 +39,47 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(func, index) in funcionariosFiltrados" :key="index">
-                  <td>{{ func.nome }}</td>
-                  <td>{{ func.cpf }}</td>
-                  <td>{{ func.cargo }}</td>
-                  <td>{{ func.telefone }}</td>
-                  <td>{{ func.email }}</td>
+                <tr v-for="item in funcionarioPaginado" :key="item.id">
+                  <td>{{ item.nome }}</td>
+                  <td>{{ item.cpf }}</td>
+                  <td>{{ item.cargo }}</td>
+                  <td>{{ item.telefone }}</td>
+                  <td>{{ item.email }}</td>
                   <td>
                     <div class="d-flex justify-content-center">
-                      <RouterLink class="btn btn-info btn-sm" to="/">
+                      <button class="btn btn-info btn-sm" @click="visualizarFuncionario(item)">
                         <i class="mdi mdi-magnify"></i>
-                      </RouterLink>
-                      <RouterLink class="btn btn-success btn-sm ms-2" to="/">
+                      </button>
+                      <button class="btn btn-success btn-sm ms-2 gap1">
                         <i class="mdi mdi-pencil"></i>
-                      </RouterLink>
-                      <RouterLink class="btn btn-danger btn-sm ms-2" to="/">
+                      </button>
+                      <button class="btn btn-danger btn-sm ms-2 gap1" @click="confirmarExclusao(item)">
                         <i class="mdi mdi-delete"></i>
-                      </RouterLink>
+                      </button>
                     </div>
                   </td>
                 </tr>
               </tbody>
             </table>
           </div>
+          <div v-if="funcionarioFiltrado.length === 0">
+            <p class="text-center text-muted">Nenhum item encontrado.</p>
+          </div>
 
+          <!-- Para mostrar o Modal -->
+          <ModalFuncionario :visivel="mostrarModal" :funcionario="funcionarioSelecionado" @fechar="fecharModal" />
+
+          <!-- Paginação -->
+          <div class="pagination mt-4">
+            <button class="page-link" :disabled="paginaAtual === 1" @click="paginaAtual--">Anterior</button>
+
+            <button v-for="pagina in totalPaginas" :key="pagina" class="page-link"
+              :class="{ active: pagina === paginaAtual }" @click="irParaPagina(pagina)">
+              {{ pagina }}
+            </button>
+
+            <button class="page-link" :disabled="paginaAtual === totalPaginas" @click="paginaAtual++">Próxima</button>
+          </div>
         </div>
       </div>
     </div>
@@ -75,29 +88,54 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import axios from 'axios';
+import Swal from 'sweetalert2';
+import ModalFuncionario from '@/components/modals/ModalFuncionario.vue';
+
+interface Funcionario {
+  id: string,
+  nome: string,
+  cpf: string,
+  cargo: string,
+  telefone: string,
+  email: string,
+  data_admissao: string,
+  cep: string,
+  rua: string,
+  bairro: string,
+  numero: string,
+  estado: string,
+  cidade: string
+}
 
 export default defineComponent({
   name: 'ConsultaFuncionario',
+  components: { ModalFuncionario },
 
   data() {
     return {
+      funcionario: [] as Funcionario[],
       filtro: '',
-      funcionarios: [] as Array<{
-        nome: string;
-        cpf: string;
-        cargo: string;
-        telefone: string;
-        email: string;
-      }>
+      paginaAtual: 1,
+      mostrarModal: false,
+      itensPorPagina: 8,
+      funcionarioSelecionado: { nome: '', cpf: '', cargo: '', telefone: '', email: '', data_admissao: '', cep: '', rua: '', bairro: '', numero: '', estado: '', cidade: '' }
     };
   },
 
   computed: {
-    funcionariosFiltrados() {
+    funcionarioFiltrado(): Funcionario[] {
       const texto = this.filtro.toLowerCase();
-      return this.funcionarios.filter(func =>
-        func.nome.toLowerCase().includes(texto)
+      return this.funcionario.filter(item =>
+        item.nome?.toLowerCase().includes(texto)
       );
+    },
+    totalPaginas(): number {
+      return Math.ceil(this.funcionarioFiltrado.length / this.itensPorPagina);
+    },
+    funcionarioPaginado(): Funcionario[] {
+      const inicio = (this.paginaAtual - 1) * this.itensPorPagina;
+      return this.funcionarioFiltrado.slice(inicio, inicio + this.itensPorPagina);
     }
   },
 
@@ -106,24 +144,70 @@ export default defineComponent({
   },
 
   methods: {
-    buscarFuncionarios() {
-      // Simulação de dados
-      this.funcionarios = [
-        {
-          nome: 'João da Silva',
-          cpf: '123.456.789-00',
-          cargo: 'Bibliotecário',
-          telefone: '(69) 99999-9999',
-          email: 'joao@exemplo.com'
-        },
-        {
-          nome: 'Maria Oliveira',
-          cpf: '987.654.321-00',
-          cargo: 'Atendente',
-          telefone: '(69) 98888-8888',
-          email: 'maria@exemplo.com'
+    async buscarFuncionarios() {
+      this.paginaAtual = 1;
+      try {
+        const response = await axios.get('http://localhost:3000/funcionarios');
+        this.funcionario = response.data;
+      } catch (erro: any) {
+        console.error('Erro ao buscar o funcionário:', erro);
+        Swal.fire({
+          icon: 'error',
+          title: 'Erro ao carregar o funcionário',
+          text: erro.message || 'Verifique se o servidor JSON está ativo.'
+        });
+      }
+    },
+
+
+    //Exclução das coisas
+    confirmarExclusao(item: Funcionario) {
+      Swal.fire({
+        title: 'Tem certeza?',
+        text: `Deseja excluir o funcionário "${item.nome}"?`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Sim, excluir!',
+        cancelButtonText: 'Cancelar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.excluirFuncionario(item.id);
         }
-      ];
+      });
+    },
+
+
+    async excluirFuncionario(id: string) {
+      try {
+        await axios.delete(`http://localhost:3000/funcionarios/${id}`);
+        this.funcionario = this.funcionario.filter(cat => cat.id !== id);
+
+        Swal.fire({
+          icon: 'success',
+          title: 'Excluído!',
+          text: 'Funcionário removido com sucesso.'
+        });
+      } catch (erro: any) {
+        console.error('Erro ao excluir:', erro);
+        Swal.fire({
+          icon: 'error',
+          title: 'Erro ao excluir funcionário',
+          text: erro.message || 'Tente novamente mais tarde.'
+        });
+      }
+    },
+
+    irParaPagina(pagina: number) {
+      this.paginaAtual = pagina;
+    },
+    visualizarFuncionario(cat: Funcionario) {
+      this.funcionarioSelecionado = cat;
+      this.mostrarModal = true;
+    },
+    fecharModal() {
+      this.mostrarModal = false;
     }
   }
 });

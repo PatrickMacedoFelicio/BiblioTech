@@ -24,12 +24,12 @@ const router = createRouter({
       component: () => import('../views/Consultar/View-Livro.vue'),
     },
     {
-      path: '/consultar/Estoque',
+      path: '/consultar/estoque',
       name: 'viewEstoque',
       component: () => import('../views/Consultar/View-Estoque.vue'),
     },
     {
-      path: '/consultar/Fornecedor',
+      path: '/consultar/fornecedor',
       name: 'viewFornecedor',
       component: () => import('../views/Consultar/View-Fornecedor.vue'),
     },
@@ -56,7 +56,7 @@ const router = createRouter({
     {
       path: '/Emprestimo',
       name: 'emprestimo',
-      component: () => import('../views/Cadastrar/Emprestar.vue'),
+      component: () => import('../views/Others/Emprestar.vue'),
     },
     {
       path: '/cadastrar/categoria',
