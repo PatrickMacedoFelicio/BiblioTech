@@ -8,12 +8,8 @@
           <div class="form-group row">
             <div class="col">
               <label>Código de Barras</label>
-              <input
-                class="form-control form-control-lg"
-                type="text"
-                v-model="estoque.codigoBarras"
-                placeholder="Digite o código de barras"
-              />
+              <input class="form-control form-control-lg" type="text" v-model="estoque.codigoBarras"
+                placeholder="Digite o código de barras" />
               <div class="text-danger" v-if="v$.estoque.codigoBarras.$error">
                 <small>{{ v$.estoque.codigoBarras.$errors[0].$message }}</small>
               </div>
@@ -21,12 +17,8 @@
 
             <div class="col">
               <label>Quantidade</label>
-              <input
-                class="form-control form-control-lg"
-                type="number"
-                v-model="estoque.quantidade"
-                placeholder="Digite a quantidade"
-              />
+              <input class="form-control form-control-lg" type="number" v-model="estoque.quantidade"
+                placeholder="Digite a quantidade" />
               <div class="text-danger" v-if="v$.estoque.quantidade.$error">
                 <small>{{ v$.estoque.quantidade.$errors[0].$message }}</small>
               </div>
@@ -36,16 +28,12 @@
           <div class="form-group row">
             <div class="col">
               <label>Título do Livro</label>
-               <input
-                class="form-control form-control-lg"
-                type="text"
-                v-model="estoque.tituloLivro"
-                placeholder="Digite o titulo do livro..."
-              />
+              <input class="form-control form-control-lg" type="text" v-model="estoque.tituloLivro"
+                placeholder="Digite o titulo do livro..." />
               <div class="text-danger" v-if="v$.estoque.tituloLivro.$error">
                 <small>{{ v$.estoque.tituloLivro.$errors[0].$message }}</small>
               </div>
-            </div>             
+            </div>
           </div>
 
           <div class="form-group row mt-4">
@@ -85,9 +73,11 @@ export default defineComponent({
         quantidade: 0,
         tituloLivro: ''
       },
+      estoques: [] as any[],
       dialog: false
     };
-  },
+  }
+  ,
 
   validations() {
     return {
@@ -124,10 +114,11 @@ export default defineComponent({
 
       if (!confirmado.isConfirmed) return;
 
-
       const novoEstoque = {
-        ...this.estoque,
-        id: Math.random().toString(36).substring(2, 8)
+        id: Math.random().toString(36).substring(2, 8),
+        codigoBarras: this.estoque.codigoBarras,
+        quantidade: this.estoque.quantidade,
+        tituloLivro: this.estoque.tituloLivro
       };
 
       try {
@@ -139,7 +130,7 @@ export default defineComponent({
         this.limparCampos();
         await this.carregarEstoque();
       } catch (erro: any) {
-        let mensagemErro = 'Não foi possível salvar a categoria.';
+        let mensagemErro = 'Não foi possível salvar no estoque.';
 
         if (erro.response) {
           mensagemErro = `Erro ${erro.response.status}: ${erro.response.statusText}`;
@@ -148,9 +139,10 @@ export default defineComponent({
         } else if (erro.message) {
           mensagemErro = erro.message;
         }
+
         Swal.fire({
           icon: 'error',
-          title: 'Erro ao cadastrar ao estoque',
+          title: 'Erro ao cadastrar no estoque',
           text: mensagemErro
         });
         console.error('Erro completo:', erro);
@@ -160,17 +152,21 @@ export default defineComponent({
     async carregarEstoque() {
       try {
         const resposta = await axios.get('http://localhost:3000/estoques');
-        this.estoque = resposta.data;
+        this.estoques = resposta.data;
       } catch (erro) {
         console.error('Erro ao carregar estoque:', erro);
       }
-    },
+    }
+    ,
 
 
     limparCampos() {
-      this.estoque.codigoBarras = '';
-      this.estoque.tituloLivro = '';
-      this.estoque.quantidade = 0;
+      this.estoque = {
+        id: '',
+        codigoBarras: '',
+        quantidade: 0,
+        tituloLivro: ''
+      };
       this.v$.$reset();
     }
   },

@@ -13,22 +13,23 @@
         <div class="col-lg-12 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
+
+                    <!-- Filtro -->
                     <div class="form-group row">
-                        <div class="col-5">
-                            <label>Título</label>
-                            <div id="the-basics">
-                                <input class="typeahead form-control form-control-lg" type="text" v-model="filtro"
-                                    placeholder="Digite o título do livro..." />
-                            </div>
+                        <div class="col-6">
+                            <label for="filtro">Título do Livro</label>
+                            <input id="filtro" v-model="filtro" type="text" class="form-control form-control-lg"
+                                placeholder="Digite o título..." />
                         </div>
-                        <div class="col col-lg-2 d-flex align-items-end">
-                            <button class="btn btn-success btn-fw btn-lg w-100 btn-icon-text" @click="buscarEstoque">
+                        <div class="col-2 d-flex align-items-end">
+                            <button class="btn btn-success w-100 btn-lg" @click="buscarEstoque">
                                 Buscar
                             </button>
                         </div>
                     </div>
 
-                    <div class="table-responsive">
+                    <!-- Tabela -->
+                    <div class="table-responsive mt-4">
                         <table class="table">
                             <thead>
                                 <tr>
@@ -39,29 +40,42 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="(item, index) in estoqueFiltrado" :key="index">
-                                    <td>{{ item.titulo }}</td>
+                                <tr v-for="item in estoquePaginado" :key="item.id">
+                                    <td>{{ item.tituloLivro }}</td>
                                     <td>{{ item.codigoBarras }}</td>
                                     <td class="text-center">{{ item.quantidade }}</td>
-                                    <td>
-                                        <div class="d-flex justify-content-center">
-                                            <button class="btn btn-info btn-sm" @click="visualizarEstoque(item)">
-                                                <i class="mdi mdi-magnify"></i>
-                                            </button>
-                                            <button class="btn btn-success btn-sm ms-2 gap1">
-                                                <i class="mdi mdi-pencil"></i>
-                                            </button>
-                                            <button class="btn btn-danger btn-sm ms-2 gap1">
-                                                <i class="mdi mdi-delete"></i>
-                                            </button>
-                                        </div>
+                                    <td class="text-center">
+                                        <button class="btn btn-purple btn-sm" @click="visualizarEstoque(item)">
+                                            <i class="mdi mdi-magnify"></i>
+                                        </button>
+                                        <button class="btn btn-success btn-sm ms-2 gap1">
+                                            <i class="mdi mdi-pencil"></i>
+                                        </button>
+                                        <button class="btn btn-danger btn-sm ms-2 gap1" @click="confirmarExclusao(item)">
+                                            <i class="mdi mdi-delete"></i>
+                                        </button>
                                     </td>
                                 </tr>
+                                <tr v-if="estoqueFiltrado.length === 0">
+                                    <td colspan="4" class="text-center text-muted">Nenhum item encontrado.</td>
+                                </tr>
                             </tbody>
-
                         </table>
                     </div>
-                    <ModalEstoque :visivel="mostrarModal" :categoria="estoqueSelecionada" @fechar="fecharModal" />
+
+                    <!-- Paginação -->
+                    <div class="pagination mt-4">
+                        <button class="page-link" :disabled="paginaAtual === 1" @click="paginaAtual--">Anterior</button>
+
+                        <button v-for="pagina in totalPaginas" :key="pagina" class="page-link"
+                            :class="{ active: pagina === paginaAtual }" @click="irParaPagina(pagina)">
+                            {{ pagina }}
+                        </button>
+
+                        <button class="page-link" :disabled="paginaAtual === totalPaginas"
+                            @click="paginaAtual++">Próxima</button>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -70,36 +84,41 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import Swal from 'sweetalert2';
 import axios from 'axios';
-import ModalEstoque from '@/components/modals/ModalEstoque.vue';
+import Swal from 'sweetalert2';
 
 interface Estoque {
     id: string;
-    titulo: string;
+    tituloLivro: string;
     codigoBarras: string;
     quantidade: number;
 }
 
 export default defineComponent({
-    name: 'ConsultaEstoque',
-    components: { ModalEstoque },
-
+    name: 'ViewEstoque',
     data() {
         return {
-            filtro: '',
             estoque: [] as Estoque[],
-            mostrarModal: false,
-            estoqueSelecionada: { titulo: '', codigoBarras: '', quantidade: 0, }
+            filtro: '',
+            paginaAtual: 1,
+            itensPorPagina: 8,
+            estoqueSelecionado: { tituloLivro: '', codigoBarras: '', quantidade: 0 }
         };
     },
 
     computed: {
-        estoqueFiltrado() {
+        estoqueFiltrado(): Estoque[] {
             const texto = this.filtro.toLowerCase();
             return this.estoque.filter(item =>
-            item.titulo && item.titulo.toLowerCase().includes(texto)
+                item.tituloLivro?.toLowerCase().includes(texto)
             );
+        },
+        totalPaginas(): number {
+            return Math.ceil(this.estoqueFiltrado.length / this.itensPorPagina);
+        },
+        estoquePaginado(): Estoque[] {
+            const inicio = (this.paginaAtual - 1) * this.itensPorPagina;
+            return this.estoqueFiltrado.slice(inicio, inicio + this.itensPorPagina);
         }
     },
 
@@ -109,25 +128,26 @@ export default defineComponent({
 
     methods: {
         async buscarEstoque() {
+            this.paginaAtual = 1;
             try {
                 const response = await axios.get('http://localhost:3000/estoques');
-                console.log('Resposta recebida:', response.data); 
                 this.estoque = response.data;
             } catch (erro: any) {
-                console.error('Erro ao buscar no estoque:', erro);
+                console.error('Erro ao buscar o estoque:', erro);
                 Swal.fire({
                     icon: 'error',
-                    title: 'Erro ao buscar no estoque',
-                    text: erro.message || 'Verifique se o servidor está rodando.'
+                    title: 'Erro ao carregar o estoque',
+                    text: erro.message || 'Verifique se o servidor JSON está ativo.'
                 });
             }
         },
+
 
         //Exclução das coisas
         confirmarExclusao(item: Estoque) {
             Swal.fire({
                 title: 'Tem certeza?',
-                text: `Deseja excluir o livro "${item.titulo}" do estoque?`,
+                text: `Deseja excluir o livro "${item.tituloLivro}" do Estoque?`,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#d33',
@@ -149,28 +169,24 @@ export default defineComponent({
                 Swal.fire({
                     icon: 'success',
                     title: 'Excluído!',
-                    text: 'Livro do estoque removido com sucesso.'
+                    text: 'A categoria foi removida com sucesso.'
                 });
             } catch (erro: any) {
                 console.error('Erro ao excluir:', erro);
                 Swal.fire({
                     icon: 'error',
-                    title: 'Erro ao excluir livro do estoque',
+                    title: 'Erro ao excluir categoria',
                     text: erro.message || 'Tente novamente mais tarde.'
                 });
             }
         },
 
-        //consultar as categorias com modal
-        visualizarEstoque(cat: Estoque) {
-            this.estoqueSelecionada = cat;
-            this.mostrarModal = true;
+        irParaPagina(pagina: number) {
+            this.paginaAtual = pagina;
         },
-        fecharModal() {
-            this.mostrarModal = false;
+        visualizarEstoque(item: Estoque) {
+            this.estoqueSelecionado = item;
         }
-
-        // Edição das coisas
     }
 });
 </script>

@@ -23,10 +23,196 @@
   ],
   "estoques": [
     {
-      "id": "zjyw2s",
-      "codigoBarras": "asda",
+      "id": "z92u0x",
+      "codigoBarras": "a12poaks21",
       "quantidade": 1,
-      "tituloLivro": "asdaa"
+      "tituloLivro": "Menino Maluquinho"
+    },
+    {
+      "id": "a1b2c3",
+      "codigoBarras": "9781234567890",
+      "quantidade": 3,
+      "tituloLivro": "O Pequeno Príncipe"
+    },
+    {
+      "id": "d4e5f6",
+      "codigoBarras": "9789876543210",
+      "quantidade": 5,
+      "tituloLivro": "Harry Potter e a Pedra Filosofal"
+    },
+    {
+      "id": "g7h8i9",
+      "codigoBarras": "9780451524935",
+      "quantidade": 2,
+      "tituloLivro": "1984"
+    },
+    {
+      "id": "j1k2l3",
+      "codigoBarras": "9780140283334",
+      "quantidade": 7,
+      "tituloLivro": "Dom Casmurro"
+    },
+    {
+      "id": "m4n5o6",
+      "codigoBarras": "9788535914849",
+      "quantidade": 4,
+      "tituloLivro": "Capitães da Areia"
+    },
+    {
+      "id": "p7q8r9",
+      "codigoBarras": "9780061120084",
+      "quantidade": 6,
+      "tituloLivro": "O Sol é Para Todos"
+    },
+    {
+      "id": "s1t2u3",
+      "codigoBarras": "9788501073764",
+      "quantidade": 9,
+      "tituloLivro": "A Culpa é das Estrelas"
+    },
+    {
+      "id": "v4w5x6",
+      "codigoBarras": "9788575422391",
+      "quantidade": 10,
+      "tituloLivro": "O Código Da Vinci"
+    },
+    {
+      "id": "y7z8a9",
+      "codigoBarras": "9788535918014",
+      "quantidade": 8,
+      "tituloLivro": "O Alquimista"
+    },
+    {
+      "id": "b1c2d3",
+      "codigoBarras": "9788580441730",
+      "quantidade": 2,
+      "tituloLivro": "Orgulho e Preconceito"
+    },
+    {
+      "id": "e4f5g6",
+      "codigoBarras": "9788532530783",
+      "quantidade": 1,
+      "tituloLivro": "A Revolução dos Bichos"
+    },
+    {
+      "id": "h7i8j9",
+      "codigoBarras": "9788595083276",
+      "quantidade": 3,
+      "tituloLivro": "O Conto da Aia"
+    },
+    {
+      "id": "k1l2m3",
+      "codigoBarras": "9788595081531",
+      "quantidade": 2,
+      "tituloLivro": "A Sutil Arte de Ligar o F*da-se"
+    },
+    {
+      "id": "n4o5p6",
+      "codigoBarras": "9788543106323",
+      "quantidade": 4,
+      "tituloLivro": "O Milagre da Manhã"
+    },
+    {
+      "id": "q7r8s9",
+      "codigoBarras": "9788580578665",
+      "quantidade": 3,
+      "tituloLivro": "Como Fazer Amigos e Influenciar Pessoas"
+    },
+    {
+      "id": "t1u2v3",
+      "codigoBarras": "9786555870022",
+      "quantidade": 1,
+      "tituloLivro": "Mindset"
+    },
+    {
+      "id": "w4x5y6",
+      "codigoBarras": "9788582468575",
+      "quantidade": 2,
+      "tituloLivro": "Me Poupe!"
+    },
+    {
+      "id": "z7a8b9",
+      "codigoBarras": "9786555640328",
+      "quantidade": 5,
+      "tituloLivro": "Mais Esperto que o Diabo"
+    },
+    {
+      "id": "c1d2e3",
+      "codigoBarras": "9788550801482",
+      "quantidade": 6,
+      "tituloLivro": "O Poder do Hábito"
+    },
+    {
+      "id": "f4g5h6",
+      "codigoBarras": "9786555351965",
+      "quantidade": 3,
+      "tituloLivro": "Do Mil ao Milhão"
+    },
+    {
+      "id": "i7j8k9",
+      "codigoBarras": "9788584391543",
+      "quantidade": 4,
+      "tituloLivro": "O Lado Difícil das Situações Difíceis"
+    },
+    {
+      "id": "l1m2n3",
+      "codigoBarras": "9788532530325",
+      "quantidade": 2,
+      "tituloLivro": "O Homem Mais Rico da Babilônia"
+    },
+    {
+      "id": "o4p5q6",
+      "codigoBarras": "9788537813263",
+      "quantidade": 5,
+      "tituloLivro": "Pai Rico, Pai Pobre"
+    },
+    {
+      "id": "r7s8t9",
+      "codigoBarras": "9788580573349",
+      "quantidade": 1,
+      "tituloLivro": "O Segredo"
+    },
+    {
+      "id": "u1v2w3",
+      "codigoBarras": "9788542218249",
+      "quantidade": 3,
+      "tituloLivro": "Pequenas Grandes Mentiras"
+    },
+    {
+      "id": "x4y5z6",
+      "codigoBarras": "9788547001082",
+      "quantidade": 2,
+      "tituloLivro": "O Hobbit"
+    },
+    {
+      "id": "a7b8c9",
+      "codigoBarras": "9788595083270",
+      "quantidade": 2,
+      "tituloLivro": "Sejamos Todos Feministas"
+    },
+    {
+      "id": "d1e2f3",
+      "codigoBarras": "9788535930030",
+      "quantidade": 7,
+      "tituloLivro": "Sapiens: Uma Breve História da Humanidade"
+    },
+    {
+      "id": "rtaku3",
+      "codigoBarras": "12398129381'",
+      "quantidade": 1,
+      "tituloLivro": "Meu pequeno Guaraná"
+    },
+    {
+      "id": "wogmlb",
+      "codigoBarras": "12312312",
+      "quantidade": 12,
+      "tituloLivro": "Pequeno principe"
+    },
+    {
+      "id": "gv1n08",
+      "codigoBarras": "2309120391",
+      "quantidade": 11,
+      "tituloLivro": "fala serio mae"
     }
   ]
 }

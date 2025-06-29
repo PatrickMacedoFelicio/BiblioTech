@@ -30,6 +30,24 @@
             </li>
 
             <li class="nav-item menu-items">
+                <RouterLink class="nav-link" to="/Emprestimo">
+                    <span class="menu-icon">
+                        <i class=""></i>
+                    </span>
+                    Devolução
+                </RouterLink>
+            </li>
+
+            <li class="nav-item menu-items">
+                <RouterLink class="nav-link" to="/Emprestimo">
+                    <span class="menu-icon">
+                        <i class=""></i>
+                    </span>
+                    Fila de Espera
+                </RouterLink>
+            </li>
+
+            <li class="nav-item menu-items">
                 <a class="nav-link" data-toggle="collapse" href="#cadastrar" aria-expanded="false"
                     aria-controls="cadastrar">
                     <span class="menu-icon">
