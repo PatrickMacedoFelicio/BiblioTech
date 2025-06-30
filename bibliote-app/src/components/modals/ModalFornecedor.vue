@@ -2,12 +2,21 @@
   <div v-if="visivel" class="modal-overlay">
     <div class="modal-content">
       <div class="modal-header">
-        <h3 class="modal-title cor">Detalhes da Categoria</h3>
+        <h3 class="modal-title cor">Detalhes de Fornecedor</h3>
         <button class="btn-close" @click="$emit('fechar')">&times;</button>
       </div>
       <div class="modal-body">
-        <p><strong class="cor">Nome: </strong> {{ categoria.nome }}</p>
-        <p><strong class="cor">Descrição: </strong> {{ categoria.descricao }}</p>
+        <div class="grid-container">
+          <div class="grid-item"><strong class="cor">Nome: </strong> {{ fornecedor.nome }}</div>
+          <div class="grid-item"><strong class="cor">CNPJ: </strong> {{ fornecedor.cnpj }}</div>
+          <div class="grid-item"><strong class="cor">E-mail: </strong> {{ fornecedor.email }}</div>
+          <div class="grid-item"><strong class="cor">Telefone: </strong> {{ fornecedor.telefone }}</div>
+          <div class="grid-item"><strong class="cor">CEP: </strong> {{ fornecedor.cep }}</div>
+          <div class="grid-item"><strong class="cor">Rua: </strong> {{ fornecedor.rua }}</div>
+          <div class="grid-item"><strong class="cor">Bairro: </strong> {{ fornecedor.bairro }}</div>
+          <div class="grid-item"><strong class="cor">Estado: </strong> {{ fornecedor.estado }}</div>
+          <div class="grid-item"><strong class="cor">Cidade: </strong> {{ fornecedor.cidade }}</div>
+        </div>
       </div>
       <div class="modal-footer">
         <button class="btn btn-secondary" @click="$emit('fechar')">Fechar</button>
@@ -25,8 +34,18 @@ export default defineComponent({
   name: 'ModalFornecedor',
   props: {
     visivel: Boolean,
-    categoria: {
-      type: Object as PropType<{ nome: string; descricao: string }>,
+    fornecedor: {
+      type: Object as PropType<{
+        nome: string;
+        cnpj: string;
+        cep: string;
+        rua: string;
+        bairro: string;
+        estado: string;
+        cidade: string;
+        telefone: string;
+        email: string;
+      }>,
       required: true
     }
   }
@@ -93,6 +112,7 @@ p {
   padding: 0.75rem 1rem;
   border-radius: 6px;
   font-size: 0.95rem;
+  margin-bottom: 10px;
   color: #f1f1f1;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 }

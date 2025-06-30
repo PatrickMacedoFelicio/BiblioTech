@@ -95,6 +95,7 @@ p {
   padding: 0.75rem 1rem;
   border-radius: 6px;
   font-size: 0.95rem;
+  margin-bottom: 10px;
   color: #f1f1f1;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 }

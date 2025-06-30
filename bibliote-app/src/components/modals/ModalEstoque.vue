@@ -6,9 +6,11 @@
         <button class="btn-close" @click="$emit('fechar')">&times;</button>
       </div>
       <div class="modal-body">
-        <p><strong class="cor">Titulo do Livro: </strong> {{ estoque.tituloLivro }}</p>
-        <p><strong class="cor">Código de Barras: </strong> {{ estoque.codigoBarras }}</p>
-        <p><strong class="cor">Quantidade: </strong> {{ estoque.quantidade }}</p>
+        <div class="grid-container">
+          <div class="grid-item"><strong class="cor">Titulo do Livro:</strong> {{ estoque.tituloLivro }}</div>
+          <div class="grid-item"><strong class="cor">Código de Barras:</strong> {{ estoque.codigoBarras }}</div>
+          <div class="grid-item"><strong class="cor">Quantidade:</strong> {{ estoque.quantidade }}</div>
+        </div>
       </div>
       <div class="modal-footer">
         <button class="btn btn-secondary" @click="$emit('fechar')">Fechar</button>
@@ -97,6 +99,7 @@ p {
   padding: 0.75rem 1rem;
   border-radius: 6px;
   font-size: 0.95rem;
+  margin-bottom: 10px;
   color: #f1f1f1;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 }

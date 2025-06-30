@@ -66,7 +66,7 @@
           </div>
 
           <!-- Para mostrar o Modal -->
-          <ModalEstoque :visivel="mostrarModal" :estoque="fornecedorSelecionado" @fechar="fecharModal" />
+          <ModalFornecedor :visivel="mostrarModal" :fornecedor="fornecedorSelecionado" @fechar="fecharModal" />
 
           <!-- Paginação -->
           <div class="pagination mt-4">
@@ -102,8 +102,6 @@ interface Fornecedor {
   cidade: string,
   telefone: string,
   email: string,
-  estados: string,
-  cidades: string,
 }
 
 export default defineComponent({
@@ -117,7 +115,7 @@ export default defineComponent({
       paginaAtual: 1,
       mostrarModal: false,
       itensPorPagina: 8,
-      fornecedorSelecionado: { nome: '', cnpj: '', cep: '', rua: '', bairro: '', estado: '', cidade: '', telefone: '', email: '', estados: '', cidades: '', }
+      fornecedorSelecionado: { nome: '', cnpj: '', cep: '', rua: '', bairro: '', estado: '', cidade: '', telefone: '', email: ''}
     };
   },
 
