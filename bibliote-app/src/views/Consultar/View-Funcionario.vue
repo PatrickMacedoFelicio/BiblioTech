@@ -119,7 +119,7 @@ export default defineComponent({
       paginaAtual: 1,
       mostrarModal: false,
       itensPorPagina: 8,
-      funcionarioSelecionado: { nome: '', cpf: '', cargo: '', telefone: '', email: '', data_admissao: '', cep: '', rua: '', bairro: '', numero: '', estado: '', cidade: '' }
+      funcionarioSelecionado: { id: '', nome: '', cpf: '', cargo: '', telefone: '', email: '', data_admissao: '', cep: '', rua: '', bairro: '', numero: '', estado: '', cidade: '' }
     };
   },
 
