@@ -60,15 +60,12 @@
               </tbody>
             </table>
           </div>
-          <!-- Caso não tenha nenhuma info -->
           <div v-if="fornecedorFiltrado.length === 0">
             <p class="text-center text-muted">Nenhum item encontrado.</p>
           </div>
 
-          <!-- Para mostrar o Modal -->
           <ModalFornecedor :visivel="mostrarModal" :fornecedor="fornecedorSelecionado" @fechar="fecharModal" />
 
-          <!-- Paginação -->
           <div class="pagination mt-4">
             <button class="page-link" :disabled="paginaAtual === 1" @click="paginaAtual--">Anterior</button>
 

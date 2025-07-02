@@ -28,7 +28,7 @@
     <div class="col-sm-4 grid-margin">
       <div class="card">
         <div class="card-body">
-          <h5>Empresitmos de Livores</h5>
+          <h5>Emprestimos de Livores</h5>
           <div class="row">
             <div class="col-8 col-sm-12 col-xl-8 my-auto">
               <div class="d-flex d-sm-block d-md-flex align-items-center">
@@ -48,7 +48,7 @@
     <div class="col-sm-4 grid-margin">
       <div class="card">
         <div class="card-body">
-          <h5>Purchase</h5>
+          <h5>Emprestimos Vencidos</h5>
           <div class="row">
             <div class="col-8 col-sm-12 col-xl-8 my-auto">
               <div class="d-flex d-sm-block d-md-flex align-items-center">
@@ -90,33 +90,7 @@
       <div class="card">
         <div class="card-body">
           <div class="d-flex flex-row justify-content-between">
-            <h4 class="card-title mb-1">Verificações Rápidas</h4>
-            <p class="text-muted mb-1">--- Your data status</p>
-          </div>
-          <div class="row">
-            <div class="col-12">
-              <div class="preview-list">
-                <!-- Itens da lista -->
-                <div class="preview-item border-bottom" v-for="(item, index) in quickChecks" :key="index">
-                  <div class="preview-thumbnail">
-                    <div :class="`preview-icon ${item.iconBg}`">
-                      <i :class="item.icon"></i>
-                    </div>
-                  </div>
-                  <div class="preview-item-content d-sm-flex flex-grow">
-                    <div class="flex-grow">
-                      <h6 class="preview-subject">{{ item.title }}</h6>
-                      <p class="text-muted mb-0">{{ item.subtitle }}</p>
-                    </div>
-                    <div class="mr-auto text-sm-right pt-2 pt-sm-0">
-                      <p class="text-muted">{{ item.time }}</p>
-                      <p class="text-muted mb-0">{{ item.tasks }}</p>
-                    </div>
-                  </div>
-                </div>
-                <!-- Fim dos itens -->
-              </div>
-            </div>
+            <h4 class="card-title mb-1">Listas de Emprestimos Vencidos Hoje</h4>
           </div>
         </div>
       </div>
