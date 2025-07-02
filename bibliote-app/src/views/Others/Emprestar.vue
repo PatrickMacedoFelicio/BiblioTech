@@ -6,9 +6,10 @@
           <div class="row justify-content-center">
             <div class="col-md-8">
               <form @submit.prevent="">
-                <h2 class="card-title">Emprestar Livros</h2>
+                <h1 class="card-title">Emprestar Livros</h1>
                 <div class="form-group row">
                   <div class="col-12">
+                    <h3 class="card-title-info">Dados do Emprestimo</h3>
                     <label>Nome do Leitor</label>
                     <input class="form-control form-control-lg" v-model="emprestimo.leitor" type="text"
                       placeholder="Nome completo" />
@@ -33,7 +34,7 @@
                     </button>
                   </div>
                 </div>
-                <h4 class="card-title">Datas</h4>
+                <h3 class="card-title-info">Datas</h3>
                 <div class="form-group row">
                   <div class="col-6">
                     <label>Data de Empréstimo</label>
@@ -129,7 +130,12 @@ export default defineComponent({
       this.v$.$reset();
     }
   }
-
-
 });
 </script>
+
+<style>
+.destaque{
+  color: blueviolet;
+}
+</style>
+
