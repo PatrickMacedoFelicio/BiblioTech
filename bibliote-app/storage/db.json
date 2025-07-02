@@ -94,15 +94,14 @@
       "id": "c20",
       "nome": "Tecnologia",
       "descricao": "Livros sobre avanços, conceitos e aplicações tecnológicas."
+    },
+    {
+      "id": "it0n8q",
+      "nome": "teaeteste",
+      "descricao": "dtsfsdfsd"
     }
   ],
   "estoques": [
-    {
-      "id": "z92u0x",
-      "codigoBarras": "a12poaks21",
-      "quantidade": 1,
-      "tituloLivro": "Menino Maluquinho"
-    },
     {
       "id": "a1b2c3",
       "codigoBarras": "9781234567890",
@@ -350,18 +349,6 @@
       "cidade": "Manaus",
       "telefone": "(66) 99229-9738",
       "email": "fornecedoranacionalme@exemplo.com"
-    },
-    {
-      "id": "dcbxbk",
-      "nome": "Distribuidora Educativa LTDA",
-      "cnpj": "77.367.654/1887-50",
-      "cep": "34637-302",
-      "rua": "Rua dos Livros",
-      "bairro": "Industrial",
-      "estado": "MG",
-      "cidade": "Belo Horizonte",
-      "telefone": "(64) 91932-4045",
-      "email": "distribuidoraeducativaltda@exemplo.com"
     },
     {
       "id": "zjzue6",
@@ -848,6 +835,5 @@
       "estado": "RO",
       "cidade": "Ji-Paraná"
     }
-  ],
-  "livros": []
+  ]
 }
