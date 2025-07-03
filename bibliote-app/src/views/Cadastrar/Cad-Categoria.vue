@@ -164,7 +164,7 @@ export default defineComponent({
   // Sessão de puxar id para editar
   computed:{
     id(){
-      console.log(this.$router.)
+      
     }
   }
   
