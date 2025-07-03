@@ -44,8 +44,8 @@
                   <td>{{ item.telefone }}</td>
                   <td>{{ item.email }}</td>
                   <td>
-                    <div class="d-flex justify-content-center" @click="visualizarFornecedor(item)">
-                      <button class="btn btn-info btn-sm">
+                    <div class="d-flex justify-content-center">
+                      <button class="btn btn-info btn-sm" @click="visualizarFornecedor(item)">
                         <i class="mdi mdi-magnify"></i>
                       </button>
                       <button class="btn btn-success btn-sm ms-2 gap1">
@@ -112,7 +112,7 @@ export default defineComponent({
       paginaAtual: 1,
       mostrarModal: false,
       itensPorPagina: 8,
-      fornecedorSelecionado: { nome: '', cnpj: '', cep: '', rua: '', bairro: '', estado: '', cidade: '', telefone: '', email: ''}
+      fornecedorSelecionado: { nome: '', cnpj: '', cep: '', rua: '', bairro: '', estado: '', cidade: '', telefone: '', email: '' }
     };
   },
 

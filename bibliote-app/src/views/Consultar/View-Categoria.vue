@@ -196,7 +196,9 @@ export default defineComponent({
     },
 
     // Edição das coisas
-
+    async editar(id: string){
+      this.$router.push(`/cadastrar/${id}/categoria`);
+    }
   }
 });
 </script>

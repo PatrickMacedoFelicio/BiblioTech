@@ -12,7 +12,6 @@
 
         <div class="card-body">
 
-          <!-- FORMULÁRIO -->
           <form @submit.prevent="salvar">
             <div class="mb-3">
               <label class="form-label">Nome da Categoria</label>
@@ -155,11 +154,19 @@ export default defineComponent({
     limparCampos() {
       this.categoria = { id: '', nome: '', descricao: '' };
       this.v$.$reset();
-    }
+    },
   },
 
   async mounted() {
     await this.carregarCategorias();
+  },
+
+  // Sessão de puxar id para editar
+  computed:{
+    id(){
+      console.log(this.$router.)
+    }
   }
+  
 });
 </script>

@@ -73,21 +73,6 @@ const router = createRouter({
       name: 'funcionario',
       component: () => import('../views/Cadastrar/Cad-Funcionario.vue'),
     },
-    {
-      path: '/Editar/editarCategoria',
-      name: 'editarCategoria',
-      component: () => import('../views/Editar/Editar-Categoria.vue'),
-      props: route => {
-        const categoriaParam = route.params.categoria;
-        const categoriaJson = Array.isArray(categoriaParam) ? categoriaParam[0] : categoriaParam;
-
-        return {
-          categoria: JSON.parse(categoriaJson)
-        };
-      }
-
-    }
-
   ],
 })
 

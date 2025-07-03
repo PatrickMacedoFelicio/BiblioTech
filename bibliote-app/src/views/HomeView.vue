@@ -66,7 +66,6 @@
     </div>
   </div>
 
-  <!-- Gráfico de pizza com legenda -->
   <div class="row">
     <div class="col-md-4 grid-margin stretch-card">
       <div class="card">
@@ -212,7 +211,7 @@ export default defineComponent({
 }
 
 .card {
-  background-color: #1e1e2f;
+  background-color: #191C24;
   color: white;
 }
 

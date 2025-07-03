@@ -4,7 +4,7 @@
       <div class="card-body">
         <div class="container">
           <div class="row justify-content-center">
-            <div class="col-md-8">
+            <div class="col-md-9">
               <form @submit.prevent="">
                 <h1 class="card-title">Emprestar Livros</h1>
                 <div class="form-group row">
@@ -38,7 +38,7 @@
                 <div class="form-group row">
                   <div class="col-6">
                     <label>Data de Empréstimo</label>
-                    <input class="form-control form-control-lg" v-model="emprestimo.data_inicio" type="date" />
+                    <input class="form-control form-control-lg" v-model="emprestimo.data_inicio" type="date" readonly />
                     <div class="text-danger" v-if="v$.emprestimo.data_inicio.$error">
                       <small>{{ v$.emprestimo.data_inicio.$errors[0].$message }}</small>
                     </div>
@@ -86,12 +86,14 @@ export default defineComponent({
   },
 
   data() {
+    const hoje = new Date().toISOString().split('T')[0];
+
     return {
       emprestimo: {
         id: '',
         leitor: '',
         livro: '',
-        data_inicio: '',
+        data_inicio: hoje,
         data_validade: ''
       },
       emprestimos: [] as any[],
@@ -120,11 +122,12 @@ export default defineComponent({
 
   methods: {
     limparCampos() {
+      const hoje = new Date().toISOString().split('T')[0];
       this.emprestimo = {
         id: '',
         leitor: '',
         livro: '',
-        data_inicio: '',
+        data_inicio: hoje,
         data_validade: ''
       };
       this.v$.$reset();
@@ -137,5 +140,13 @@ export default defineComponent({
 .destaque{
   color: blueviolet;
 }
+
+input[readonly] {
+  background-color: #2a2a3c !important;   
+  color: #c7c7c7 !important;              
+  cursor: not-allowed;
+  border-color: #2a2a3c;                   
+}
+
 </style>
 
