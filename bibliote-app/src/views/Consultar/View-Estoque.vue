@@ -48,7 +48,8 @@
                                         <button class="btn btn-purple btn-sm" @click="visualizarEstoque(item)">
                                             <i class="mdi mdi-magnify"></i>
                                         </button>
-                                        <button class="btn btn-success btn-sm ms-2 gap1">
+                                        <button class="btn btn-success btn-sm ms-2 gap1"
+                                            @click="editarEstoque(item.id)">
                                             <i class="mdi mdi-pencil"></i>
                                         </button>
                                         <button class="btn btn-danger btn-sm ms-2 gap1"
@@ -91,12 +92,14 @@ import { defineComponent } from 'vue';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import ModalEstoque from '@/components/modals/ModalEstoque.vue';
+import EditarCategoria from '../Editar/Editar-Categoria.vue';
 
 interface Estoque {
     id: string;
-    tituloLivro: string;
     codigoBarras: string;
     quantidade: number;
+    livro: string;
+    tituloLivro: string;
 }
 
 export default defineComponent({
@@ -106,11 +109,12 @@ export default defineComponent({
     data() {
         return {
             estoque: [] as Estoque[],
+            livros: [] as any[],
             filtro: '',
             paginaAtual: 1,
             mostrarModal: false,
             itensPorPagina: 8,
-            estoqueSelecionado: { tituloLivro: '', codigoBarras: '', quantidade: 0 }
+            estoqueSelecionado: { tituloLivro: '', codigoBarras: '', quantidade: 0 },
         };
     },
 
@@ -138,17 +142,31 @@ export default defineComponent({
         async buscarEstoque() {
             this.paginaAtual = 1;
             try {
-                const response = await axios.get('http://localhost:3000/estoques');
-                this.estoque = response.data;
+                const [resEstoque, resLivros] = await Promise.all([
+                    axios.get('http://localhost:3000/estoques'),
+                    axios.get('http://localhost:3000/livros')
+                ]);
+
+                this.livros = resLivros.data;
+
+                this.estoque = resEstoque.data.map((item: Estoque) => {
+                    const livroEncontrado = this.livros.find(l => l.id === item.livro);
+                    return {
+                        ...item,
+                        tituloLivro: livroEncontrado ? livroEncontrado.titulo : 'Livro não encontrado'
+                    };
+                });
+
             } catch (erro: any) {
-                console.error('Erro ao buscar o estoque:', erro);
+                console.error('Erro ao buscar o estoque ou livros:', erro);
                 Swal.fire({
                     icon: 'error',
                     title: 'Erro ao carregar o estoque',
                     text: erro.message || 'Verifique se o servidor JSON está ativo.'
                 });
             }
-        },
+        }
+        ,
 
 
         //Exclução das coisas
@@ -169,6 +187,7 @@ export default defineComponent({
             });
         },
 
+        // Excluir
         async excluirCategoria(id: string) {
             try {
                 await axios.delete(`http://localhost:3000/estoques/${id}`);
@@ -187,6 +206,11 @@ export default defineComponent({
                     text: erro.message || 'Tente novamente mais tarde.'
                 });
             }
+        },
+
+        //Edição
+        async editarEstoque(id: string) {
+            this.$router.push(`/editar/estoque/${id}`);
         },
 
         irParaPagina(pagina: number) {

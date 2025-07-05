@@ -87,7 +87,13 @@ const router = createRouter({
       path: '/Colaboradores',
       name: 'colaboradores',
       component: () => import('../views/Others/Us.vue'),
-    }
+    },
+    //Edições
+    {
+      path: '/editar/estoque/:id',
+      name: 'editarEstoque',
+      component: () => import('../views/Cadastrar/Cad-Estoque.vue'),
+    },
   ],
 })
 

@@ -2,9 +2,28 @@
   <div class="grid-margin stretch-card">
     <div class="card">
       <div class="card-body">
-        <h3 class="card-title">Cadastro de Estoque</h3>
-
+        <h3 class="card-title">{{ ehEdicao ? 'Atualização de' : 'Cadastro de' }} Estoque</h3>
         <form @submit.prevent="salvar">
+
+          <div class="form-group row align-items-end">
+            <div class="col-6">
+              <label>Título do Livro</label>
+              <select class="form-control form-control-lg" v-model="estoque.livro">
+                <option value="" disabled>Selecione o livro...</option>
+                <option v-for="livro in listarLivros" :key="livro.id" :value="livro.id">
+                  {{ livro.titulo }}
+                </option>
+              </select>
+              <div class="text-danger" v-if="v$.estoque.livro.$error">
+                <small>{{ v$.estoque.livro.$errors[0].$message }}</small>
+              </div>
+            </div>
+            <div class="col-2 text-end">
+              <router-link class="btn btn-info btn-lg px-4 py-3" to="/cadastrar/livro">
+                <strong>+</strong>
+              </router-link>
+            </div>
+          </div>
           <div class="form-group row">
             <div class="col">
               <label>Código de Barras</label>
@@ -24,24 +43,12 @@
               </div>
             </div>
           </div>
-
-          <div class="form-group row">
-            <div class="col">
-              <label>Título do Livro</label>
-              <input class="form-control form-control-lg" type="text" v-model="estoque.tituloLivro"
-                placeholder="Digite o titulo do livro..." />
-              <div class="text-danger" v-if="v$.estoque.tituloLivro.$error">
-                <small>{{ v$.estoque.tituloLivro.$errors[0].$message }}</small>
-              </div>
-            </div>
-          </div>
-
           <div class="form-group row mt-4">
             <div class="col-auto">
               <button type="submit" class="btn btn-success btn-lg">Salvar</button>
             </div>
             <div class="col-auto">
-              <button type="button" class="btn btn-secondary btn-lg" @click="limparCampos">Limpar</button>
+              <button type="button" class="btn btn-secondary btn-lg disable" @click="limparCampos">Limpar</button>
             </div>
           </div>
         </form>
@@ -65,15 +72,25 @@ export default defineComponent({
     return { v$: useVuelidate() };
   },
 
+  computed: {
+    id() {
+      return this.$route.params.id || null;
+    },
+    ehEdicao() {
+      return !!this.id;
+    }
+  },
+
   data() {
     return {
       estoque: {
         id: '',
         codigoBarras: '',
         quantidade: 0,
-        tituloLivro: ''
+        livro: ''
       },
       estoques: [] as any[],
+      listarLivros: [] as any[],
       dialog: false
     };
   }
@@ -89,7 +106,7 @@ export default defineComponent({
           required: helpers.withMessage('Quantidade é obrigatória', required),
           minValue: helpers.withMessage('Deve ser no mínimo 1', minValue(1))
         },
-        tituloLivro: {
+        livro: {
           required: helpers.withMessage('Escolher um livro é obrigatorio!', required)
         }
       }
@@ -102,50 +119,39 @@ export default defineComponent({
       if (!valido) return;
 
       const confirmado = await Swal.fire({
-        title: 'Confirmar cadastro?',
-        text: 'Deseja realmente cadastrar ao estoque?',
+        title: this.ehEdicao ? 'Confirmar atualização?' : 'Confirmar cadastro?',
+        text: this.ehEdicao ? 'Deseja atualizar as informações deste estoque?' : 'Deseja realmente cadastrar ao estoque?',
         icon: 'question',
         showCancelButton: true,
         confirmButtonColor: '#28a745',
         cancelButtonColor: '#6c757d',
-        confirmButtonText: 'Sim, cadastrar!',
+        confirmButtonText: this.ehEdicao ? 'Sim, atualizar!' : 'Sim, cadastrar!',
         cancelButtonText: 'Cancelar'
       });
 
       if (!confirmado.isConfirmed) return;
 
-      const novoEstoque = {
-        id: Math.random().toString(36).substring(2, 8),
-        codigoBarras: this.estoque.codigoBarras,
-        quantidade: this.estoque.quantidade,
-        tituloLivro: this.estoque.tituloLivro
+      const estoqueFinal = {
+        ...this.estoque,
+        id: this.ehEdicao ? this.id : Math.random().toString(36).substring(2, 8)
       };
 
       try {
-        await axios.post('http://localhost:3000/estoques', novoEstoque);
-        Toast.fire({
-          icon: 'success',
-          title: 'Estoque cadastrado com sucesso!'
-        });
-        this.limparCampos();
-        await this.carregarEstoque();
-      } catch (erro: any) {
-        let mensagemErro = 'Não foi possível salvar no estoque.';
-
-        if (erro.response) {
-          mensagemErro = `Erro ${erro.response.status}: ${erro.response.statusText}`;
-        } else if (erro.request) {
-          mensagemErro = 'Sem resposta do servidor. Verifique sua conexão.';
-        } else if (erro.message) {
-          mensagemErro = erro.message;
+        if (this.ehEdicao) {
+          await axios.put(`http://localhost:3000/estoques/${this.id}`, estoqueFinal);
+          Toast.fire({ icon: 'success', title: 'Estoque atualizado com sucesso!' });
+        } else {
+          await axios.post('http://localhost:3000/estoques', estoqueFinal);
+          Toast.fire({ icon: 'success', title: 'Estoque cadastrado com sucesso!' });
         }
 
+        this.$router.push('/consultar/estoque');
+      } catch (erro) {
         Swal.fire({
           icon: 'error',
-          title: 'Erro ao cadastrar no estoque',
-          text: mensagemErro
+          title: 'Erro ao salvar',
+          text: 'Erro inesperado.'
         });
-        console.error('Erro completo:', erro);
       }
     },
 
@@ -156,8 +162,40 @@ export default defineComponent({
       } catch (erro) {
         console.error('Erro ao carregar estoque:', erro);
       }
-    }
-    ,
+    },
+
+    // para edição das coisas
+    async carregarDados() {
+      try {
+        const resposta = await axios.get(`http://localhost:3000/estoques/${this.id}`);
+        this.estoque = {
+          id: resposta.data.id,
+          codigoBarras: resposta.data.codigoBarras,
+          quantidade: resposta.data.quantidade,
+          livro: resposta.data.livro?.id || resposta.data.livro || ''
+        };
+      } catch (erro) {
+        Toast.fire({
+          icon: 'error',
+          title: 'Erro ao carregar o estoque para edição'
+        });
+        this.$router.push('/consultar/estoque');
+      }
+    },
+
+    // carregar os livros para pegar no combobox
+    async carregarLivros() {
+      try {
+        const resposta = await axios.get('http://localhost:3000/livros');
+        this.listarLivros = resposta.data;
+      } catch (erro) {
+        console.error('Erro ao carregar livros:', erro);
+        Toast.fire({
+          icon: 'error',
+          title: 'Erro ao carregar os livros'
+        });
+      }
+    },
 
 
     limparCampos() {
@@ -165,14 +203,19 @@ export default defineComponent({
         id: '',
         codigoBarras: '',
         quantidade: 0,
-        tituloLivro: ''
+        livro: ''
       };
       this.v$.$reset();
     }
   },
 
   async mounted() {
+    await this.carregarLivros();
     await this.carregarEstoque();
+
+    if (this.ehEdicao) {
+      await this.carregarDados();
+    }
   }
 });
 </script>

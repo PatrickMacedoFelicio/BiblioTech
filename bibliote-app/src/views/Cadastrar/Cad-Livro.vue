@@ -83,7 +83,6 @@
               <label for="exampleFormControlSelect1">Categoria</label>
               <select class="form-control form-control-lg" id="exampleFormControlSelect1" v-model="CadLivro.categoria">
                 <option value="" disabled selected>Selecione a categoria...</option>
-                
               </select>
 
               <div class="text-danger" v-if="v$.CadLivro.categoria.$errors.length && v$.CadLivro.categoria.$dirty">
@@ -136,6 +135,7 @@ export default defineComponent({
   data() {
     return {
       CadLivro: {
+        id:'',
         titulo: '',
         autor: '',
         ISBN: '',
