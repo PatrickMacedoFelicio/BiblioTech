@@ -82,6 +82,11 @@ const router = createRouter({
       path: '/FilaEspera',
       name: 'filaEspera',
       component: () => import('../views/Others/FilaEspera.vue'),
+    },
+    {
+      path: '/Colaboradores',
+      name: 'colaboradores',
+      component: () => import('../views/Others/Us.vue'),
     }
   ],
 })
