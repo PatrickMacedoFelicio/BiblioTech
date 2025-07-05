@@ -36,7 +36,7 @@
             </li>
 
             <li class="nav-item menu-items">
-                <RouterLink class="nav-link" to="/Fila-Espera'">
+                <RouterLink class="nav-link" to="/FilaEspera">
                     <span class="menu-icon">
                         <i class="mdi mdi-timer-sand"></i>
                     </span>
@@ -44,9 +44,8 @@
                 </RouterLink>
             </li>
 
-            <li class="nav-item menu-items" id="cad">
-                <a class="nav-link" data-toggle="collapse" href="#cadastrar" aria-expanded="false"
-                    aria-controls="cadastrar">
+            <li class="nav-item menu-items">
+                <a class="nav-link" data-toggle="collapse" href="#cadastrar" aria-expanded="false" aria-controls="cadastrar"  id="cad">
                     <span class="menu-icon">
                         <i class="mdi mdi mdi-plus-circle"></i>
                     </span>

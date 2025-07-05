@@ -79,7 +79,7 @@ const router = createRouter({
       component: () => import('../views/Others/Devolucao.vue'),
     },
     {
-      path: '/Fila-Espera',
+      path: '/FilaEspera',
       name: 'filaEspera',
       component: () => import('../views/Others/FilaEspera.vue'),
     }
