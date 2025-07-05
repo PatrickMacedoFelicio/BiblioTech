@@ -54,11 +54,6 @@ const router = createRouter({
       component: () => import('../views/Cadastrar/Cad-Fornecedor.vue'),
     },
     {
-      path: '/Emprestimo',
-      name: 'emprestimo',
-      component: () => import('../views/Others/Emprestar.vue'),
-    },
-    {
       path: '/cadastrar/categoria',
       name: 'categoria',
       component: () => import('../views/Cadastrar/Cad-Categoria.vue'),
@@ -73,6 +68,21 @@ const router = createRouter({
       name: 'funcionario',
       component: () => import('../views/Cadastrar/Cad-Funcionario.vue'),
     },
+    {
+      path: '/Emprestimo',
+      name: 'emprestimo',
+      component: () => import('../views/Others/Emprestar.vue'),
+    },
+    {
+      path: '/Devolucao',
+      name: 'devolucao',
+      component: () => import('../views/Others/Devolucao.vue'),
+    },
+    {
+      path: '/Fila-Espera',
+      name: 'filaEspera',
+      component: () => import('../views/Others/FilaEspera.vue'),
+    }
   ],
 })
 

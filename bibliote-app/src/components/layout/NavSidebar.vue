@@ -1,10 +1,7 @@
 <template>
-    <!-- partial:partials/_sidebar.html -->
     <nav class="sidebar sidebar-offcanvas" id="sidebar">
         <div class="sidebar-brand-wrapper d-none d-lg-flex align-items-center justify-content-center fixed-top">
-
             <RouterLink class="sidebar-brand brand-logo" to="/"><img src="./images/logo.svg" alt="logo" /></RouterLink>
-
         </div>
         <ul class="nav">
             <li class="nav-item nav-category">
@@ -16,7 +13,7 @@
                     <span class="menu-icon">
                         <i class="mdi mdi-home"></i>
                     </span>
-                    Página Inicial
+                    <span class="menu-title">Página Inicial</span>
                 </RouterLink>
             </li>
 
@@ -25,29 +22,29 @@
                     <span class="menu-icon">
                         <i class="mdi mdi-book-open"></i>
                     </span>
-                    Emprestimo
+                    <span class="menu-title">Emprestimo</span>
                 </RouterLink>
             </li>
 
             <li class="nav-item menu-items">
-                <RouterLink class="nav-link" to="/Emprestimo">
+                <RouterLink class="nav-link" to="/Devolucao">
                     <span class="menu-icon">
-                        <i class=""></i>
+                        <i class="mdi mdi-book-minus"></i>
                     </span>
-                    Devolução
+                    <span class="menu-title">Devolução</span>
                 </RouterLink>
             </li>
 
             <li class="nav-item menu-items">
-                <RouterLink class="nav-link" to="/Emprestimo">
+                <RouterLink class="nav-link" to="/Fila-Espera'">
                     <span class="menu-icon">
-                        <i class=""></i>
+                        <i class="mdi mdi-timer-sand"></i>
                     </span>
-                    Fila de Espera
+                    <span class="menu-title">Fila de Espera</span>
                 </RouterLink>
             </li>
 
-            <li class="nav-item menu-items">
+            <li class="nav-item menu-items" id="cad">
                 <a class="nav-link" data-toggle="collapse" href="#cadastrar" aria-expanded="false"
                     aria-controls="cadastrar">
                     <span class="menu-icon">
@@ -99,7 +96,7 @@
                 </div>
             </li>
 
-            <li class="nav-item menu-items">
+            <li class="nav-item menu-items" id="con">
                 <a class="nav-link" data-toggle="collapse" href="#consultar" aria-expanded="false"
                     aria-controls="consultar">
                     <span class="menu-icon">
