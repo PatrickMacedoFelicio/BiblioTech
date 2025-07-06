@@ -40,13 +40,13 @@
               <tbody>
                 <tr v-for="(item, index) in categoriaPaginado" :key="index">
                   <td>{{ item.nome }}</td>
-                  <td>{{ item.descricao.length > 50 ? item.descricao.slice(0, 80) + '...' : item.descricao }}</td>
+                  <td>{{ item.descricao.length > 50 ? item.descricao.slice(0, 100) + '...' : item.descricao }}</td>
                   <td>
                     <div class="d-flex justify-content-center">
                       <button class="btn btn-info btn-sm" @click="visualizarCategoria(item)">
                         <i class="mdi mdi-magnify"></i>
                       </button>
-                      <button class="btn btn-success btn-sm ms-2 gap1">
+                      <button class="btn btn-success btn-sm ms-2 gap1" @click="editarCategoria(item.id)">
                         <i class="mdi mdi-pencil"></i>
                       </button>
                       <button class="btn btn-danger btn-sm ms-2 gap1" @click="confirmarExclusao(item)">
@@ -196,8 +196,8 @@ export default defineComponent({
     },
 
     // Edição das coisas
-    async editar(id: string){
-      this.$router.push(`/cadastrar/${id}/categoria`);
+    async editarCategoria(id: string){
+      this.$router.push(`/editar/categoria/${id}`);
     }
   }
 });

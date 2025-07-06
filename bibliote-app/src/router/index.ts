@@ -34,7 +34,7 @@ const router = createRouter({
       component: () => import('../views/Consultar/View-Fornecedor.vue'),
     },
     {
-      path: '/consultar/Categoria',
+      path: '/consultar/categoria',
       name: 'viewCategoria',
       component: () => import('../views/Consultar/View-Categoria.vue'),
     },
@@ -93,6 +93,11 @@ const router = createRouter({
       path: '/editar/estoque/:id',
       name: 'editarEstoque',
       component: () => import('../views/Cadastrar/Cad-Estoque.vue'),
+    }, 
+    {
+      path: '/editar/categoria/:id',
+      name: 'editarCategoria',
+      component: () => import('../views/Cadastrar/Cad-Categoria.vue'),
     },
   ],
 })

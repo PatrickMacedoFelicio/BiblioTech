@@ -1,45 +1,45 @@
 <template>
-  <div class="row">
-    <div class="col-sm-12">
-      <div class="card">
-        <div class="card-header">
-          <div class="row">
-            <div class="col-sm-10">
-              <h3 class="m-0">Cadastro de Categoria</h3>
-            </div>
-          </div>
-        </div>
+  <div class="grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <form @submit.prevent="salvar">
+          <h3 class="card-title">Cadastro de Fornecedor</h3>
 
-        <div class="card-body">
-
-          <form @submit.prevent="salvar">
-            <div class="mb-3">
+          <div class="form-group row">
+            <div class="col">
               <label class="form-label">Nome da Categoria</label>
-              <input type="text" class="form-control" v-model="categoria.nome" />
+              <input type="text" class="form-control" v-model="categoria.nome"
+                placeholder="Digite o nome da categoria..." />
               <div class="text-danger" v-if="v$.categoria.nome.$errors.length">
                 <p v-for="error of v$.categoria.nome.$errors" :key="error.$uid">
                   <small>{{ error.$message }}</small>
                 </p>
               </div>
             </div>
+          </div>
 
-            <div class="mb-3">
-              <label class="form-label">Descrição</label>
-              <textarea class="form-control" rows="4" v-model="categoria.descricao"></textarea>
+          <div class="mb-3">
+            <label class="form-label">Descrição</label>
+            <textarea class="form-control" placeholder="Descreva a categoria para o livro..." rows="4"
+              v-model="categoria.descricao"></textarea>
+            <div class="text-danger" v-if="v$.categoria.descricao.$errors.length">
+              <p v-for="error of v$.categoria.descricao.$errors" :key="error.$uid">
+                <small>{{ error.$message }}</small>
+              </p>
             </div>
+          </div>
 
-            <div class="d-flex gap-2">
-              <div class="form-group row mt-4">
-                <div class="col-auto">
-                  <button type="submit" class="btn btn-success btn-lg">Salvar</button>
-                </div>
-                <div class="col-auto">
-                  <button type="button" class="btn btn-secondary btn-lg" @click="limparCampos">Limpar</button>
-                </div>
+          <div class="d-flex gap-2">
+            <div class="form-group row mt-4">
+              <div class="col-auto">
+                <button type="submit" class="btn btn-success btn-lg">Salvar</button>
+              </div>
+              <div class="col-auto">
+                <button type="button" class="btn btn-secondary btn-lg" @click="limparCampos">Limpar</button>
               </div>
             </div>
-          </form>
-        </div>
+          </div>
+        </form>
       </div>
     </div>
   </div>
@@ -74,7 +74,6 @@ export default defineComponent({
         nome: '',
         descricao: ''
       } as Categoria,
-
       categorias: [] as Categoria[]
     };
   },
@@ -86,7 +85,10 @@ export default defineComponent({
           required: helpers.withMessage('Nome é obrigatório!', required),
           minLength: helpers.withMessage('Mínimo de 3 caracteres', minLength(3))
         },
-        descricao: {}
+        descricao: {
+          required: helpers.withMessage('A descrição é obrigatória!', required),
+          minLength: helpers.withMessage('Mínimo de 10 caracteres', minLength(10))
+        }
       }
     };
   },
@@ -97,13 +99,13 @@ export default defineComponent({
       if (!valido) return;
 
       const confirmado = await Swal.fire({
-        title: 'Confirmar cadastro?',
-        text: 'Deseja realmente cadastrar esta categoria?',
+        title: this.ehEdicao ? 'Confirmar atualização?' : 'Confirmar cadastro?',
+        text: this.ehEdicao ? 'Deseja atualizar as informações desta categoria?' : 'Deseja realmente cadastrar esta categoria?',
         icon: 'question',
         showCancelButton: true,
         confirmButtonColor: '#28a745',
         cancelButtonColor: '#6c757d',
-        confirmButtonText: 'Sim, cadastrar!',
+        confirmButtonText: this.ehEdicao ? 'Sim, atualizar!' : 'Sim, cadastrar!',
         cancelButtonText: 'Cancelar'
       });
 
@@ -112,33 +114,25 @@ export default defineComponent({
 
       const novaCategoria = {
         ...this.categoria,
-        id: Math.random().toString(36).substring(2, 8)
+        id: this.ehEdicao ? this.id : Math.random().toString(36).substring(2, 8)
       };
 
       try {
-        await axios.post('http://localhost:3000/categorias', novaCategoria);
-        Toast.fire({
-          icon: 'success',
-          title: 'Categoria cadastrada com sucesso!'
-        });
-        this.limparCampos();
-        await this.carregarCategorias();
-      } catch (erro: any) {
-        let mensagemErro = 'Não foi possível salvar a categoria.';
-
-        if (erro.response) {
-          mensagemErro = `Erro ${erro.response.status}: ${erro.response.statusText}`;
-        } else if (erro.request) {
-          mensagemErro = 'Sem resposta do servidor. Verifique sua conexão.';
-        } else if (erro.message) {
-          mensagemErro = erro.message;
+        if (this.ehEdicao) {
+          await axios.put(`http://localhost:3000/categorias/${this.id}`, novaCategoria);
+          Toast.fire({ icon: 'success', title: 'Categoria atualizada com sucesso!' });
+        } else {
+          await axios.post('http://localhost:3000/categorias', novaCategoria);
+          Toast.fire({ icon: 'success', title: 'Categoria cadastrada com sucesso!' });
         }
+
+        this.$router.push('/consultar/categoria');
+      } catch (erro) {
         Swal.fire({
           icon: 'error',
-          title: 'Erro ao cadastrar',
-          text: mensagemErro
+          title: 'Erro ao salvar',
+          text: 'Erro inesperado.'
         });
-        console.error('Erro completo:', erro);
       }
     },
 
@@ -151,6 +145,24 @@ export default defineComponent({
       }
     },
 
+    // para edição das coisas
+    async carregarDados() {
+      try {
+        const resposta = await axios.get(`http://localhost:3000/categorias/${this.id}`);
+        this.categoria = {
+          id: resposta.data.id,
+          nome: resposta.data.nome,
+          descricao: resposta.data.descricao
+        };
+      } catch (erro) {
+        Toast.fire({
+          icon: 'error',
+          title: 'Erro ao carregar a categoria para edição'
+        });
+        this.$router.push('/consultar/categoria');
+      }
+    },
+
     limparCampos() {
       this.categoria = { id: '', nome: '', descricao: '' };
       this.v$.$reset();
@@ -159,14 +171,21 @@ export default defineComponent({
 
   async mounted() {
     await this.carregarCategorias();
+
+    if (this.ehEdicao) {
+      await this.carregarDados();
+    }
   },
 
   // Sessão de puxar id para editar
-  computed:{
-    id(){
-      
+  computed: {
+    id() {
+      return this.$route.params.id || null;
+    },
+    ehEdicao() {
+      return !!this.id;
     }
   }
-  
+
 });
 </script>

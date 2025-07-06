@@ -811,5 +811,35 @@
       "categoria": "Romance",
       "sinopse": "Clássico sobre relacionamentos e status social."
     }
+  ],
+  "leitores": [
+    {
+      "id": "",
+      "nome": "zinho",
+      "email": "",
+      "cpf": "",
+      "telefone": "",
+      "dataNasc": "",
+      "Rua": "",
+      "Bairro": "",
+      "Numero": "",
+      "cep": "",
+      "estado": "",
+      "cidade": ""
+    },
+    {
+      "id": "asd1",
+      "nome": "cu",
+      "email": "",
+      "cpf": "",
+      "telefone": "",
+      "dataNasc": "",
+      "Rua": "",
+      "Bairro": "",
+      "Numero": "",
+      "cep": "",
+      "estado": "",
+      "cidade": ""
+    }
   ]
 }

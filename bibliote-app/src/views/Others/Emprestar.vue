@@ -8,11 +8,18 @@
               <form @submit.prevent="">
                 <h1 class="card-title">Emprestar Livros</h1>
                 <div class="form-group row">
+
                   <div class="col-12">
                     <h3 class="card-title-info">Dados do Emprestimo</h3>
                     <label>Nome do Leitor</label>
-                    <input class="form-control form-control-lg" v-model="emprestimo.leitor" type="text"
-                      placeholder="Nome completo" />
+
+                    <select class="form-control form-control-lg" v-model="emprestimo.leitor">
+                      <option value="" disabled>Selecione o livro...</option>
+                      <option v-for="leitor in listarLeitor" :key="leitor.id" :value="leitor.id">
+                        {{ leitor.nome }}
+                      </option>
+                    </select>
+
                     <div class="text-danger" v-if="v$.emprestimo.leitor.$error">
                       <small>{{ v$.emprestimo.leitor.$errors[0].$message }}</small>
                     </div>
@@ -22,8 +29,12 @@
                 <div class="form-group row align-items-end">
                   <div class="col-10">
                     <label>Livro</label>
-                    <input class="form-control form-control-lg" v-model="emprestimo.livro" type="text"
-                      placeholder="Título do livro" />
+                    <select class="form-control form-control-lg" v-model="emprestimo.livro">
+                      <option value="" disabled>Selecione o livro...</option>
+                      <option v-for="livro in listarLivros" :key="livro.id" :value="livro.id">
+                        {{ livro.titulo }}
+                      </option>
+                    </select>
                     <div class="text-danger" v-if="v$.emprestimo.livro.$error">
                       <small>{{ v$.emprestimo.livro.$errors[0].$message }}</small>
                     </div>
@@ -97,6 +108,8 @@ export default defineComponent({
         data_validade: ''
       },
       emprestimos: [] as any[],
+      listarLivros: [] as any[],
+      listarLeitor: [] as any[],
       dialog: false
     };
   },
@@ -121,6 +134,53 @@ export default defineComponent({
   },
 
   methods: {
+    async salvar() {
+
+    },
+
+    async carregarEmprestimo() {
+
+    },
+
+    // para edição das coisas
+    async carregarDados() {
+
+    },
+
+    // carregar os Çivros para pegar no combobox
+    async carregarLivros() {
+      try {
+        const resposta = await axios.get('http://localhost:3000/livros');
+        this.listarLivros = resposta.data.sort((a: any, b: any) => {
+          return a.titulo.localeCompare(b.titulo);
+        });
+
+      } catch (erro) {
+        console.error('Erro ao carregar livros:', erro);
+        Toast.fire({
+          icon: 'error',
+          title: 'Erro ao carregar os livros'
+        });
+      }
+    },
+
+    // carregar os leitores
+    async carregarLeitores() {
+      try {
+        const resposta = await axios.get('http://localhost:3000/leitores');
+        this.listarLeitor = resposta.data.sort((a: any, b: any) => {
+          return a.nome.localeCompare(b.nome);
+        });
+
+      } catch (erro) {
+        console.error('Erro ao carregar leitores:', erro);
+        Toast.fire({
+          icon: 'error',
+          title: 'Erro ao carregar os leitores'
+        });
+      }
+    },
+
     limparCampos() {
       const hoje = new Date().toISOString().split('T')[0];
       this.emprestimo = {
@@ -132,21 +192,27 @@ export default defineComponent({
       };
       this.v$.$reset();
     }
+  },
+
+
+  async mounted() {
+    await this.carregarLivros();
+    await this.carregarLeitores();
+    await this.carregarEmprestimo();
   }
+
 });
 </script>
 
 <style>
-.destaque{
+.destaque {
   color: blueviolet;
 }
 
 input[readonly] {
-  background-color: #2a2a3c !important;   
-  color: #c7c7c7 !important;              
+  background-color: #2a2a3c !important;
+  color: #c7c7c7 !important;
   cursor: not-allowed;
-  border-color: #2a2a3c;                   
+  border-color: #2a2a3c;
 }
-
 </style>
-
