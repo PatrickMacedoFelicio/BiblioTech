@@ -814,20 +814,6 @@
   ],
   "leitores": [
     {
-      "id": "1a2b3c",
-      "nome": "Carlos Henrique",
-      "email": "carlos.henrique@email.com",
-      "cpf": "123.456.789-00",
-      "telefone": "(11) 91234-5678",
-      "dataNasc": "1990-05-15",
-      "Rua": "Rua das Flores",
-      "Bairro": "Centro",
-      "Numero": "123",
-      "cep": "01001-000",
-      "estado": "SP",
-      "cidade": "São Paulo"
-    },
-    {
       "id": "2b3c4d",
       "nome": "Mariana Souza",
       "email": "mariana.souza@email.com",
