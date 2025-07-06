@@ -1,121 +1,204 @@
 <template>
-<div class="page-header">
-        <h3 class="card-title">Consulta de Leitores</h3>
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="#">Consultar</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Estoque</li>
-            </ol>
-        </nav>
-    </div>
-    <div class="row">
-        <div class="col-lg-12 grid-margin stretch-card">
-            <div class="card">
-                <div class="card-body">
-                    <div class="form-group row">
-                        <div class="col-5">
-                            <label>Nome</label>
-                            <div id="the-basics">
-                                <input class="typeahead form-control form-control-lg" type="text"
-                                    placeholder="Digite o nome do leitor...">
-                            </div>
-                        </div>
-                        <div class="col col-lg-2 d-flex align-items-end">
-                            <button class="btn btn-success btn-fw btn-lg w-100 btn-icon-text">Buscar</button>
-                        </div>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Nome</th>
-                                    <th>CPF</th>
-                                    <th>Telefone</th>
-                                    <th>E-mail</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-for="(leitor, index) in listaLeitor" :key="index">
-                                    <td>{{ leitor.nome }}</td>
-                                    <td>{{ leitor.cpf }}</td>
-                                    <td>{{ leitor.telefone }}</td>
-                                    <td>{{ leitor.email }}</td>
-                                    <td>
-                                        <div class="d-flex justify-content-center">
-                                            <RouterLink class="btn btn-info btn-sm" to="/">
-                                                <i class="mdi mdi-magnify"></i>
-                                            </RouterLink>
-                                            <RouterLink class="btn btn-success btn-sm ms-2 gap1" to="/">
-                                                <i class="mdi mdi-pencil"></i>
-                                            </RouterLink>
-                                            <RouterLink class="btn btn-danger btn-sm ms-2 gap1" to="/">
-                                                <i class="mdi mdi-delete"></i>
-                                            </RouterLink>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+  <div class="page-header">
+    <h3 class="card-title">Consulta de Leitores</h3>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#">Consultar</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Leitores</li>
+      </ol>
+    </nav>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-12 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <div class="form-group row">
+            <div class="col-5">
+              <label>Nome do Leitor</label>
+              <input class="form-control form-control-lg" type="text" v-model="filtro"
+                placeholder="Digite o nome do leitor..." />
             </div>
+            <div class="col col-lg-2 d-flex align-items-end">
+              <button class="btn btn-success btn-fw btn-lg w-100 btn-icon-text" @click="buscarLeitores">
+                Buscar
+              </button>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Nome</th>
+                  <th>CPF</th>
+                  <th>Telefone</th>
+                  <th>Email</th>
+                  <th class="text-center">Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="leitor in leitoresPaginado" :key="leitor.id">
+                  <td>{{ leitor.nome }}</td>
+                  <td>{{ leitor.cpf }}</td>
+                  <td>{{ leitor.telefone }}</td>
+                  <td>{{ leitor.email }}</td>
+                  <td>
+                    <div class="d-flex justify-content-center">
+                      <button class="btn btn-info btn-sm" @click="visualizarLeitor(leitor)">
+                        <i class="mdi mdi-magnify"></i>
+                      </button>
+                      <button class="btn btn-success btn-sm ms-2 gap1">
+                        <i class="mdi mdi-pencil"></i>
+                      </button>
+                      <button class="btn btn-danger btn-sm ms-2 gap1" @click="confirmarExclusao(leitor)">
+                        <i class="mdi mdi-delete"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div v-if="leitoresFiltrados.length === 0">
+            <p class="text-center text-muted">Nenhum leitor encontrado.</p>
+          </div>
+
+          <!-- Modal de Visualização -->
+          <ModalLeitor :visivel="mostrarModal" :leitor="leitorSelecionado" @fechar="fecharModal" />
+
+          <!-- Paginação -->
+          <div class="pagination mt-4">
+            <button class="page-link" :disabled="paginaAtual === 1" @click="paginaAtual--">Anterior</button>
+            <button v-for="pagina in totalPaginas" :key="pagina" class="page-link"
+              :class="{ active: pagina === paginaAtual }" @click="irParaPagina(pagina)">
+              {{ pagina }}
+            </button>
+            <button class="page-link" :disabled="paginaAtual === totalPaginas" @click="paginaAtual++">Próxima</button>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent } from 'vue';
+import axios from 'axios';
+import Swal from 'sweetalert2';
+import ModalLeitor from '@/components/modals/ModalLeitor.vue';
+
+interface Leitor {
+  id: string,
+  nome: string,
+  email: string,
+  telefone: string,
+  cpf: string,
+  dataNasc: string,
+  cep: string,
+  Rua: string,
+  Bairro: string,
+  Numero: string,
+  estado: string,
+  cidade: string,
+}
 
 export default defineComponent({
-    name: 'ViewLeitor',
+  name: 'ConsultaLeitor',
+  components: { ModalLeitor },
 
-    data(){
-        return{
-            listaLeitor: [] as Array<{
-                nome: string,
-                email: string,
-                telefone: string,
-                cpf: string,
-                endereco: string,
-                dataNascimento: Date,
-            }>,
-        }
+  data() {
+    return {
+      leitores: [] as Leitor[],
+      filtro: '',
+      paginaAtual: 1,
+      itensPorPagina: 8,
+      mostrarModal: false,
+      leitorSelecionado: {} as Leitor,
+    };
+  },
+
+  computed: {
+    leitoresFiltrados(): Leitor[] {
+      const texto = this.filtro.toLowerCase();
+      return this.leitores.filter(leitor => leitor.nome?.toLowerCase().includes(texto));
     },
-
-    mounted(){
-        this.buscarLeitor();
+    totalPaginas(): number {
+      return Math.ceil(this.leitoresFiltrados.length / this.itensPorPagina);
     },
-
-    methods: {
-        buscarLeitor(){
-            this.listaLeitor.push({
-                nome: 'Patrick Felicio',
-                email: 'patrickmac@gmail.com',
-                telefone: '(69) 99255-0726',
-                cpf: '123.452.541-56',
-                endereco: 'Rua Colorado do oeste, 3164, Cafezinho',
-                dataNascimento: new Date('2004-10-23')
-            });
-
-            this.listaLeitor.push({
-                nome: 'Lucas Semeler',
-                email: 'Semelerzinho12@gmail.com',
-                telefone: '(69) 98354-4466',
-                cpf: '017.456.270-57',
-                endereco: 'Rua Albino Germano Roth, 762, Lomba Grande',
-                dataNascimento: new Date('2004-07-02')
-            });
-
-            this.listaLeitor.push({
-                nome: 'Samuel Felipe',
-                email: 'samZic402@gmail.com',
-                telefone: '(69) 99153-3946',
-                cpf: '477.501.238-06',
-                endereco: 'Rua Moisés Caroso, 200, Jequiezinho',
-                dataNascimento: new Date('2004-02-12')
-            });
-        }
+    leitoresPaginado(): Leitor[] {
+      const inicio = (this.paginaAtual - 1) * this.itensPorPagina;
+      return this.leitoresFiltrados.slice(inicio, inicio + this.itensPorPagina);
     }
-    
+  },
+
+  mounted() {
+    this.buscarLeitores();
+  },
+
+  methods: {
+    async buscarLeitores() {
+      this.paginaAtual = 1;
+      try {
+        const response = await axios.get('http://localhost:3000/leitores');
+        this.leitores = response.data;
+      } catch (erro: any) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Erro ao carregar leitores',
+          text: erro.message || 'Verifique se o servidor JSON está ativo.'
+        });
+      }
+    },
+
+    confirmarExclusao(leitor: Leitor) {
+      Swal.fire({
+        title: 'Tem certeza?',
+        text: `Deseja excluir o leitor "${leitor.nome}"?`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Sim, excluir!',
+        cancelButtonText: 'Cancelar'
+      }).then(result => {
+        if (result.isConfirmed) {
+          this.excluirLeitor(leitor.id);
+        }
+      });
+    },
+
+    async excluirLeitor(id: string) {
+      try {
+        await axios.delete(`http://localhost:3000/leitores/${id}`);
+        this.leitores = this.leitores.filter(l => l.id !== id);
+        Swal.fire({
+          icon: 'success',
+          title: 'Excluído!',
+          text: 'Leitor removido com sucesso.'
+        });
+      } catch (erro: any) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Erro ao excluir leitor',
+          text: erro.message || 'Tente novamente mais tarde.'
+        });
+      }
+    },
+
+    visualizarLeitor(leitor: Leitor) {
+      this.leitorSelecionado = leitor;
+      this.mostrarModal = true;
+    },
+
+    fecharModal() {
+      this.mostrarModal = false;
+    },
+
+    irParaPagina(pagina: number) {
+      this.paginaAtual = pagina;
+    }
+  }
 });
 </script>
