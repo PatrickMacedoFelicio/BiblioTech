@@ -712,16 +712,6 @@
   ],
   "livros": [
     {
-      "id": "livro-1",
-      "titulo": "O Pequeno Príncipe",
-      "autor": "Autor Genérico",
-      "ISBN": "ISBN-0001",
-      "ano_publicacao": "2020-01-01",
-      "editora": "Editora Genérica",
-      "categoria": "Ficção",
-      "sinopse": "Sinopse de O Pequeno Príncipe."
-    },
-    {
       "id": "livro-2",
       "titulo": "Harry Potter e a Pedra Filosofal",
       "autor": "J.K. Rowling",
@@ -810,23 +800,109 @@
       "editora": "Penguin",
       "categoria": "Romance",
       "sinopse": "Clássico sobre relacionamentos e status social."
+    },
+    {
+      "id": "livro-11",
+      "titulo": "1984",
+      "autor": "George Orwell",
+      "ISBN": "ISBN-0011",
+      "ano_publicacao": "1949-06-08",
+      "editora": "Companhia das Letras",
+      "categoria": "Distopia",
+      "sinopse": "Um romance sobre vigilância totalitária e liberdade."
+    },
+    {
+      "id": "livro-12",
+      "titulo": "Dom Casmurro",
+      "autor": "Machado de Assis",
+      "ISBN": "ISBN-0012",
+      "ano_publicacao": "1899-01-01",
+      "editora": "Editora Record",
+      "categoria": "Romance",
+      "sinopse": "Narrativa ambígua sobre amor, ciúme e memória."
+    },
+    {
+      "id": "livro-13",
+      "titulo": "O Hobbit",
+      "autor": "J.R.R. Tolkien",
+      "ISBN": "ISBN-0013",
+      "ano_publicacao": "1937-09-21",
+      "editora": "Martins Fontes",
+      "categoria": "Fantasia",
+      "sinopse": "A aventura de Bilbo Bolseiro em uma terra fantástica."
+    },
+    {
+      "id": "livro-14",
+      "titulo": "O Pequeno Príncipe",
+      "autor": "Antoine de Saint-Exupéry",
+      "ISBN": "ISBN-0014",
+      "ano_publicacao": "1943-04-06",
+      "editora": "Agir",
+      "categoria": "Fábula",
+      "sinopse": "Uma história poética sobre amizade e amor."
+    },
+    {
+      "id": "livro-15",
+      "titulo": "A Revolução dos Bichos",
+      "autor": "George Orwell",
+      "ISBN": "ISBN-0015",
+      "ano_publicacao": "1945-08-17",
+      "editora": "Companhia das Letras",
+      "categoria": "Sátira",
+      "sinopse": "Allegoria política sobre a Revolução Russa."
+    },
+    {
+      "id": "livro-16",
+      "titulo": "Capitães da Areia",
+      "autor": "Jorge Amado",
+      "ISBN": "ISBN-0016",
+      "ano_publicacao": "1937-01-01",
+      "editora": "Companhia das Letras",
+      "categoria": "Romance",
+      "sinopse": "A vida de meninos de rua em Salvador."
+    },
+    {
+      "id": "livro-17",
+      "titulo": "Ensaio Sobre a Cegueira",
+      "autor": "José Saramago",
+      "ISBN": "ISBN-0017",
+      "ano_publicacao": "1995-01-01",
+      "editora": "Companhia das Letras",
+      "categoria": "Ficção",
+      "sinopse": "Uma epidemia de cegueira atinge uma cidade inteira."
+    },
+    {
+      "id": "livro-18",
+      "titulo": "O Código Da Vinci",
+      "autor": "Dan Brown",
+      "ISBN": "ISBN-0018",
+      "ano_publicacao": "2003-03-18",
+      "editora": "Sextante",
+      "categoria": "Suspense",
+      "sinopse": "Mistérios e conspirações envolvendo a Igreja e a arte."
+    },
+    {
+      "id": "livro-19",
+      "titulo": "Harry Potter e a Pedra Filosofal",
+      "autor": "J.K. Rowling",
+      "ISBN": "ISBN-0019",
+      "ano_publicacao": "1997-06-26",
+      "editora": "Rocco",
+      "categoria": "Fantasia",
+      "sinopse": "O início da jornada do jovem bruxo Harry Potter."
+    },
+    {
+      "id": "livro-20",
+      "titulo": "A Menina que Roubava Livros",
+      "autor": "Markus Zusak",
+      "ISBN": "ISBN-0020",
+      "ano_publicacao": "2005-09-01",
+      "editora": "Intrínseca",
+      "categoria": "Drama",
+      "sinopse": "História comovente sobre palavras e sobrevivência na guerra."
     }
   ],
   "leitores": [
-    {
-      "id": "1a2b3c",
-      "nome": "Carlos Henrique",
-      "email": "carlos.henrique@email.com",
-      "cpf": "123.456.789-00",
-      "telefone": "(11) 91234-5678",
-      "dataNasc": "1990-05-15",
-      "Rua": "Rua das Flores",
-      "Bairro": "Centro",
-      "Numero": "123",
-      "cep": "01001-000",
-      "estado": "SP",
-      "cidade": "São Paulo"
-    },
     {
       "id": "2b3c4d",
       "nome": "Mariana Souza",

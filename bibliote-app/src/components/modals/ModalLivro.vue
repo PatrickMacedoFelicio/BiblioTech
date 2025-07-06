@@ -2,13 +2,24 @@
   <div v-if="visivel" class="modal-overlay">
     <div class="modal-content">
       <div class="modal-header">
-        <h3 class="modal-title cor">Detalhes da Categoria</h3>
+        <h3 class="modal-title cor">Detalhes do Livro</h3>
         <button class="btn-close" @click="$emit('fechar')">&times;</button>
       </div>
+
       <div class="modal-body">
-        <p><strong class="cor">Nome: </strong> {{ categoria.nome }}</p>
-        <p><strong class="cor">Descrição: </strong> {{ categoria.descricao }}</p>
+        <div class="grid-container">
+          <div class="grid-item"><strong class="cor">Título:</strong> {{ livro.titulo }}</div>
+          <div class="grid-item"><strong class="cor">Autor:</strong> {{ livro.autor }}</div>
+          <div class="grid-item"><strong class="cor">ISBN:</strong> {{ livro.ISBN }}</div>
+          <div class="grid-item"><strong class="cor">Ano de Publicação:</strong> {{ livro.ano_publicacao }}</div>
+          <div class="grid-item"><strong class="cor">Editora:</strong> {{ livro.editora }}</div>
+          <div class="grid-item"><strong class="cor">Categoria:</strong> {{ livro.categoria }}</div>
+          <div class="grid-item" style="grid-column: 1 / -1;">
+            <strong class="cor">Sinopse:</strong><br /> {{ livro.sinopse }}
+          </div>
+        </div>
       </div>
+
       <div class="modal-footer">
         <button class="btn btn-secondary" @click="$emit('fechar')">Fechar</button>
       </div>
@@ -20,13 +31,24 @@
 import { defineComponent } from 'vue';
 import type { PropType } from 'vue';
 
-
 export default defineComponent({
   name: 'ModalLivro',
   props: {
-    visivel: Boolean,
-    categoria: {
-      type: Object as PropType<{ nome: string; descricao: string }>,
+    visivel: {
+      type: Boolean,
+      required: true
+    },
+    livro: {
+      type: Object as PropType<{
+        id: string;
+        titulo: string;
+        autor: string;
+        ISBN: string;
+        ano_publicacao: string;
+        editora: string;
+        categoria: string;
+        sinopse: string;
+      }>,
       required: true
     }
   }
@@ -64,6 +86,7 @@ export default defineComponent({
   display: flex;
   justify-content: space-between;
   align-items: center;
+  color: #fff;
 }
 
 .btn-close {
@@ -74,12 +97,12 @@ export default defineComponent({
   color: #fff;
 }
 
-.cor {
-  color: #c3a3ff;
+.modal-body {
+  color: #f1f1f1;
 }
 
-p {
-  font-size: 1rem;
+.cor {
+  color: #c3a3ff;
 }
 
 .grid-container {
@@ -109,3 +132,4 @@ p {
   }
 }
 </style>
+ 

@@ -1,115 +1,212 @@
 <template>
+  <div class="page-header">
+    <h3 class="card-title">Consulta De Livros</h3>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#">Consultar</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Livros</li>
+      </ol>
+    </nav>
+  </div>
 
-    <div class="page-header">
-        <h3 class="card-title">Consulta De Livros</h3>
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="#">Consultar</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Livros</li>
-            </ol>
-        </nav>
-    </div>
-    <div class="row">
-        <div class="col-lg-12 grid-margin stretch-card">
-            <div class="card">
-                <div class="card-body">
-                    <div class="form-group row">
-                        <div class="col-5">
-                            <label>Título</label>
-                            <div id="the-basics">
-                                <input class="typeahead form-control form-control-lg" type="text"
-                                    placeholder="Digite o título do livro...">
-                            </div>
-                        </div>
-                        <div class="col col-lg-2 d-flex align-items-end">
-                            <button class="btn btn-success btn-fw btn-lg w-100 btn-icon-text">Buscar</button>
-                        </div>
-
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Título</th>
-                                    <th>ISBN</th>
-                                    <th>Autor</th>
-                                    <th>Ano de publicação</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-for="(livro, index) in listarLivro" :key="index">
-                                    <td>{{ livro.titulo }}</td>
-                                    <td>{{ livro.isbn }}</td>
-                                    <td>{{ livro.autor }}</td>
-                                    <td>{{ livro.ano_publicacao }}</td>
-                                    <td>
-                                        <div class="d-flex justify-content-end">
-                                            <RouterLink class="btn btn-info btn-sm" to="/">
-                                                <i class="mdi mdi-magnify"></i>
-                                            </RouterLink>
-                                            <RouterLink class="btn btn-success btn-sm gap1" to="/">
-                                                <i class="mdi mdi-pencil"></i>
-                                            </RouterLink>
-                                            <RouterLink class="btn btn-danger btn-sm gap1" to="/">
-                                                <i class="mdi mdi-delete"></i>
-                                            </RouterLink>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+  <div class="row">
+    <div class="col-lg-12 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <div class="form-group row">
+            <div class="col-5">
+              <label>Título</label>
+              <input class="form-control form-control-lg" type="text" v-model="filtro"
+                placeholder="Digite o título do livro..." />
             </div>
+            <div class="col col-lg-2 d-flex align-items-end">
+              <button class="btn btn-success btn-fw btn-lg w-100 btn-icon-text" @click="buscarLivros">
+                Buscar
+              </button>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Título</th>
+                  <th>ISBN</th>
+                  <th>Autor</th>
+                  <th>Ano de publicação</th>
+                  <th class="text-center">Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="livro in livrosPaginados" :key="livro.id">
+                  <td>{{ livro.titulo }}</td>
+                  <td>{{ livro.ISBN }}</td>
+                  <td>{{ livro.autor }}</td>
+                  <td>{{ livro.ano_publicacao }}</td>
+                  <td>
+                    <div class="d-flex justify-content-end">
+                      <button class="btn btn-info btn-sm" @click="visualizarLivro(livro)">
+                        <i class="mdi mdi-magnify"></i>
+                      </button>
+                      <RouterLink class="btn btn-success btn-sm gap1" :to="`/editar-livro/${livro.id}`">
+                        <i class="mdi mdi-pencil"></i>
+                      </RouterLink>
+                      <button class="btn btn-danger btn-sm gap1" @click="confirmarExclusao(livro)">
+                        <i class="mdi mdi-delete"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <ModalLivro :visivel="mostrarModal" :livro="livroSelecionado" @fechar="fecharModal" />
+
+          <div v-if="livrosFiltrados.length === 0">
+            <p class="text-center text-muted">Nenhum livro encontrado.</p>
+          </div>
+
+          <div class="pagination mt-4">
+            <button class="page-link" :disabled="paginaAtual === 1" @click="paginaAtual--">Anterior</button>
+
+            <button v-for="pagina in totalPaginas" :key="pagina" class="page-link"
+              :class="{ active: pagina === paginaAtual }" @click="irParaPagina(pagina)">
+              {{ pagina }}
+            </button>
+
+            <button class="page-link" :disabled="paginaAtual === totalPaginas" @click="paginaAtual++">Próxima</button>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent } from 'vue';
+import axios from 'axios';
+import Swal from 'sweetalert2';
+import ModalLivro from '@/components/modals/ModalLivro.vue';
+
+interface Livro {
+  id: string;
+  titulo: string;
+  autor: string;
+  ISBN: string;
+  ano_publicacao: string;
+  editora: string;
+  categoria: string;
+  sinopse: string;
+}
 
 export default defineComponent({
-    name: 'ViewLivro',
+  name: 'ViewLivro',
+  components: { ModalLivro },
 
-    data() {
-        return {
-            listarLivro: [] as Array<{
-                titulo: string,
-                isbn: string,
-                ano_publicacao: string,
-                autor: string,
-            }>,
-        }
+  data() {
+    return {
+      livros: [] as Livro[],
+      filtro: '',
+      paginaAtual: 1,
+      itensPorPagina: 8,
+      mostrarModal: false,
+      livroSelecionado: {
+        id: '',
+        titulo: '',
+        autor: '',
+        ISBN: '',
+        ano_publicacao: '',
+        editora: '',
+        categoria: '',
+        sinopse: ''
+      }
+    };
+  },
+
+  computed: {
+    livrosFiltrados(): Livro[] {
+      const termo = this.filtro.toLowerCase();
+      return this.livros.filter(livro =>
+        livro.titulo?.toLowerCase().includes(termo)
+      );
     },
-
-    mounted() {
-        this.buscarLivro();
+    totalPaginas(): number {
+      return Math.ceil(this.livrosFiltrados.length / this.itensPorPagina);
     },
-
-    methods: {
-        buscarLivro() {
-            this.listarLivro.push({
-                titulo: 'Jogos Vorazes',
-                isbn: '1-232-21-31231212',
-                autor: 'Suzanne Collins',
-                ano_publicacao: '2008'
-            });
-
-            this.listarLivro.push({
-                titulo: 'Tudo é Rio',
-                isbn: '4-765-45-123123151',
-                autor: 'Carla Madeiras',
-                ano_publicacao: '2014'
-            });
-
-            this.listarLivro.push({
-                titulo: 'A Culpa É das Estrelas',
-                isbn: '7-246-87-098098898',
-                autor: 'John Green',
-                ano_publicacao: '2012'
-            });
-        }
+    livrosPaginados(): Livro[] {
+      const inicio = (this.paginaAtual - 1) * this.itensPorPagina;
+      return this.livrosFiltrados.slice(inicio, inicio + this.itensPorPagina);
     }
+  },
 
+  mounted() {
+    this.buscarLivros();
+  },
+
+  methods: {
+    async buscarLivros() {
+      try {
+        const response = await axios.get('http://localhost:3000/livros');
+        this.livros = response.data;
+      } catch (erro: any) {
+        console.error('Erro ao buscar livros:', erro);
+        Swal.fire({
+          icon: 'error',
+          title: 'Erro ao carregar livros',
+          text: erro.message || 'Verifique se o servidor JSON está ativo.'
+        });
+      }
+    },
+
+    visualizarLivro(livro: Livro) {
+      this.livroSelecionado = livro;
+      this.mostrarModal = true;
+    },
+
+    fecharModal() {
+      this.mostrarModal = false;
+    },
+
+    confirmarExclusao(livro: Livro) {
+      Swal.fire({
+        title: 'Tem certeza?',
+        text: `Deseja excluir o livro "${livro.titulo}"?`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Sim, excluir!',
+        cancelButtonText: 'Cancelar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.excluirLivro(livro.id);
+        }
+      });
+    },
+
+    async excluirLivro(id: string) {
+      try {
+        await axios.delete(`http://localhost:3000/livros/${id}`);
+        this.livros = this.livros.filter(l => l.id !== id);
+        Swal.fire({
+          icon: 'success',
+          title: 'Excluído!',
+          text: 'Livro removido com sucesso.'
+        });
+      } catch (erro: any) {
+        console.error('Erro ao excluir livro:', erro);
+        Swal.fire({
+          icon: 'error',
+          title: 'Erro ao excluir livro',
+          text: erro.message || 'Tente novamente mais tarde.'
+        });
+      }
+    },
+
+    irParaPagina(pagina: number) {
+      this.paginaAtual = pagina;
+    }
+  }
 });
 </script>

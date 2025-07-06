@@ -107,9 +107,12 @@
 
             </div>
           </div>
-          <div class="form-group row">
-            <div class="col">
-              <button type="submit" class="btn btn-success btn-fw btn-lg">Cadastrar</button>
+          <div class="form-group row mt-4">
+            <div class="col-auto">
+              <button type="submit" class="btn btn-success btn-lg">Salvar</button>
+            </div>
+            <div class="col-auto">
+              <button type="button" class="btn btn-secondary btn-lg" @click="limparCampos">Limpar</button>
             </div>
           </div>
         </form>
@@ -135,7 +138,7 @@ export default defineComponent({
   data() {
     return {
       CadLivro: {
-        id:'',
+        id: '',
         titulo: '',
         autor: '',
         ISBN: '',
@@ -185,7 +188,20 @@ export default defineComponent({
       if (!result) return;
 
       console.log('Dados do formulário', this.CadLivro);
-    }
-  }
+    },
+
+    limparCampos() {
+      this.CadLivro = {
+        id: '',
+        titulo: '',
+        autor: '',
+        ISBN: '',
+        ano_publicacao: '',
+        editora: '',
+        categoria: '',
+        sinopse: '',
+      };
+    },
+  },
 });
 </script>
