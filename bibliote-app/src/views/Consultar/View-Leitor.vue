@@ -152,10 +152,10 @@ export default defineComponent({
       }
     },
 
-    confirmarExclusao(leitor: Leitor) {
+    confirmarExclusao(item: Leitor) {
       Swal.fire({
         title: 'Tem certeza?',
-        text: `Deseja excluir o leitor "${leitor.nome}"?`,
+        text: `Deseja excluir o leitor "${item.nome}"?`,
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#d33',
@@ -164,7 +164,7 @@ export default defineComponent({
         cancelButtonText: 'Cancelar'
       }).then(result => {
         if (result.isConfirmed) {
-          this.excluirLeitor(leitor.id);
+          this.excluirLeitor(item.id);
         }
       });
     },
