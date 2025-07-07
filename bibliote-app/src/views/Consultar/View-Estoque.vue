@@ -92,7 +92,6 @@ import { defineComponent } from 'vue';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import ModalEstoque from '@/components/modals/ModalEstoque.vue';
-import EditarCategoria from '../Editar/Editar-Categoria.vue';
 
 interface Estoque {
     id: string;

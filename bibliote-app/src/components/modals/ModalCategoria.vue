@@ -8,7 +8,9 @@
       <div class="modal-body">
         <div class="grid-container">
           <div class="grid-item"><strong class="cor">Nome: </strong> {{ categoria.nome }}</div>
-          <div class="grid-item"><strong class="cor">Descrição: </strong> {{ categoria.descricao }}</div>
+          <div class="grid-item" style="grid-column: 1 / -1;">
+            <strong class="cor">Sinopse:</strong><br /> {{ categoria.descricao }}
+          </div>
         </div>
       </div>
       <div class="modal-footer">

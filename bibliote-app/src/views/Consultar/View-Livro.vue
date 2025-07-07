@@ -33,7 +33,7 @@
                   <th>Título</th>
                   <th>ISBN</th>
                   <th>Autor</th>
-                  <th>Ano de publicação</th>
+                  <th>Categoria</th>
                   <th class="text-center">Ações</th>
                 </tr>
               </thead>
@@ -42,15 +42,15 @@
                   <td>{{ livro.titulo }}</td>
                   <td>{{ livro.ISBN }}</td>
                   <td>{{ livro.autor }}</td>
-                  <td>{{ livro.ano_publicacao }}</td>
+                  <td>{{ livro.nomeCategoria }}</td>
                   <td>
                     <div class="d-flex justify-content-end">
                       <button class="btn btn-info btn-sm" @click="visualizarLivro(livro)">
                         <i class="mdi mdi-magnify"></i>
                       </button>
-                      <RouterLink class="btn btn-success btn-sm gap1" :to="`/editar-livro/${livro.id}`">
+                      <button class="btn btn-success btn-sm gap1" @click="editarEstoque(livro.id)">
                         <i class="mdi mdi-pencil"></i>
-                      </RouterLink>
+                      </button>
                       <button class="btn btn-danger btn-sm gap1" @click="confirmarExclusao(livro)">
                         <i class="mdi mdi-delete"></i>
                       </button>
@@ -98,6 +98,7 @@ interface Livro {
   editora: string;
   categoria: string;
   sinopse: string;
+  nomeCategoria?: string;
 }
 
 export default defineComponent({
@@ -107,6 +108,7 @@ export default defineComponent({
   data() {
     return {
       livros: [] as Livro[],
+      categorias: [] as any[],
       filtro: '',
       paginaAtual: 1,
       itensPorPagina: 8,
@@ -146,11 +148,25 @@ export default defineComponent({
 
   methods: {
     async buscarLivros() {
+      this.paginaAtual = 1;
       try {
-        const response = await axios.get('http://localhost:3000/livros');
-        this.livros = response.data;
+        const [resCategorias, resLivro] = await Promise.all([
+          await axios.get('http://localhost:3000/categorias'),
+          await axios.get('http://localhost:3000/livros')
+        ]);
+
+        this.categorias = resCategorias.data;
+
+        this.livros = resLivro.data.map((item: Livro) => {
+          const categoriaEncontrada = this.categorias.find(cat => cat.id === item.categoria);
+          return {
+            ...item,
+            nomeCategoria: categoriaEncontrada ? categoriaEncontrada.nome : 'Categoria não encontrada'
+          };
+        });
+
       } catch (erro: any) {
-        console.error('Erro ao buscar livros:', erro);
+        console.error('Erro ao buscar livros ou categoria:', erro);
         Swal.fire({
           icon: 'error',
           title: 'Erro ao carregar livros',
@@ -203,6 +219,12 @@ export default defineComponent({
         });
       }
     },
+
+    //Edição
+    async editarEstoque(id: string) {
+      this.$router.push(`/editar/livro/${id}`);
+    },
+
 
     irParaPagina(pagina: number) {
       this.paginaAtual = pagina;
