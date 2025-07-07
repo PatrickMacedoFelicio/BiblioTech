@@ -88,12 +88,13 @@ const router = createRouter({
       name: 'colaboradores',
       component: () => import('../views/Others/Us.vue'),
     },
+    
     //Edições
     {
       path: '/editar/estoque/:id',
       name: 'editarEstoque',
       component: () => import('../views/Cadastrar/Cad-Estoque.vue'),
-    }, 
+    },
     {
       path: '/editar/categoria/:id',
       name: 'editarCategoria',
@@ -103,6 +104,21 @@ const router = createRouter({
       path: '/editar/livro/:id',
       name: 'editarCategoria',
       component: () => import('../views/Cadastrar/Cad-Livro.vue'),
+    },
+    {
+      path: '/editar/fornecedor/:id',
+      name: 'editarForncedor',
+      component: () => import('../views/Cadastrar/Cad-Fornecedor.vue'),
+    },
+    {
+      path: '/editar/funcionario/:id',
+      name: 'editarFuncionario',
+      component: () => import('../views/Cadastrar/Cad-Funcionario.vue'),
+    },
+      {
+      path: '/editar/leitor/:id',
+      name: 'editarLeitor',
+      component: () => import('../views/Cadastrar/Cad-Leitor.vue'),
     },
   ],
 })

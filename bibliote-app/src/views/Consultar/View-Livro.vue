@@ -150,9 +150,9 @@ export default defineComponent({
     async buscarLivros() {
       this.paginaAtual = 1;
       try {
-        const [resCategorias, resLivro] = await Promise.all([
-          await axios.get('http://localhost:3000/categorias'),
-          await axios.get('http://localhost:3000/livros')
+        const [resLivro, resCategorias ] = await Promise.all([
+          await axios.get('http://localhost:3000/livros'),
+          await axios.get('http://localhost:3000/categorias')
         ]);
 
         this.categorias = resCategorias.data;
