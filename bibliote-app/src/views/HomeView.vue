@@ -24,11 +24,11 @@
         </div>
       </div>
     </div>
-    
+
     <div class="col-sm-4 grid-margin">
       <div class="card">
         <div class="card-body">
-          <h5>Emprestimos de Livores</h5>
+          <h5>Emprestimos</h5>
           <div class="row">
             <div class="col-8 col-sm-12 col-xl-8 my-auto">
               <div class="d-flex d-sm-block d-md-flex align-items-center">
@@ -44,7 +44,7 @@
         </div>
       </div>
     </div>
-    
+
     <div class="col-sm-4 grid-margin">
       <div class="card">
         <div class="card-body">
@@ -100,11 +100,29 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, ref } from 'vue'
-import Chart from 'chart.js/auto'
+import Chart from 'chart.js/auto';
+import axios from 'axios';
+
 
 export default defineComponent({
   name: 'IndexView',
   setup() {
+    // as metricas de cima
+    const totalLeitores = ref(0)
+
+
+    const carregarLeitores = async () => {
+      try {
+        const resposta = await axios.get('http://localhost:3000/leitores')
+        totalLeitores.value = resposta.data.length
+      } catch (erro) {
+        console.error('Erro ao carregar leitores:', erro)
+      }
+    }
+
+    // O grafico
+
+
     const labels = [
       'Ficção', 'Suspense', 'Romance', 'Ação',
       'Fantasia', 'Biografia', 'Ciência', 'História',
@@ -194,10 +212,13 @@ export default defineComponent({
           }
         }
       })
+       carregarLeitores();
     })
 
     return { labels, colors, quickChecks }
   }
+
+  
 })
 </script>
 
