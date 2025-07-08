@@ -82,8 +82,8 @@
               <label for="exampleFormControlSelect1">Categoria</label>
               <select class="form-control form-control-lg" id="exampleFormControlSelect1" v-model="livro.categoria">
                 <option value="" disabled>Selecione a categoria...</option>
-                <option v-for="cat in listarCategorias" :key="cat.id" :value="cat.id">
-                  {{ cat.nome }}
+                <option v-for="(cate, index) in listarCategorias" :key="index" :value="cate.id">
+                  {{ cate.nome }}
                 </option>
               </select>
 
@@ -229,7 +229,7 @@ export default defineComponent({
           Toast.fire({ icon: 'success', title: 'Livro cadastrado com sucesso!' });
         }
 
-        this.$router.push('/consultar/livros');
+        this.$router.push('/consultar/livro');
       } catch (erro) {
         Swal.fire({
           icon: 'error',
@@ -259,7 +259,7 @@ export default defineComponent({
           ISBN: resposta.data.ISBN,
           ano_publicacao: resposta.data.ano_publicacao,
           editora: resposta.data.editora,
-          categoria: resposta.data.Categoria,
+          categoria: resposta.data.categoria,
           sinopse: resposta.data.sinopse,
         };
       } catch (erro) {

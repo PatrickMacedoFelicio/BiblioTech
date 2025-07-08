@@ -4,19 +4,16 @@
       <div class="card-body">
         <h3 class="card-title">{{ ehEdicao ? 'Atualização de' : 'Cadastro de' }} Estoque</h3>
         <form @submit.prevent="salvar">
-
           <div class="form-group row align-items-end">
             <div class="col-6">
               <label>Título do Livro</label>
-              <select class="form-control form-control-lg" v-model="estoque.livro">
-                <option value="" disabled>Selecione o livro...</option>
-                <option v-for="livro in listarLivros" :key="livro.id" :value="livro.id">
-                  {{ livro.titulo }}
-                </option>
-              </select>
+              <v-select  v-model="estoque.livro" :options="listarLivros" label="titulo" :reduce="livro => livro.id"
+                placeholder="Digite ou selecione um livro..." class="form-control form-control-lg p-0" />
+
               <div class="text-danger" v-if="v$.estoque.livro.$error">
                 <small>{{ v$.estoque.livro.$errors[0].$message }}</small>
               </div>
+              
             </div>
             <div class="col-2 text-end">
               <router-link class="btn btn-info btn-lg px-4 py-3" to="/cadastrar/livro">
@@ -64,12 +61,18 @@ import { required, minValue, helpers } from '@vuelidate/validators';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { Toast } from '@/common/toast';
+import vSelect from "vue3-select";
+import "vue3-select/dist/vue3-select.css"
 
 export default defineComponent({
   name: 'CadastroEstoque',
 
   setup() {
     return { v$: useVuelidate() };
+  },
+
+  components: {
+    'v-select': vSelect
   },
 
   computed: {
@@ -87,7 +90,7 @@ export default defineComponent({
         id: '',
         codigoBarras: '',
         quantidade: 0,
-        livro: ''
+        livro: '',
       },
       estoques: [] as any[],
       listarLivros: [] as any[],
@@ -172,7 +175,7 @@ export default defineComponent({
           id: resposta.data.id,
           codigoBarras: resposta.data.codigoBarras,
           quantidade: resposta.data.quantidade,
-          livro: resposta.data.livro?.id || resposta.data.livro || ''
+          livro: resposta.data.livro
         };
       } catch (erro) {
         Toast.fire({
@@ -210,8 +213,9 @@ export default defineComponent({
   },
 
   async mounted() {
-    await this.carregarLivros();
     await this.carregarEstoque();
+    await this.carregarLivros();
+
 
     if (this.ehEdicao) {
       await this.carregarDados();
@@ -219,3 +223,37 @@ export default defineComponent({
   }
 });
 </script>
+
+<style>
+/* Fundo do seletor */
+.vue3-select {
+  background-color: #1e1e2f; /* fundo escuro */
+  border: 1px solid #444; /* borda mais escura */
+  color: #eee; /* texto claro */
+}
+
+/* Placeholder e texto */
+.vue3-select .vue3-select__control {
+  background-color: #1e1e2f !important;
+  color: #eee !important;
+}
+
+/* Lista de opções */
+.vue3-select__menu {
+  background-color: #2c2c3e;
+  color: #eee;
+  border: 1px solid #444;
+}
+
+/* Opção selecionada */
+.vue3-select__option--selected {
+  background-color: #6357ff; /* roxo que casa com o botão + */
+  color: white;
+}
+
+/* Opção ao passar o mouse */
+.vue3-select__option--highlight {
+  background-color: #4b46cc;
+  color: white;
+}
+</style>

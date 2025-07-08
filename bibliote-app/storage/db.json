@@ -103,12 +103,6 @@
   ],
   "estoques": [
     {
-      "id": "e1a2b3",
-      "codigoBarras": "9780000000001",
-      "quantidade": 3,
-      "livro": "livro-1"
-    },
-    {
       "id": "c4d5e6",
       "codigoBarras": "9780000000002",
       "quantidade": 5,
@@ -711,197 +705,197 @@
     }
   ],
   "livros": [
-  {
-    "id": "livro-2",
-    "titulo": "Harry Potter e a Pedra Filosofal",
-    "autor": "J.K. Rowling",
-    "ISBN": "ISBN-0002",
-    "ano_publicacao": "1997-06-26",
-    "editora": "Rocco",
-    "categoria": "c2",
-    "sinopse": "Primeiro livro da série Harry Potter."
-  },
-  {
-    "id": "livro-3",
-    "titulo": "1984",
-    "autor": "George Orwell",
-    "ISBN": "ISBN-0003",
-    "ano_publicacao": "1949-06-08",
-    "editora": "Companhia das Letras",
-    "categoria": "c6",
-    "sinopse": "Uma visão sombria de um futuro totalitário."
-  },
-  {
-    "id": "livro-4",
-    "titulo": "Dom Casmurro",
-    "autor": "Machado de Assis",
-    "ISBN": "ISBN-0004",
-    "ano_publicacao": "1899-01-01",
-    "editora": "Editora Brasileira",
-    "categoria": "c3",
-    "sinopse": "A história de Bentinho e Capitu."
-  },
-  {
-    "id": "livro-5",
-    "titulo": "Capitães da Areia",
-    "autor": "Jorge Amado",
-    "ISBN": "ISBN-0005",
-    "ano_publicacao": "1937-01-01",
-    "editora": "Companhia das Letras",
-    "categoria": "c3",
-    "sinopse": "Grupo de meninos de rua em Salvador."
-  },
-  {
-    "id": "livro-6",
-    "titulo": "O Sol é Para Todos",
-    "autor": "Harper Lee",
-    "ISBN": "ISBN-0006",
-    "ano_publicacao": "1960-07-11",
-    "editora": "Editora Harper",
-    "categoria": "c4",
-    "sinopse": "Questões raciais nos EUA."
-  },
-  {
-    "id": "livro-7",
-    "titulo": "A Culpa é das Estrelas",
-    "autor": "John Green",
-    "ISBN": "ISBN-0007",
-    "ano_publicacao": "2012-01-10",
-    "editora": "Intrínseca",
-    "categoria": "c3",
-    "sinopse": "Dois adolescentes com câncer se apaixonam."
-  },
-  {
-    "id": "livro-8",
-    "titulo": "O Código Da Vinci",
-    "autor": "Dan Brown",
-    "ISBN": "ISBN-0008",
-    "ano_publicacao": "2003-03-18",
-    "editora": "Sextante",
-    "categoria": "c8",
-    "sinopse": "Mistérios envolvendo religião e história."
-  },
-  {
-    "id": "livro-9",
-    "titulo": "O Alquimista",
-    "autor": "Paulo Coelho",
-    "ISBN": "ISBN-0009",
-    "ano_publicacao": "1988-01-01",
-    "editora": "Rocco",
-    "categoria": "c11",
-    "sinopse": "Jornada espiritual de um jovem pastor."
-  },
-  {
-    "id": "livro-10",
-    "titulo": "Orgulho e Preconceito",
-    "autor": "Jane Austen",
-    "ISBN": "ISBN-0010",
-    "ano_publicacao": "1813-01-28",
-    "editora": "Penguin",
-    "categoria": "c3",
-    "sinopse": "Clássico sobre relacionamentos e status social."
-  },
-  {
-    "id": "livro-11",
-    "titulo": "1984",
-    "autor": "George Orwell",
-    "ISBN": "ISBN-0011",
-    "ano_publicacao": "1949-06-08",
-    "editora": "Companhia das Letras",
-    "categoria": "c6",
-    "sinopse": "Um romance sobre vigilância totalitária e liberdade."
-  },
-  {
-    "id": "livro-12",
-    "titulo": "Dom Casmurro",
-    "autor": "Machado de Assis",
-    "ISBN": "ISBN-0012",
-    "ano_publicacao": "1899-01-01",
-    "editora": "Editora Record",
-    "categoria": "c3",
-    "sinopse": "Narrativa ambígua sobre amor, ciúme e memória."
-  },
-  {
-    "id": "livro-13",
-    "titulo": "O Hobbit",
-    "autor": "J.R.R. Tolkien",
-    "ISBN": "ISBN-0013",
-    "ano_publicacao": "1937-09-21",
-    "editora": "Martins Fontes",
-    "categoria": "c2",
-    "sinopse": "A aventura de Bilbo Bolseiro em uma terra fantástica."
-  },
-  {
-    "id": "livro-14",
-    "titulo": "O Pequeno Príncipe",
-    "autor": "Antoine de Saint-Exupéry",
-    "ISBN": "ISBN-0014",
-    "ano_publicacao": "1943-04-06",
-    "editora": "Agir",
-    "categoria": "c4",
-    "sinopse": "Uma história poética sobre amizade e amor."
-  },
-  {
-    "id": "livro-15",
-    "titulo": "A Revolução dos Bichos",
-    "autor": "George Orwell",
-    "ISBN": "ISBN-0015",
-    "ano_publicacao": "1945-08-17",
-    "editora": "Companhia das Letras",
-    "categoria": "c17",
-    "sinopse": "Allegoria política sobre a Revolução Russa."
-  },
-  {
-    "id": "livro-16",
-    "titulo": "Capitães da Areia",
-    "autor": "Jorge Amado",
-    "ISBN": "ISBN-0016",
-    "ano_publicacao": "1937-01-01",
-    "editora": "Companhia das Letras",
-    "categoria": "c3",
-    "sinopse": "A vida de meninos de rua em Salvador."
-  },
-  {
-    "id": "livro-17",
-    "titulo": "Ensaio Sobre a Cegueira",
-    "autor": "José Saramago",
-    "ISBN": "ISBN-0017",
-    "ano_publicacao": "1995-01-01",
-    "editora": "Companhia das Letras",
-    "categoria": "c6",
-    "sinopse": "Uma epidemia de cegueira atinge uma cidade inteira."
-  },
-  {
-    "id": "livro-18",
-    "titulo": "O Código Da Vinci",
-    "autor": "Dan Brown",
-    "ISBN": "ISBN-0018",
-    "ano_publicacao": "2003-03-18",
-    "editora": "Sextante",
-    "categoria": "c8",
-    "sinopse": "Mistérios e conspirações envolvendo a Igreja e a arte."
-  },
-  {
-    "id": "livro-19",
-    "titulo": "Harry Potter e a Pedra Filosofal",
-    "autor": "J.K. Rowling",
-    "ISBN": "ISBN-0019",
-    "ano_publicacao": "1997-06-26",
-    "editora": "Rocco",
-    "categoria": "c2",
-    "sinopse": "O início da jornada do jovem bruxo Harry Potter."
-  },
-  {
-    "id": "livro-20",
-    "titulo": "A Menina que Roubava Livros",
-    "autor": "Markus Zusak",
-    "ISBN": "ISBN-0020",
-    "ano_publicacao": "2005-09-01",
-    "editora": "Intrínseca",
-    "categoria": "c4",
-    "sinopse": "História comovente sobre palavras e sobrevivência na guerra."
-  }
-],
+    {
+      "id": "livro-2",
+      "titulo": "Harry Potter e a Pedra Filosofal",
+      "autor": "J.K. Rowling",
+      "ISBN": "ISBN-0002",
+      "ano_publicacao": "1997-06-26",
+      "editora": "Rocco",
+      "categoria": "c2",
+      "sinopse": "Primeiro livro da série Harry Potter."
+    },
+    {
+      "id": "livro-3",
+      "titulo": "1984",
+      "autor": "George Orwell",
+      "ISBN": "ISBN-0003",
+      "ano_publicacao": "1949-06-08",
+      "editora": "Companhia das Letras",
+      "categoria": "c6",
+      "sinopse": "Uma visão sombria de um futuro totalitário."
+    },
+    {
+      "id": "livro-4",
+      "titulo": "Dom Casmurro",
+      "autor": "Machado de Assis",
+      "ISBN": "ISBN-0004",
+      "ano_publicacao": "1899-01-01",
+      "editora": "Editora Brasileira",
+      "categoria": "c3",
+      "sinopse": "A história de Bentinho e Capitu."
+    },
+    {
+      "id": "livro-5",
+      "titulo": "Capitães da Areia",
+      "autor": "Jorge Amado",
+      "ISBN": "ISBN-0005",
+      "ano_publicacao": "1937-01-01",
+      "editora": "Companhia das Letras",
+      "categoria": "c3",
+      "sinopse": "Grupo de meninos de rua em Salvador."
+    },
+    {
+      "id": "livro-6",
+      "titulo": "O Sol é Para Todos",
+      "autor": "Harper Lee",
+      "ISBN": "ISBN-0006",
+      "ano_publicacao": "1960-07-11",
+      "editora": "Editora Harper",
+      "categoria": "c4",
+      "sinopse": "Questões raciais nos EUA."
+    },
+    {
+      "id": "livro-7",
+      "titulo": "A Culpa é das Estrelas",
+      "autor": "John Green",
+      "ISBN": "ISBN-0007",
+      "ano_publicacao": "2012-01-10",
+      "editora": "Intrínseca",
+      "categoria": "c3",
+      "sinopse": "Dois adolescentes com câncer se apaixonam."
+    },
+    {
+      "id": "livro-8",
+      "titulo": "O Código Da Vinci",
+      "autor": "Dan Brown",
+      "ISBN": "ISBN-0008",
+      "ano_publicacao": "2003-03-18",
+      "editora": "Sextante",
+      "categoria": "c8",
+      "sinopse": "Mistérios envolvendo religião e história."
+    },
+    {
+      "id": "livro-9",
+      "titulo": "O Alquimista",
+      "autor": "Paulo Coelho",
+      "ISBN": "ISBN-0009",
+      "ano_publicacao": "1988-01-01",
+      "editora": "Rocco",
+      "categoria": "c11",
+      "sinopse": "Jornada espiritual de um jovem pastor."
+    },
+    {
+      "id": "livro-10",
+      "titulo": "Orgulho e Preconceito",
+      "autor": "Jane Austen",
+      "ISBN": "ISBN-0010",
+      "ano_publicacao": "1813-01-28",
+      "editora": "Penguin",
+      "categoria": "c3",
+      "sinopse": "Clássico sobre relacionamentos e status social."
+    },
+    {
+      "id": "livro-11",
+      "titulo": "1984",
+      "autor": "George Orwell",
+      "ISBN": "ISBN-0011",
+      "ano_publicacao": "1949-06-08",
+      "editora": "Companhia das Letras",
+      "categoria": "c6",
+      "sinopse": "Um romance sobre vigilância totalitária e liberdade."
+    },
+    {
+      "id": "livro-12",
+      "titulo": "Dom Casmurro",
+      "autor": "Machado de Assis",
+      "ISBN": "ISBN-0012",
+      "ano_publicacao": "1899-01-01",
+      "editora": "Editora Record",
+      "categoria": "c3",
+      "sinopse": "Narrativa ambígua sobre amor, ciúme e memória."
+    },
+    {
+      "id": "livro-13",
+      "titulo": "O Hobbit",
+      "autor": "J.R.R. Tolkien",
+      "ISBN": "ISBN-0013",
+      "ano_publicacao": "1937-09-21",
+      "editora": "Martins Fontes",
+      "categoria": "c2",
+      "sinopse": "A aventura de Bilbo Bolseiro em uma terra fantástica."
+    },
+    {
+      "id": "livro-14",
+      "titulo": "O Pequeno Príncipe",
+      "autor": "Antoine de Saint-Exupéry",
+      "ISBN": "ISBN-0014",
+      "ano_publicacao": "1943-04-06",
+      "editora": "Agir",
+      "categoria": "c4",
+      "sinopse": "Uma história poética sobre amizade e amor."
+    },
+    {
+      "id": "livro-15",
+      "titulo": "A Revolução dos Bichos",
+      "autor": "George Orwell",
+      "ISBN": "ISBN-0015",
+      "ano_publicacao": "1945-08-17",
+      "editora": "Companhia das Letras",
+      "categoria": "c17",
+      "sinopse": "Allegoria política sobre a Revolução Russa."
+    },
+    {
+      "id": "livro-16",
+      "titulo": "Capitães da Areia",
+      "autor": "Jorge Amado",
+      "ISBN": "ISBN-0016",
+      "ano_publicacao": "1937-01-01",
+      "editora": "Companhia das Letras",
+      "categoria": "c3",
+      "sinopse": "A vida de meninos de rua em Salvador."
+    },
+    {
+      "id": "livro-17",
+      "titulo": "Ensaio Sobre a Cegueira",
+      "autor": "José Saramago",
+      "ISBN": "ISBN-0017",
+      "ano_publicacao": "1995-01-01",
+      "editora": "Companhia das Letras",
+      "categoria": "c6",
+      "sinopse": "Uma epidemia de cegueira atinge uma cidade inteira."
+    },
+    {
+      "id": "livro-18",
+      "titulo": "O Código Da Vinci",
+      "autor": "Dan Brown",
+      "ISBN": "ISBN-0018",
+      "ano_publicacao": "2003-03-18",
+      "editora": "Sextante",
+      "categoria": "c8",
+      "sinopse": "Mistérios e conspirações envolvendo a Igreja e a arte."
+    },
+    {
+      "id": "livro-19",
+      "titulo": "Harry Potter e a Pedra Filosofal",
+      "autor": "J.K. Rowling",
+      "ISBN": "ISBN-0019",
+      "ano_publicacao": "1997-06-26",
+      "editora": "Rocco",
+      "categoria": "c2",
+      "sinopse": "O início da jornada do jovem bruxo Harry Potter."
+    },
+    {
+      "id": "livro-20",
+      "titulo": "A Menina que Roubava Livros",
+      "autor": "Markus Zusak",
+      "ISBN": "ISBN-0020",
+      "ano_publicacao": "2005-09-01",
+      "editora": "Intrínseca",
+      "categoria": "c4",
+      "sinopse": "História comovente sobre palavras e sobrevivência na guerra."
+    }
+  ],
   "leitores": [
     {
       "id": "2b3c4d",
