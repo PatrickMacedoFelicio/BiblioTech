@@ -8,14 +8,14 @@
     <div class="col-sm-4 grid-margin">
       <div class="card">
         <div class="card-body">
-          <h5>Leitores Cadastrados</h5>
+          <h4>Núemro de Leitores</h4>
           <div class="row">
             <div class="col-8 col-sm-12 col-xl-8 my-auto">
               <div class="d-flex d-sm-block d-md-flex align-items-center">
-                <h2 class="mb-0">102</h2>
-                <p class="text-success ml-2 mb-0 font-weight-medium">+3.5%</p>
+                <h2 class="text-primary mb-0">{{ totalLeitores }}</h2>
+                <h3 class="ml-2 mb-0 font-weight-medium"> Cadastrados</h3>
               </div>
-              <h6 class="text-muted font-weight-normal">11.38% do mês passado</h6>
+              <h6 class="text-muted font-weight-normal">Número total no sistema</h6>
             </div>
             <div class="col-4 col-sm-12 col-xl-4 text-center text-xl-right">
               <i class="icon-lg mdi mdi-account-multiple-outline text-primary ml-auto"></i>
@@ -28,14 +28,14 @@
     <div class="col-sm-4 grid-margin">
       <div class="card">
         <div class="card-body">
-          <h5>Emprestimos</h5>
+          <h4>Quantidade de Emprestimos</h4>
           <div class="row">
             <div class="col-8 col-sm-12 col-xl-8 my-auto">
               <div class="d-flex d-sm-block d-md-flex align-items-center">
-                <h2 class="mb-0">34</h2>
-                <p class="text-success ml-2 mb-0 font-weight-medium">+8.3%</p>
+                <h2 class="text-danger mb-0">400</h2>
+                <h3 class="ml-2 mb-0 font-weight-medium"> Emprestimos</h3>
               </div>
-              <h6 class="text-muted font-weight-normal">9.61% do mês passado</h6>
+              <h6 class="text-muted font-weight-normal">Finalizados e em andamento</h6>
             </div>
             <div class="col-4 col-sm-12 col-xl-4 text-center text-xl-right">
               <i class="icon-lg mdi mdi-book-open-page-variant text-danger ml-auto"></i>
@@ -48,14 +48,14 @@
     <div class="col-sm-4 grid-margin">
       <div class="card">
         <div class="card-body">
-          <h5>Emprestimos Vencidos</h5>
+          <h4>Emprestimos Vencidos</h4>
           <div class="row">
             <div class="col-8 col-sm-12 col-xl-8 my-auto">
               <div class="d-flex d-sm-block d-md-flex align-items-center">
-                <h2 class="mb-0">$2039</h2>
-                <p class="text-danger ml-2 mb-0 font-weight-medium">-2.1%</p>
+                <h2 class="text-success mb-0">45</h2>
+                <h3 class="ml-2 mb-0 font-weight-medium"> Vencidos</h3>
               </div>
-              <h6 class="text-muted font-weight-normal">2.27% Since last month</h6>
+              <h6 class="text-muted font-weight-normal">Total com o status vencido em aberto</h6>
             </div>
             <div class="col-4 col-sm-12 col-xl-4 text-center text-xl-right">
               <i class="icon-lg mdi mdi-monitor text-success ml-auto"></i>
@@ -212,17 +212,22 @@ export default defineComponent({
           }
         }
       })
-       carregarLeitores();
+      carregarLeitores();
     })
 
-    return { labels, colors, quickChecks }
+    return { totalLeitores, labels, colors, quickChecks }
   }
 
-  
+
 })
 </script>
 
 <style scoped>
+
+h4{
+  color: #e7e8ee;
+}
+
 .chart-container {
   position: relative;
   width: 100%;

@@ -79,11 +79,6 @@ const router = createRouter({
       component: () => import('../views/Others/Devolucao.vue'),
     },
     {
-      path: '/FilaEspera',
-      name: 'filaEspera',
-      component: () => import('../views/Others/FilaEspera.vue'),
-    },
-    {
       path: '/Colaboradores',
       name: 'colaboradores',
       component: () => import('../views/Others/Us.vue'),
@@ -102,7 +97,7 @@ const router = createRouter({
     },
     {
       path: '/editar/livro/:id',
-      name: 'editarCategoria',
+      name: 'editarLivro',
       component: () => import('../views/Cadastrar/Cad-Livro.vue'),
     },
     {

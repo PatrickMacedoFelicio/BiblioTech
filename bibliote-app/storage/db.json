@@ -1093,5 +1093,14 @@
       "estado": "MT",
       "cidade": "Cuiabá"
     }
+  ],
+  "emprestar": [
+    {
+      "id": "cdidcg",
+      "leitor": "3m4n5o",
+      "livro": "livro-18",
+      "data_inicio": "2025-07-09",
+      "data_validade": "2025-07-25"
+    }
   ]
 }

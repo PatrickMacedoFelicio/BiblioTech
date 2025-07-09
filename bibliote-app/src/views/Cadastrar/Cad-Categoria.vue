@@ -3,7 +3,7 @@
     <div class="card">
       <div class="card-body">
         <form @submit.prevent="salvar">
-          <h3 class="card-title">Cadastro de Fornecedor</h3>
+          <h3 class="card-title">{{ ehEdicao ? 'Atualização de' : 'Cadastro de' }} Categoria</h3>
 
           <div class="form-group row">
             <div class="col">

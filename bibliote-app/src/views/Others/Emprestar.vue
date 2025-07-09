@@ -5,7 +5,7 @@
         <div class="container">
           <div class="row justify-content-center">
             <div class="col-md-9">
-              <form @submit.prevent="">
+              <form @submit.prevent="salvar">
                 <h1 class="card-title">Emprestar Livros</h1>
                 <div class="form-group row">
 
@@ -50,9 +50,6 @@
                   <div class="col-6">
                     <label>Data de Empréstimo</label>
                     <input class="form-control form-control-lg" v-model="emprestimo.data_inicio" type="date" readonly />
-                    <div class="text-danger" v-if="v$.emprestimo.data_inicio.$error">
-                      <small>{{ v$.emprestimo.data_inicio.$errors[0].$message }}</small>
-                    </div>
                   </div>
                   <div class="col-6">
                     <label>Data de Devolução</label>
@@ -118,16 +115,13 @@ export default defineComponent({
     return {
       emprestimo: {
         leitor: {
-          required: helpers.withMessage('Nome é obrigatorio!', required)
+          required: helpers.withMessage('Selecione um Leitor!', required)
         },
         livro: {
-          required: helpers.withMessage('E-mail é obrigatorio', required)
-        },
-        data_inicio: {
-          required: helpers.withMessage('Cargo é obrigatorio', required)
+          required: helpers.withMessage('Selecione um Livro!', required)
         },
         data_validade: {
-          required: helpers.withMessage('CPF é obrigatório', required),
+          required: helpers.withMessage('Selecione uma data de Validade!', required),
         }
       }
     };
@@ -135,11 +129,64 @@ export default defineComponent({
 
   methods: {
     async salvar() {
+      const valido = await this.v$.$validate();
+      if (!valido) return;
 
+      const confirmado = await Swal.fire({
+        title: 'Confirmar cadastro?',
+        text: 'Deseja realmente fazer este emprestimo?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#28a745',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Sim, emprestar!',
+        cancelButtonText: 'Cancelar'
+      });
+
+      if (!confirmado.isConfirmed) return;
+
+      const novoEmprestimo = {
+        id: Math.random().toString(36).substring(2, 8),
+        leitor: this.emprestimo.leitor,
+        livro: this.emprestimo.livro,
+        data_inicio: this.emprestimo.data_inicio,
+        data_validade: this.emprestimo.data_validade
+      };
+
+      try {
+        await axios.post('http://localhost:3000/emprestar', novoEmprestimo);
+        Toast.fire({
+          icon: 'success',
+          title: 'Emprestimo cadastrado com sucesso!'
+        });
+        this.limparCampos();
+        await this.carregarEmprestimo();
+      } catch (erro: any) {
+        let mensagemErro = 'Não foi possível salvar fornecedor.';
+
+        if (erro.response) {
+          mensagemErro = `Erro ${erro.response.status}: ${erro.response.statusText}`;
+        } else if (erro.request) {
+          mensagemErro = 'Sem resposta do servidor. Verifique sua conexão.';
+        } else if (erro.message) {
+          mensagemErro = erro.message;
+        }
+
+        Swal.fire({
+          icon: 'error',
+          title: 'Erro ao cadastrar o emprestimo',
+          text: mensagemErro
+        });
+        console.error('Erro completo:', erro);
+      }
     },
-
     async carregarEmprestimo() {
-
+      try {
+        const resposta = await axios.get('http://localhost:3000/emprestar');
+        this.emprestimo = resposta.data;
+      } catch (erro) {
+        console.error('Erro ao carregar Emprestimos:', erro);
+      }
     },
 
     // para edição das coisas
@@ -194,13 +241,11 @@ export default defineComponent({
     }
   },
 
-
   async mounted() {
     await this.carregarLivros();
     await this.carregarLeitores();
     await this.carregarEmprestimo();
   }
-
 });
 </script>
 

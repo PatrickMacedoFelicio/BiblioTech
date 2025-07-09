@@ -1,6 +1,6 @@
 <template>
     <div class="page-header">
-        <h3 class="card-title">Consulta de Fornecedores</h3>
+        <h3 class="card-title">Devolução</h3>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="#">Consultar</a></li>
@@ -14,10 +14,15 @@
             <div class="card">
                 <div class="card-body">
                     <div class="form-group row">
-                        <div class="col-5">
-                            <label>Nome do Fornecedor</label>
+                        <div class="col-4">
+                            <label>Livro</label>
                             <input class="form-control form-control-lg" type="text" v
-                                placeholder="Digite o nome do fornecedor..." />
+                                placeholder="Digite o livro..." />
+                        </div>
+                         <div class="col-4">
+                            <label>Nome do leitor</label>
+                            <input class="form-control form-control-lg" type="text" v
+                                placeholder="Digite o nome do leitor..." />
                         </div>
                         <div class="col col-lg-2 d-flex align-items-end">
                             <button class="btn btn-success btn-fw btn-lg w-100 btn-icon-text">
@@ -30,10 +35,11 @@
                         <table class="table">
                             <thead>
                                 <tr>
+                                    <th></th>
                                     <th>Nome</th>
-                                    <th>CNPJ</th>
-                                    <th>Telefone</th>
-                                    <th>Email</th>
+                                    <th>Livro</th>
+                                    <th>Data de Vencimento</th>
+                                    <th>Status</th>
                                     <th class="text-center">Ações</th>
                                 </tr>
                             </thead>
