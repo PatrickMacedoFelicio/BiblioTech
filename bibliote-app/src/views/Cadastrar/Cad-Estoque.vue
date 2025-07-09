@@ -66,7 +66,6 @@ import { required, minValue, helpers } from '@vuelidate/validators';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { Toast } from '@/common/toast';
-import vSelect from "vue3-select";
 import "vue3-select/dist/vue3-select.css"
 
 export default defineComponent({
@@ -74,10 +73,6 @@ export default defineComponent({
 
   setup() {
     return { v$: useVuelidate() };
-  },
-
-  components: {
-    'v-select': vSelect
   },
 
   computed: {
