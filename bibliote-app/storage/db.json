@@ -1096,11 +1096,15 @@
   ],
   "emprestar": [
     {
-      "id": "cdidcg",
-      "leitor": "3m4n5o",
-      "livro": "livro-18",
+      "id": "497iel",
+      "leitor": "1k2l3m",
+      "livros": [
+        "livro-2",
+        "livro-17"
+      ],
       "data_inicio": "2025-07-09",
-      "data_validade": "2025-07-25"
+      "data_validade": "2025-08-01",
+      "status": "Ativo"
     }
   ]
 }

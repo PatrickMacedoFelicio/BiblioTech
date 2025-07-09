@@ -31,7 +31,7 @@
 
                   <div class="form-group row align-items-end" v-for="(livroId, index) in emprestimo.livros"
                     :key="index">
-                    <div class="col-9">
+                    <div class="col-md-10">
                       <select class="form-control form-control-lg" v-model="emprestimo.livros[index]">
                         <option value="" disabled>Selecione o livro...</option>
                         <option v-for="livro in livrosDisponiveis(index)" :key="livro.id" :value="livro.id">
@@ -40,28 +40,21 @@
                       </select>
                     </div>
 
-                    <div class="col-1" v-if="emprestimo.livros.length > 1">
-                      <button class="btn btn-danger btn-lg w-100" type="button" @click="removerLivro(index)"
+                    <div class="col-md-2">
+                      <button v-if="index === emprestimo.livros.length - 1 && emprestimo.livros.length < 2"
+                        class="btn btn-info btn-lg w-100" type="button" @click="adicionarLivro"
+                        title="Adicionar outro livro">
+                        <strong>+</strong>
+                      </button>
+
+                      <button v-else class="btn btn-danger btn-lg w-100" type="button" @click="removerLivro(index)"
                         title="Remover livro">
-                        ❌
+                        <strong>X</strong>
                       </button>
                     </div>
-
-                    <div class="col-2" v-if="index === emprestimo.livros.length - 1">
-                      <button class="btn btn-info btn-lg w-100" type="button" @click="adicionarLivro"
-                        :disabled="emprestimo.livros.length >= 2" title="Adicionar outro livro">
-                        +
-                      </button>
-                    </div>
-                  </div>
-
-                  <!-- Mensagem de erro -->
-                  <div class="text-danger" v-if="v$.emprestimo.livros.$dirty && v$.emprestimo.livros.$errors.length">
-                    <small v-for="(erro, i) in v$.emprestimo.livros.$errors" :key="i">
-                      {{ erro.$message }}<br />
-                    </small>
                   </div>
                 </div>
+
 
                 <!-- DATAS -->
                 <h3 class="card-title-info">Datas</h3>
@@ -120,7 +113,8 @@ export default defineComponent({
         leitor: '',
         livros: [''],
         data_inicio: hoje,
-        data_validade: ''
+        data_validade: '',
+        status: ''
       },
       emprestimos: [] as any[],
       listarLivros: [] as any[],
@@ -137,10 +131,6 @@ export default defineComponent({
         },
         livros: {
           required: helpers.withMessage('Selecione pelo menos um livro!', required),
-          maxLength: helpers.withMessage('Máximo de 2 livros por empréstimo!', maxLength(2)),
-          $each: {
-            required: helpers.withMessage('Livro obrigatório!', required)
-          }
         },
         data_validade: {
           required: helpers.withMessage('Selecione uma data de Validade!', required),
@@ -172,7 +162,8 @@ export default defineComponent({
         leitor: this.emprestimo.leitor,
         livros: this.emprestimo.livros,
         data_inicio: this.emprestimo.data_inicio,
-        data_validade: this.emprestimo.data_validade
+        data_validade: this.emprestimo.data_validade,
+        status: this.emprestimo.status = "Ativo"
       };
 
       try {
@@ -273,7 +264,8 @@ export default defineComponent({
         leitor: '',
         livros: [''],
         data_inicio: hoje,
-        data_validade: ''
+        data_validade: '',
+        status: ''
       };
       this.v$.$reset();
     }
