@@ -7,13 +7,18 @@
           <div class="form-group row align-items-end">
             <div class="col-6">
               <label>Título do Livro</label>
-              <v-select  v-model="estoque.livro" :options="listarLivros" label="titulo" :reduce="livro => livro.id"
-                placeholder="Digite ou selecione um livro..." class="form-control form-control-lg p-0" />
 
+              <select class="form-control form-control-lg" v-model="estoque.livro">
+                <option disabled value="">Selecione um livro...</option>
+                <option v-for="livro in listarLivros" :key="livro.id" :value="livro.id">
+                  {{ livro.titulo }}
+                </option>
+              </select>
               <div class="text-danger" v-if="v$.estoque.livro.$error">
                 <small>{{ v$.estoque.livro.$errors[0].$message }}</small>
               </div>
-              
+
+
             </div>
             <div class="col-2 text-end">
               <router-link class="btn btn-info btn-lg px-4 py-3" to="/cadastrar/livro">
@@ -213,9 +218,8 @@ export default defineComponent({
   },
 
   async mounted() {
-    await this.carregarEstoque();
     await this.carregarLivros();
-
+    await this.carregarEstoque();
 
     if (this.ehEdicao) {
       await this.carregarDados();
@@ -223,37 +227,3 @@ export default defineComponent({
   }
 });
 </script>
-
-<style>
-/* Fundo do seletor */
-.vue3-select {
-  background-color: #1e1e2f; /* fundo escuro */
-  border: 1px solid #444; /* borda mais escura */
-  color: #eee; /* texto claro */
-}
-
-/* Placeholder e texto */
-.vue3-select .vue3-select__control {
-  background-color: #1e1e2f !important;
-  color: #eee !important;
-}
-
-/* Lista de opções */
-.vue3-select__menu {
-  background-color: #2c2c3e;
-  color: #eee;
-  border: 1px solid #444;
-}
-
-/* Opção selecionada */
-.vue3-select__option--selected {
-  background-color: #6357ff; /* roxo que casa com o botão + */
-  color: white;
-}
-
-/* Opção ao passar o mouse */
-.vue3-select__option--highlight {
-  background-color: #4b46cc;
-  color: white;
-}
-</style>
