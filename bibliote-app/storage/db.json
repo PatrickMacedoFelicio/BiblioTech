@@ -1092,6 +1092,20 @@
       "cep": "78000-000",
       "estado": "MT",
       "cidade": "Cuiabá"
+    },
+    {
+      "id": "k5re7p",
+      "nome": "asdasdas",
+      "email": "dasdsd@gmail.com",
+      "cpf": "112.312.312-31",
+      "telefone": "(31) 23123-1231",
+      "dataNasc": "2025-07-03",
+      "Rua": "sadasdasdadsasd",
+      "Bairro": "1231231231",
+      "Numero": "12313212312312",
+      "cep": "12312-312",
+      "estado": "MS",
+      "cidade": "Bela Vista"
     }
   ],
   "emprestar": [
@@ -1104,6 +1118,27 @@
       ],
       "data_inicio": "2025-07-09",
       "data_validade": "2025-08-01",
+      "status": "Ativo"
+    },
+    {
+      "id": "st9csq",
+      "leitor": "k5re7p",
+      "livros": [
+        "livro-16",
+        "livro-18"
+      ],
+      "data_inicio": "2025-07-09",
+      "data_validade": "2025-07-31",
+      "status": "Ativo"
+    },
+    {
+      "id": "se1knp",
+      "leitor": "5o6p7q",
+      "livros": [
+        "livro-7"
+      ],
+      "data_inicio": "2025-07-09",
+      "data_validade": "2025-07-29",
       "status": "Ativo"
     }
   ]

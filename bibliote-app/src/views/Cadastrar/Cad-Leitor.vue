@@ -8,9 +8,9 @@
             <div class="col">
               <label>Nome Completo</label>
               <input class="form-control form-control-lg" type="text" placeholder="Digite o nome completo"
-                     v-model="CadLivro.nome" />
-              <div class="text-danger" v-if="v$.CadLivro.nome.$errors.length && v$.CadLivro.nome.$dirty">
-                <p v-for="error of v$.CadLivro.nome.$errors" :key="error.$uid">
+                v-model="CadLeitores.nome" />
+              <div class="text-danger" v-if="v$.CadLeitores.nome.$errors.length && v$.CadLeitores.nome.$dirty">
+                <p v-for="error of v$.CadLeitores.nome.$errors" :key="error.$uid">
                   <small>{{ error.$message }}</small>
                 </p>
               </div>
@@ -18,9 +18,9 @@
             <div class="col">
               <label>E-mail</label>
               <input class="form-control form-control-lg" type="text" placeholder="Digite o e-mail"
-                     v-model="CadLivro.email" />
-              <div class="text-danger" v-if="v$.CadLivro.email.$errors.length && v$.CadLivro.email.$dirty">
-                <p v-for="error of v$.CadLivro.email.$errors" :key="error.$uid">
+                v-model="CadLeitores.email" />
+              <div class="text-danger" v-if="v$.CadLeitores.email.$errors.length && v$.CadLeitores.email.$dirty">
+                <p v-for="error of v$.CadLeitores.email.$errors" :key="error.$uid">
                   <small>{{ error.$message }}</small>
                 </p>
               </div>
@@ -30,10 +30,10 @@
           <div class="form-group row">
             <div class="col">
               <label>CPF</label>
-              <input class="form-control form-control-lg" type="text" v-model="CadLivro.cpf" v-mask="'###.###.###-##'"
-                     placeholder="Digite o CPF" />
-              <div class="text-danger" v-if="v$.CadLivro.cpf.$errors.length && v$.CadLivro.cpf.$dirty">
-                <p v-for="error of v$.CadLivro.cpf.$errors" :key="error.$uid">
+              <input class="form-control form-control-lg" type="text" v-model="CadLeitores.cpf"
+                v-mask="'###.###.###-##'" placeholder="Digite o CPF" />
+              <div class="text-danger" v-if="v$.CadLeitores.cpf.$errors.length && v$.CadLeitores.cpf.$dirty">
+                <p v-for="error of v$.CadLeitores.cpf.$errors" :key="error.$uid">
                   <small>{{ error.$message }}</small>
                 </p>
               </div>
@@ -41,18 +41,18 @@
             <div class="col">
               <label>Telefone</label>
               <input class="form-control form-control-lg" type="text" v-mask="'(##) #####-####'"
-                     placeholder="Digite o Telefone" v-model="CadLivro.telefone" />
-              <div class="text-danger" v-if="v$.CadLivro.telefone.$errors.length && v$.CadLivro.telefone.$dirty">
-                <p v-for="error of v$.CadLivro.telefone.$errors" :key="error.$uid">
+                placeholder="Digite o Telefone" v-model="CadLeitores.telefone" />
+              <div class="text-danger" v-if="v$.CadLeitores.telefone.$errors.length && v$.CadLeitores.telefone.$dirty">
+                <p v-for="error of v$.CadLeitores.telefone.$errors" :key="error.$uid">
                   <small>{{ error.$message }}</small>
                 </p>
               </div>
             </div>
             <div class="col">
               <label>Data de Nascimento</label>
-              <input class="form-control form-control-lg" type="date" v-model="CadLivro.dataNasc" />
-              <div class="text-danger" v-if="v$.CadLivro.dataNasc.$errors.length && v$.CadLivro.dataNasc.$dirty">
-                <p v-for="error of v$.CadLivro.dataNasc.$errors" :key="error.$uid">
+              <input class="form-control form-control-lg" type="date" v-model="CadLeitores.dataNasc" />
+              <div class="text-danger" v-if="v$.CadLeitores.dataNasc.$errors.length && v$.CadLeitores.dataNasc.$dirty">
+                <p v-for="error of v$.CadLeitores.dataNasc.$errors" :key="error.$uid">
                   <small>{{ error.$message }}</small>
                 </p>
               </div>
@@ -64,18 +64,19 @@
             <div class="col">
               <label>CEP</label>
               <input class="form-control-lg form-control" type="text" v-mask="'#####-###'" placeholder="CEP"
-                     v-model="CadLivro.cep" @blur="buscarCep" />
-              <div class="text-danger" v-if="v$.CadLivro.cep.$errors.length && v$.CadLivro.cep.$dirty">
-                <p v-for="error of v$.CadLivro.cep.$errors" :key="error.$uid">
+                v-model="CadLeitores.cep" @blur="buscarCep" />
+              <div class="text-danger" v-if="v$.CadLeitores.cep.$errors.length && v$.CadLeitores.cep.$dirty">
+                <p v-for="error of v$.CadLeitores.cep.$errors" :key="error.$uid">
                   <small>{{ error.$message }}</small>
                 </p>
               </div>
             </div>
             <div class="col">
               <label>Rua</label>
-              <input class="form-control form-control-lg" type="text" placeholder="Nome da rua" v-model="CadLivro.Rua" />
-              <div class="text-danger" v-if="v$.CadLivro.Rua.$errors.length && v$.CadLivro.Rua.$dirty">
-                <p v-for="error of v$.CadLivro.Rua.$errors" :key="error.$uid">
+              <input class="form-control form-control-lg" type="text" placeholder="Nome da rua"
+                v-model="CadLeitores.Rua" />
+              <div class="text-danger" v-if="v$.CadLeitores.Rua.$errors.length && v$.CadLeitores.Rua.$dirty">
+                <p v-for="error of v$.CadLeitores.Rua.$errors" :key="error.$uid">
                   <small>{{ error.$message }}</small>
                 </p>
               </div>
@@ -83,9 +84,9 @@
             <div class="col">
               <label>Bairro</label>
               <input class="form-control form-control-lg" type="text" placeholder="Digite o bairro"
-                     v-model="CadLivro.Bairro" />
-              <div class="text-danger" v-if="v$.CadLivro.Bairro.$errors.length && v$.CadLivro.Bairro.$dirty">
-                <p v-for="error of v$.CadLivro.Bairro.$errors" :key="error.$uid">
+                v-model="CadLeitores.Bairro" />
+              <div class="text-danger" v-if="v$.CadLeitores.Bairro.$errors.length && v$.CadLeitores.Bairro.$dirty">
+                <p v-for="error of v$.CadLeitores.Bairro.$errors" :key="error.$uid">
                   <small>{{ error.$message }}</small>
                 </p>
               </div>
@@ -93,9 +94,9 @@
             <div class="col">
               <label>Número</label>
               <input class="form-control form-control-lg" type="text" placeholder="Número da casa"
-                     v-model="CadLivro.Numero" />
-              <div class="text-danger" v-if="v$.CadLivro.Numero.$errors.length && v$.CadLivro.Numero.$dirty">
-                <p v-for="error of v$.CadLivro.Numero.$errors" :key="error.$uid">
+                v-model="CadLeitores.Numero" />
+              <div class="text-danger" v-if="v$.CadLeitores.Numero.$errors.length && v$.CadLeitores.Numero.$dirty">
+                <p v-for="error of v$.CadLeitores.Numero.$errors" :key="error.$uid">
                   <small>{{ error.$message }}</small>
                 </p>
               </div>
@@ -105,33 +106,33 @@
           <div class="form-group row">
             <div class="col">
               <label>Estado</label>
-              <select class="form-control form-control-lg" v-model="CadLivro.estado">
+              <select class="form-control form-control-lg" v-model="CadLeitores.estado">
                 <option value="" disabled selected>Selecione seu estado...</option>
                 <option v-for="estado in estados" :key="estado.uf" :value="estado.uf">
                   {{ estado.nome }}
                 </option>
               </select>
-              <div class="text-danger" v-if="v$.CadLivro.estado.$errors.length && v$.CadLivro.estado.$dirty">
-                <p v-for="error of v$.CadLivro.estado.$errors" :key="error.$uid">
+              <div class="text-danger" v-if="v$.CadLeitores.estado.$errors.length && v$.CadLeitores.estado.$dirty">
+                <p v-for="error of v$.CadLeitores.estado.$errors" :key="error.$uid">
                   <small>{{ error.$message }}</small>
                 </p>
               </div>
             </div>
             <div class="col">
               <label>Cidade</label>
-              <select class="form-control form-control-lg" v-model="CadLivro.cidade">
+              <select class="form-control form-control-lg" v-model="CadLeitores.cidade">
                 <option value="" disabled selected>Selecione sua cidade...</option>
                 <option v-for="cidade in cidades" :key="cidade" :value="cidade">{{ cidade }}</option>
               </select>
-              <div class="text-danger" v-if="v$.CadLivro.cidade.$errors.length && v$.CadLivro.nome.$dirty">
-                <p v-for="error of v$.CadLivro.cidade.$errors" :key="error.$uid">
+              <div class="text-danger" v-if="v$.CadLeitores.cidade.$errors.length && v$.CadLeitores.nome.$dirty">
+                <p v-for="error of v$.CadLeitores.cidade.$errors" :key="error.$uid">
                   <small>{{ error.$message }}</small>
                 </p>
               </div>
             </div>
           </div>
 
-         <div class="form-group row mt-4">
+          <div class="form-group row mt-4">
             <div class="col-auto">
               <button type="submit" class="btn btn-success btn-lg">Salvar</button>
             </div>
@@ -151,6 +152,9 @@ import { defineComponent } from "vue";
 import { useVuelidate } from '@vuelidate/core';
 import { required, email, minLength, helpers } from '@vuelidate/validators';
 import { mask } from 'vue-the-mask';
+import axios from 'axios';
+import Swal from 'sweetalert2';
+import { Toast } from '@/common/toast';
 
 const dataFuturo = helpers.withMessage(
   'Data de nascimento não pode ser no futuro',
@@ -169,7 +173,8 @@ export default defineComponent({
 
   data() {
     return {
-      CadLivro: {
+      CadLeitores: {
+        id: '',
         nome: '',
         email: '',
         cpf: '',
@@ -200,15 +205,15 @@ export default defineComponent({
   },
 
   watch: {
-    'CadLivro.estado'(uf: string) {
+    'CadLeitores.estado'(uf: string) {
       if (!uf) return;
       fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${uf}/municipios`)
         .then(res => res.json())
         .then(data => {
           this.cidades = data.map((cidade: any) => cidade.nome);
-          if (this.CadLivro.cidade && this.estadoPorCep === uf) {
+          if (this.CadLeitores.cidade && this.estadoPorCep === uf) {
           } else {
-            this.CadLivro.cidade = '';
+            this.CadLeitores.cidade = '';
           }
         });
     }
@@ -216,7 +221,7 @@ export default defineComponent({
 
   validations() {
     return {
-      CadLivro: {
+      CadLeitores: {
         nome: { minLength: helpers.withMessage('O nome deve ter no mínimo 8 carácteres!', minLength(8)), required: helpers.withMessage('Nome é obrigatorio!', required) },
         email: { email: helpers.withMessage('Este e-mail não é considerado valido!', email), required: helpers.withMessage('E-mail é obrigatorio', required) },
         cpf: { required: helpers.withMessage('CPF é obrigatório', required) },
@@ -234,16 +239,16 @@ export default defineComponent({
 
   methods: {
     async buscarCep() {
-      const cep = this.CadLivro.cep.replace(/\D/g, '');
+      const cep = this.CadLeitores.cep.replace(/\D/g, '');
       if (cep.length !== 8) return;
       try {
         const res = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
         const data = await res.json();
         if (data.erro) return;
-        this.CadLivro.Rua = data.logradouro;
-        this.CadLivro.Bairro = data.bairro;
-        this.CadLivro.estado = data.uf;
-        this.CadLivro.cidade = data.localidade;
+        this.CadLeitores.Rua = data.logradouro;
+        this.CadLeitores.Bairro = data.bairro;
+        this.CadLeitores.estado = data.uf;
+        this.CadLeitores.cidade = data.localidade;
         this.estadoPorCep = data.uf;
       } catch (error) {
         console.error('Erro ao buscar CEP:', error);
@@ -251,13 +256,103 @@ export default defineComponent({
     },
 
     async salvar() {
-      const result = await this.v$.$validate();
-      if (!result) return;
-      console.log('Dados do formulário', this.CadLivro);
+      const valido = await this.v$.$validate();
+      if (!valido) return;
+
+      const confirmado = await Swal.fire({
+        title: 'Confirmar cadastro?',
+        text: 'Deseja realmente cadastrar leitores?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#28a745',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Sim, cadastrar!',
+        cancelButtonText: 'Cancelar'
+      });
+
+      if (!confirmado.isConfirmed) return;
+
+      const novoLeitor = {
+        id: Math.random().toString(36).substring(2, 8),
+        nome: this.CadLeitores.nome,
+        email: this.CadLeitores.email,
+        cpf: this.CadLeitores.cpf,
+        telefone: this.CadLeitores.telefone,
+        dataNasc: this.CadLeitores.dataNasc,
+        Rua: this.CadLeitores.Rua,
+        Bairro: this.CadLeitores.Bairro,
+        Numero: this.CadLeitores.Numero,
+        cep: this.CadLeitores.cep,
+        estado: this.CadLeitores.estado,
+        cidade: this.CadLeitores.cidade,
+      };
+
+      try {
+        await axios.post('http://localhost:3000/leitores', novoLeitor);
+        Toast.fire({
+          icon: 'success',
+          title: 'Leitor cadastrado com sucesso!'
+        });
+        this.limparCampos();
+        await this.carregarLeitor();
+      } catch (erro: any) {
+        let mensagemErro = 'Não foi possível salvar o leitor.';
+
+        if (erro.response) {
+          mensagemErro = `Erro ${erro.response.status}: ${erro.response.statusText}`;
+        } else if (erro.request) {
+          mensagemErro = 'Sem resposta do servidor. Verifique sua conexão.';
+        } else if (erro.message) {
+          mensagemErro = erro.message;
+        }
+
+        Swal.fire({
+          icon: 'error',
+          title: 'Erro ao cadastrar o leitor',
+          text: mensagemErro
+        });
+        console.error('Erro completo:', erro);
+      }
+    },
+
+    async carregarDados() {
+      try {
+        const resposta = await axios.get(`http://localhost:3000/leitores/${this.id}`);
+        this.CadLeitores = {
+          id: resposta.data.id,
+          nome: resposta.data.nome,
+          email: resposta.data.email,
+          cpf: resposta.data.cpf,
+          telefone: resposta.data.telefone,
+          dataNasc: resposta.data.dataNasc,
+          Rua: resposta.data.Rua,
+          Bairro: resposta.data.Bairro,
+          Numero: resposta.data.Numero,
+          cep: resposta.data.cep,
+          estado: resposta.data.estado,
+          cidade: resposta.data.cidade,
+        };
+      } catch (erro) {
+        Toast.fire({
+          icon: 'error',
+          title: 'Erro ao carregar a categoria para edição'
+        });
+        this.$router.push('/consultar/categoria');
+      }
+    },
+
+    async carregarLeitor() {
+      try {
+        const resposta = await axios.get('http://localhost:3000/leitores');
+        this.CadLeitores = resposta.data;
+      } catch (erro) {
+        console.error('Erro ao carregar leitores:', erro);
+      }
     },
 
     limparCampos() {
-      this.CadLivro = {
+      this.CadLeitores = {
+        id:'',
         nome: '',
         email: '',
         cpf: '',
@@ -272,6 +367,24 @@ export default defineComponent({
       };
       this.v$.$reset();
     }
+  },
+
+  async mounted() {
+    await this.carregarLeitor();
+
+    if (this.ehEdicao) {
+      await this.carregarDados();
+    }
+  },
+
+  computed: {
+    id() {
+      return this.$route.params.id || null;
+    },
+    ehEdicao() {
+      return !!this.id;
+    }
   }
+
 });
 </script>
