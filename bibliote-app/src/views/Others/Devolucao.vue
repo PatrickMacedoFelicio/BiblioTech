@@ -34,11 +34,11 @@
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th></th>
+                                    <th style="width: 100px;"></th>
                                     <th>Nome</th>
                                     <th>Livro</th>
                                     <th>Data de Vencimento</th>
-                                    <th>Status</th>
+                                    <th class="text-center">Status</th>
                                     <th class="text-center">Ações</th>
                                 </tr>
                             </thead>
@@ -46,38 +46,27 @@
                                 <tr v-for="(item, index) in emprestimoPaginado" :key="index">
                                     <td>
                                         <div class="d-flex justify-content-center">
-                                            <button class="btn btn-success btn-sm ms-2 gap1"
-                                                @click="editarCategoria(item.id)">
-                                                <i class="mdi mdi-pencil"></i>
-                                            </button>
-
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="d-flex justify-content-center">
-                                            <button class="btn btn-danger btn-sm ms-2 gap1"
-                                                @click="confirmarExclusao(item)">
-                                                <i class="mdi mdi-delete"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-
-                                    <td>{{ item.leitor }}</td>
-                                    <td>{{ item.livros }}</td>
-                                    <td>{{ item.data_validade }}</td>
-                                    <td>{{ item.status }}</td>
-                                    <td>
-                                        <div class="d-flex justify-content-center">
-                                            <button class="btn btn-info btn-sm" @click="visualizarCategoria(item)">
+                                            <button class="btn btn-warning btn-sm" @click="visualizarCategoria(item)">
                                                 <i class="mdi mdi-magnify"></i>
                                             </button>
-                                            <button class="btn btn-warning btn-sm ms-2 gap1"
+                                        </div>
+                                    </td>
+                                    <td>{{ item.leitorNome }}</td>
+                                    <td>{{ item.livrosNomes }}</td>
+                                    <td >{{ item.data_validade }}</td>
+                                    <td class="text-center">
+                                        <span class="badge" :class="getBadgeClass(item.status)">
+                                            {{ item.status }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex justify-content-center">
+                                            <button class="btn btn-success btn-sm" @click="visualizarCategoria(item)">
+                                                <i class="mdi mdi-magnify"></i>
+                                            </button>
+                                            <button class="btn btn-danger btn-sm ms-2 gap1"
                                                 @click="editarCategoria(item.id)">
                                                 <i class="mdi mdi-pencil"></i>
-                                            </button>
-                                            <button class="btn btn-sucess btn-sm ms-2 gap1"
-                                                @click="confirmarExclusao(item)">
-                                                <i class="mdi mdi-delete"></i>
                                             </button>
                                         </div>
                                     </td>
@@ -103,7 +92,9 @@ interface Emprestimo {
     livros: [''],
     data_inicio: Date,
     data_validade: string,
-    status: string
+    status: string,
+    leitorNome: string,
+    livrosNomes: string
 }
 
 export default defineComponent({
@@ -153,13 +144,35 @@ export default defineComponent({
         async buscarEmprestimo() {
             this.paginaAtual = 1;
             try {
-                const response = await axios.get('http://localhost:3000/emprestar');
-                this.emprestimo = response.data;
+                const [resEmprestimos, resLeitores, resLivros] = await Promise.all([
+                    axios.get('http://localhost:3000/emprestar'),
+                    axios.get('http://localhost:3000/leitores'),
+                    axios.get('http://localhost:3000/livros')
+                ]);
+
+                const leitores = resLeitores.data;
+                const livros = resLivros.data;
+
+                this.emprestimo = resEmprestimos.data.map((emp: any) => {
+                    const leitorEncontrado = leitores.find((l: any) => l.id === emp.leitor);
+
+                    const nomesLivros = emp.livros.map((livroId: string) => {
+                        const livro = livros.find((l: any) => l.id === livroId);
+                        return livro ? livro.titulo : 'Livro não encontrado';
+                    });
+
+                    return {
+                        ...emp,
+                        leitorNome: leitorEncontrado ? leitorEncontrado.nome : 'Leitor não encontrado',
+                        livrosNomes: nomesLivros.join(' & ')
+                    };
+                });
+
             } catch (erro: any) {
-                console.error('Erro ao buscar emprestimos:', erro);
+                console.error('Erro ao buscar empréstimos:', erro);
                 Swal.fire({
                     icon: 'error',
-                    title: 'Erro ao buscar emprestimo',
+                    title: 'Erro ao buscar empréstimos',
                     text: erro.message || 'Verifique se o servidor está rodando.'
                 });
             }
@@ -210,6 +223,19 @@ export default defineComponent({
         // Edição das coisas
         async editarEmprestimo(id: string) {
             this.$router.push(`/editar/empretimo/${id}`);
+        },
+
+        getBadgeClass(status: string) {
+            switch (status.toLowerCase()) {
+                case 'ativo':
+                    return 'badge-outline-primary';
+                case 'vencido':
+                    return 'badge-outline-danger';
+                case 'finalizado':
+                    return 'badge-outline-success';
+                default:
+                    return 'badge-outline-secondary';
+            }
         }
     }
 })
