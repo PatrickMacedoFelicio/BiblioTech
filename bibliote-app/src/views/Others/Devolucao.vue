@@ -37,7 +37,6 @@
                                     <th style="width: 100px;"></th>
                                     <th>Nome</th>
                                     <th>Livro</th>
-                                    <th>Data de Vencimento</th>
                                     <th class="text-center">Status</th>
                                     <th class="text-center">Ações</th>
                                 </tr>
@@ -46,14 +45,13 @@
                                 <tr v-for="(item, index) in emprestimoPaginado" :key="index">
                                     <td>
                                         <div class="d-flex justify-content-center">
-                                            <button class="btn btn-warning btn-sm" @click="visualizarCategoria(item)">
+                                            <button class="btn btn-info btn-sm" @click="visualizarEmprestimo(item)">
                                                 <i class="mdi mdi-magnify"></i>
                                             </button>
                                         </div>
                                     </td>
                                     <td>{{ item.leitorNome }}</td>
                                     <td>{{ item.livrosNomes }}</td>
-                                    <td >{{ item.data_validade }}</td>
                                     <td class="text-center">
                                         <span class="badge" :class="getBadgeClass(item.status)">
                                             {{ item.status }}
@@ -61,11 +59,10 @@
                                     </td>
                                     <td>
                                         <div class="d-flex justify-content-center">
-                                            <button class="btn btn-success btn-sm" @click="visualizarCategoria(item)">
-                                                <i class="mdi mdi-magnify"></i>
+                                            <button class="btn btn-success btn-sm" @click="">
+                                                <i class="mdi mdi-check"></i>
                                             </button>
-                                            <button class="btn btn-danger btn-sm ms-2 gap1"
-                                                @click="editarCategoria(item.id)">
+                                            <button class="btn btn-danger btn-sm ms-2 gap1" @click="">
                                                 <i class="mdi mdi-pencil"></i>
                                             </button>
                                         </div>
@@ -73,6 +70,25 @@
                                 </tr>
                             </tbody>
                         </table>
+                    </div>
+                    <!-- Caso não tenha nenhuma info -->
+                    <div v-if="emprestimoFiltrado.length === 0">
+                        <p class="text-center text-muted">Nenhum item encontrado.</p>
+                    </div>
+
+                    <!-- DENTRO da <template>, mas FORA da tabela -->
+                    <ModalDevolucao :visivel="mostrarModal" :emprestimos="emprestimoSelecionado" @fechar="fecharModal" />
+                    <!-- Paginação -->
+                    <div class="pagination mt-4">
+                        <button class="page-link" :disabled="paginaAtual === 1" @click="paginaAtual--">Anterior</button>
+
+                        <button v-for="pagina in totalPaginas" :key="pagina" class="page-link"
+                            :class="{ active: pagina === paginaAtual }" @click="irParaPagina(pagina)">
+                            {{ pagina }}
+                        </button>
+
+                        <button class="page-link" :disabled="paginaAtual === totalPaginas"
+                            @click="paginaAtual++">Próxima</button>
                     </div>
                 </div>
             </div>
@@ -84,13 +100,13 @@
 import { defineComponent } from 'vue';
 import Swal from 'sweetalert2';
 import axios from 'axios';
-import ModalCategoria from '@/components/modals/ModalCategoria.vue';
+import ModalDevolucao from '@/components/modals/ModalDevolucao.vue';
 
 interface Emprestimo {
     id: string,
     leitor: string,
     livros: [''],
-    data_inicio: Date,
+    data_inicio: string,
     data_validade: string,
     status: string,
     leitorNome: string,
@@ -99,7 +115,7 @@ interface Emprestimo {
 
 export default defineComponent({
     name: 'ConsultarCategoria',
-    components: { ModalCategoria },
+    components: { ModalDevolucao },
 
     data() {
         return {
@@ -216,6 +232,13 @@ export default defineComponent({
             }
         },
 
+        visualizarEmprestimo(cat: Emprestimo) {
+            this.emprestimoSelecionado = cat;
+            this.mostrarModal = true;
+        },
+        fecharModal() {
+            this.mostrarModal = false;
+        },
         irParaPagina(pagina: number) {
             this.paginaAtual = pagina;
         },
@@ -231,7 +254,7 @@ export default defineComponent({
                     return 'badge-outline-primary';
                 case 'vencido':
                     return 'badge-outline-danger';
-                case 'finalizado':
+                case 'devolvido':
                     return 'badge-outline-success';
                 default:
                     return 'badge-outline-secondary';
