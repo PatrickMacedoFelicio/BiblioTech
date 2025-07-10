@@ -42,6 +42,47 @@
                                     <th class="text-center">Ações</th>
                                 </tr>
                             </thead>
+                            <tbody>
+                                <tr v-for="(item, index) in emprestimoPaginado" :key="index">
+                                    <td>
+                                        <div class="d-flex justify-content-center">
+                                            <button class="btn btn-success btn-sm ms-2 gap1"
+                                                @click="editarCategoria(item.id)">
+                                                <i class="mdi mdi-pencil"></i>
+                                            </button>
+
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex justify-content-center">
+                                            <button class="btn btn-danger btn-sm ms-2 gap1"
+                                                @click="confirmarExclusao(item)">
+                                                <i class="mdi mdi-delete"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+
+                                    <td>{{ item.leitor }}</td>
+                                    <td>{{ item.livros }}</td>
+                                    <td>{{ item.data_validade }}</td>
+                                    <td>{{ item.status }}</td>
+                                    <td>
+                                        <div class="d-flex justify-content-center">
+                                            <button class="btn btn-info btn-sm" @click="visualizarCategoria(item)">
+                                                <i class="mdi mdi-magnify"></i>
+                                            </button>
+                                            <button class="btn btn-warning btn-sm ms-2 gap1"
+                                                @click="editarCategoria(item.id)">
+                                                <i class="mdi mdi-pencil"></i>
+                                            </button>
+                                            <button class="btn btn-sucess btn-sm ms-2 gap1"
+                                                @click="confirmarExclusao(item)">
+                                                <i class="mdi mdi-delete"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
                         </table>
                     </div>
                 </div>
@@ -56,88 +97,79 @@ import Swal from 'sweetalert2';
 import axios from 'axios';
 import ModalCategoria from '@/components/modals/ModalCategoria.vue';
 
-interface Devolucao {
-    id: string;
-    data_devolucao: string,
+interface Emprestimo {
+    id: string,
     leitor: string,
-    funcionario: string,
-    emprestimo: string
+    livros: [''],
+    data_inicio: Date,
+    data_validade: string,
+    status: string
 }
 
 export default defineComponent({
-    name: 'Devolucao',
+    name: 'ConsultarCategoria',
     components: { ModalCategoria },
 
     data() {
         return {
             filtro: '',
-            devolucao: [] as Devolucao[],
-            leitor: [] as any[],
-            funcionario: [] as any[],
-            emprestimo: [] as any[],
+            emprestimo: [] as Emprestimo[],
             mostrarModal: false,
-            categoriaSelecionada: { data_devolucao: '' },
+            emprestimoSelecionado: {
+                id: '',
+                leitor: '',
+                livros: [''],
+                data_inicio: '',
+                data_validade: '',
+                status: ''
+            },
             paginaAtual: 1,
             itensPorPagina: 8,
         };
     },
 
+
     computed: {
-        devolucaoFiltrada() {
+        emprestimoFiltrado() {
             const texto = this.filtro.toLowerCase();
-            return this.devolucao.filter(item =>
-                item.id?.toLowerCase().includes(texto)
+            return this.emprestimo.filter(item =>
+                item.leitor?.toLowerCase().includes(texto)
             );
         },
         totalPaginas(): number {
-            return Math.ceil(this.devolucaoFiltrada.length / this.itensPorPagina);
+            return Math.ceil(this.emprestimoFiltrado.length / this.itensPorPagina);
         },
-        categoriaPaginado(): Devolucao[] {
+        emprestimoPaginado(): Emprestimo[] {
             const inicio = (this.paginaAtual - 1) * this.itensPorPagina;
-            return this.devolucaoFiltrada.slice(inicio, inicio + this.itensPorPagina);
+            return this.emprestimoFiltrado.slice(inicio, inicio + this.itensPorPagina);
         },
     },
 
     mounted() {
-        this.buscarDevolucao();
+        this.buscarEmprestimo();
     },
 
     methods: {
-        async buscarDevolucao() {
+        async buscarEmprestimo() {
             this.paginaAtual = 1;
             try {
-                const [resDevolucao, resCliente, resEmprestar] = await Promise.all([
-                    axios.get('http://localhost:3000/devolucao'),
-                    axios.get('http://localhost:3000/leitores'),
-                    axios.get('http://localhost:3000/emprestar')
-                ]);
-
-                this.emprestimo = resEmprestar.data;
-                this.leitor = resCliente.data;
-
-                this.devolucao = resDevolucao.data.map((item: Devolucao) => {
-                    const leitorEncontrado = this.leitor.find(l => l.id === item.leitor);
-                    return {
-                        ...item,
-                        tituloLivro: leitorEncontrado ? leitorEncontrado.nome : 'Leitor não encontrado'
-                    };
-                });
-
+                const response = await axios.get('http://localhost:3000/emprestar');
+                this.emprestimo = response.data;
             } catch (erro: any) {
-                console.error('Erro ao buscar o estoque ou livros:', erro);
+                console.error('Erro ao buscar emprestimos:', erro);
                 Swal.fire({
                     icon: 'error',
-                    title: 'Erro ao carregar o estoque',
-                    text: erro.message || 'Verifique se o servidor JSON está ativo.'
+                    title: 'Erro ao buscar emprestimo',
+                    text: erro.message || 'Verifique se o servidor está rodando.'
                 });
             }
         },
 
         //Exclução das coisas
-        confirmarExclusao(item: Devolucao) {
+        confirmarExclusao(item: Emprestimo) {
             Swal.fire({
                 title: 'Tem certeza?',
-                text: `Deseja excluir a devolucao do livro "${item.nome}"?`,
+                text: `Deseja excluir o emprestimos do livros: "${item.livros}" para o leitor(a): "${item.leitor}"?`,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#d33',
@@ -146,47 +178,39 @@ export default defineComponent({
                 cancelButtonText: 'Cancelar'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    this.excluirCategoria(item.id);
+                    this.excluirEmprestimo(item.id);
                 }
             });
         },
 
-        async excluirCategoria(id: string) {
+        async excluirEmprestimo(id: string) {
             try {
-                await axios.delete(`http://localhost:3000/categorias/${id}`);
-                this.categoria = this.categoria.filter(cat => cat.id !== id);
+                await axios.delete(`http://localhost:3000/emprestar/${id}`);
+                this.emprestimo = this.emprestimo.filter(cat => cat.id !== id);
 
                 Swal.fire({
                     icon: 'success',
                     title: 'Excluído!',
-                    text: 'A categoria foi removida com sucesso.'
+                    text: 'O emprestimo foi removido com sucesso.'
                 });
             } catch (erro: any) {
                 console.error('Erro ao excluir:', erro);
                 Swal.fire({
                     icon: 'error',
-                    title: 'Erro ao excluir categoria',
+                    title: 'Erro ao excluir emprestimo',
                     text: erro.message || 'Tente novamente mais tarde.'
                 });
             }
         },
 
-        //consultar as categorias com modal
-        visualizarCategoria(cat: Categoria) {
-            this.categoriaSelecionada = cat;
-            this.mostrarModal = true;
-        },
-        fecharModal() {
-            this.mostrarModal = false;
-        },
         irParaPagina(pagina: number) {
             this.paginaAtual = pagina;
         },
 
         // Edição das coisas
-        async editarCategoria(id: string) {
-            this.$router.push(`/editar/categoria/${id}`);
+        async editarEmprestimo(id: string) {
+            this.$router.push(`/editar/empretimo/${id}`);
         }
     }
-});
+})
 </script>

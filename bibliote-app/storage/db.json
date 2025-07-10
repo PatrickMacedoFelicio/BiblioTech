@@ -1187,9 +1187,17 @@
       "data_inicio": "2025-07-10",
       "data_validade": "2025-07-09",
       "status": "Ativo"
+    },
+    {
+      "id": "orix79",
+      "leitor": "7g8h9i",
+      "livros": [
+        "livro-11",
+        "livro-17"
+      ],
+      "data_inicio": "2025-07-10",
+      "data_validade": "2025-07-22",
+      "status": "Ativo"
     }
-  ],
-  "devolucao":{
-    
-  }
+  ]
 }
