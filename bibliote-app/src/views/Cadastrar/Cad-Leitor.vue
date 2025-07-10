@@ -293,7 +293,7 @@ export default defineComponent({
           icon: 'success',
           title: 'Leitor cadastrado com sucesso!'
         });
-        this.limparCampos();
+        this.$router.push('/consultar/leitor');
         await this.carregarLeitor();
       } catch (erro: any) {
         let mensagemErro = 'Não foi possível salvar o leitor.';
@@ -337,7 +337,7 @@ export default defineComponent({
           icon: 'error',
           title: 'Erro ao carregar a categoria para edição'
         });
-        this.$router.push('/consultar/categoria');
+        this.$router.push('/consultar/leitor');
       }
     },
 

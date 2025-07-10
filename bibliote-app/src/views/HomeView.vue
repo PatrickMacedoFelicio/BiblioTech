@@ -13,7 +13,7 @@
             <div class="col-8 col-sm-12 col-xl-8 my-auto">
               <div class="d-flex d-sm-block d-md-flex align-items-center">
                 <h2 class="text-primary mb-0">{{ totalLeitores }}</h2>
-                <h3 class="ml-2 mb-0 font-weight-medium"> Cadastrados</h3>
+                <h2 class="ml-2 mb-0 font-weight-medium"> Cadastrados</h2>
               </div>
               <h6 class="text-muted font-weight-normal">Número total no sistema</h6>
             </div>
@@ -32,8 +32,8 @@
           <div class="row">
             <div class="col-8 col-sm-12 col-xl-8 my-auto">
               <div class="d-flex d-sm-block d-md-flex align-items-center">
-                <h2 class="text-danger mb-0">400</h2>
-                <h3 class="ml-2 mb-0 font-weight-medium"> Emprestimos</h3>
+                <h2 class="text-danger mb-0">{{ totalEmprAtivo }}</h2>
+                <h2 class="ml-2 mb-0 font-weight-medium"> Emprestimos</h2>
               </div>
               <h6 class="text-muted font-weight-normal">Finalizados e em andamento</h6>
             </div>
@@ -52,10 +52,10 @@
           <div class="row">
             <div class="col-8 col-sm-12 col-xl-8 my-auto">
               <div class="d-flex d-sm-block d-md-flex align-items-center">
-                <h2 class="text-success mb-0">45</h2>
-                <h3 class="ml-2 mb-0 font-weight-medium"> Vencidos</h3>
+                <h2 class="text-success mb-0">{{ totalEmprVencido }}</h2>
+                <h2 class="ml-2 mb-0 font-weight-medium"> Vencidos</h2>
               </div>
-              <h6 class="text-muted font-weight-normal">Total com o status vencido em aberto</h6>
+              <h6 class="text-muted font-weight-normal">Total com o status vencido</h6>
             </div>
             <div class="col-4 col-sm-12 col-xl-4 text-center text-xl-right">
               <i class="icon-lg mdi mdi-monitor text-success ml-auto"></i>
@@ -109,6 +109,8 @@ export default defineComponent({
   setup() {
     // as metricas de cima
     const totalLeitores = ref(0)
+    const totalEmprAtivo = ref(0)
+    const totalEmprVencido = ref(0)
 
 
     const carregarLeitores = async () => {
@@ -120,9 +122,20 @@ export default defineComponent({
       }
     }
 
+    const carregarEmprestimo = async () => {
+      try {
+        const resposta = await axios.get('http://localhost:3000/emprestar')
+        const ativos = resposta.data.filter((emp: any) => emp.status === 'Ativo')
+        const vencido = resposta.data.filter((emp: any) => emp.status === 'Vencido')
+        totalEmprAtivo.value = ativos.length
+        totalEmprVencido.value = vencido.length
+      } catch (erro) {
+        console.error('Erro ao carregar Emprestimos:', erro)
+      }
+    }
+
+
     // O grafico
-
-
     const labels = [
       'Ficção', 'Suspense', 'Romance', 'Ação',
       'Fantasia', 'Biografia', 'Ciência', 'História',
@@ -213,9 +226,10 @@ export default defineComponent({
         }
       })
       carregarLeitores();
+      carregarEmprestimo();
     })
 
-    return { totalLeitores, labels, colors, quickChecks }
+    return { totalLeitores, labels, colors, quickChecks, totalEmprAtivo, totalEmprVencido }
   }
 
 
@@ -223,8 +237,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-
-h4{
+h4 {
   color: #e7e8ee;
 }
 

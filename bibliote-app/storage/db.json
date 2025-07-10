@@ -1106,6 +1106,32 @@
       "cep": "12312-312",
       "estado": "MS",
       "cidade": "Bela Vista"
+    },
+    {
+      "id": "g1pfpu",
+      "nome": "aaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "email": "aaaaaaa@gmail.com",
+      "cpf": "230.120.123-10",
+      "telefone": "(12) 03102-3102",
+      "dataNasc": "2003-03-12",
+      "Rua": "çdçfsjdfçj",
+      "Bairro": "çljsdf~çgljdfçgjdç~j",
+      "Numero": "12312",
+      "estado": "GO",
+      "cidade": "Alto Horizonte"
+    },
+    {
+      "id": "5eq4aq",
+      "nome": "asdasdasdada",
+      "email": "sdadasd@gmail.com",
+      "cpf": "123.120.939-12",
+      "telefone": "(91) 82309-8138",
+      "dataNasc": "2004-02-01",
+      "Rua": "pjdpsjfgçj",
+      "Bairro": "çdskjgçlskdjg",
+      "Numero": "02934923",
+      "estado": "TO",
+      "cidade": "Aragominas"
     }
   ],
   "emprestar": [
@@ -1118,7 +1144,7 @@
       ],
       "data_inicio": "2025-07-09",
       "data_validade": "2025-08-01",
-      "status": "Ativo"
+      "status": "Vencido"
     },
     {
       "id": "st9csq",
@@ -1140,6 +1166,30 @@
       "data_inicio": "2025-07-09",
       "data_validade": "2025-07-29",
       "status": "Ativo"
+    },
+    {
+      "id": "8tbv99",
+      "leitor": "2l3m4n",
+      "livros": [
+        "livro-14"
+      ],
+      "data_inicio": "2025-07-10",
+      "data_validade": "2025-07-31",
+      "status": "Ativo"
+    },
+    {
+      "id": "3xp7la",
+      "leitor": "5o6p7q",
+      "livros": [
+        "livro-15",
+        "livro-14"
+      ],
+      "data_inicio": "2025-07-10",
+      "data_validade": "2025-07-09",
+      "status": "Ativo"
     }
-  ]
+  ],
+  "devolucao":{
+    
+  }
 }
