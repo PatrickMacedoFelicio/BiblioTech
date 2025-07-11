@@ -94,11 +94,6 @@
       "id": "c20",
       "nome": "Tecnologia",
       "descricao": "Livros sobre avanços, conceitos e aplicações tecnológicas."
-    },
-    {
-      "id": "it0n8q",
-      "nome": "teaeteste",
-      "descricao": "dtsfsdfsd"
     }
   ],
   "estoques": [
@@ -1219,6 +1214,17 @@
       ],
       "data_inicio": "2025-07-11",
       "data_validade": "2025-07-31",
+      "status": "Ativo"
+    },
+    {
+      "id": "srt6d7",
+      "leitor": "6f7g8h",
+      "livros": [
+        "livro-15",
+        "livro-18"
+      ],
+      "data_inicio": "2025-07-11",
+      "data_validade": "2025-07-30",
       "status": "Ativo"
     }
   ]

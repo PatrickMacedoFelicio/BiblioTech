@@ -59,11 +59,15 @@
                                     </td>
                                     <td>
                                         <div class="d-flex justify-content-center">
-                                            <button class="btn btn-success btn-sm" @click="">
-                                                <i class="mdi mdi-check"></i>
+                                            <button class="btn btn-info btn-sm" @click="visualizarFornecedor(item)">
+                                                <i class="mdi mdi-magnify"></i>
                                             </button>
-                                            <button class="btn btn-danger btn-sm ms-2 gap1" @click="">
+                                            <button class="btn btn-success btn-sm ms-2 gap1">
                                                 <i class="mdi mdi-pencil"></i>
+                                            </button>
+                                            <button class="btn btn-danger btn-sm ms-2 gap1"
+                                                @click="confirmarExclusao(item)">
+                                                <i class="mdi mdi-delete"></i>
                                             </button>
                                         </div>
                                     </td>
