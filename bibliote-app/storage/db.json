@@ -1155,7 +1155,7 @@
       ],
       "data_inicio": "2025-07-09",
       "data_validade": "2025-07-31",
-      "status": "Ativo"
+      "status": "Devolvido"
     },
     {
       "id": "se1knp",
@@ -1175,7 +1175,7 @@
       ],
       "data_inicio": "2025-07-10",
       "data_validade": "2025-07-31",
-      "status": "Ativo"
+      "status": "Devolvido"
     },
     {
       "id": "3xp7la",
@@ -1186,7 +1186,7 @@
       ],
       "data_inicio": "2025-07-10",
       "data_validade": "2025-07-09",
-      "status": "Ativo"
+      "status": "Devolvido"
     },
     {
       "id": "orix79",
@@ -1209,6 +1209,17 @@
       "data_inicio": "2025-07-10",
       "data_validade": "2025-07-22",
       "status": "Devolvido"
+    },
+    {
+      "id": "ejaz5w",
+      "leitor": "g1pfpu",
+      "livros": [
+        "livro-2",
+        "livro-18"
+      ],
+      "data_inicio": "2025-07-11",
+      "data_validade": "2025-07-31",
+      "status": "Ativo"
     }
   ]
 }

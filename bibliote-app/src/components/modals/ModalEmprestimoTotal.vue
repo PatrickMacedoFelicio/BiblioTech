@@ -7,10 +7,23 @@
       </div>
       <div class="modal-body">
         <div class="grid-container">
-          <div class="grid-item"><strong class="cor">Nome: </strong> {{ categoria.nome }}</div>
-          <div class="grid-item" style="grid-column: 1 / -1;">
-            <strong class="cor">Sinopse:</strong><br /> {{ categoria.descricao }}
+          <div class="grid-item"><strong class="cor">Leitor: </strong> {{ emprestar.leitor }}</div>
+          <div class="grid-item"><strong class="cor">Livros: </strong> {{ emprestar.livros }}</div>
+          <div class="grid-item"><strong class="cor">Data de Emprestimo: </strong> {{ emprestar.data_inicio }}</div>
+          <div class="grid-item"><strong class="cor">Data de Vencimento: </strong> {{ emprestar.data_validade }}</div>
+          <div class="grid-item"><strong class="cor">Status: </strong> {{ emprestar.status }}</div>
+
+          <div class="grid-item"><strong class="cor">Leitor: </strong> {{ emprestar.leitorNome || emprestar.leitor }}
           </div>
+
+          <div class="grid-item">
+            <strong class="cor">Livros: </strong>
+            <span v-for="(titulo, idx) in (emprestar.livrosNomes || emprestar.livros.join(',')).split(' & ')" :key="idx"
+              class="badge badge-outline-info me-1">
+              {{ titulo }}
+            </span>
+          </div>
+
         </div>
       </div>
       <div class="modal-footer">
@@ -26,11 +39,23 @@ import type { PropType } from 'vue';
 
 
 export default defineComponent({
-  name: 'ModalCategoria',
+  name: 'ModalEmprestimoTotal',
   props: {
-    visivel: Boolean,
-    categoria: {
-      type: Object as PropType<{ nome: string; descricao: string }>,
+    visivel: {
+      type: Boolean,
+      required: true
+    },
+    emprestar: {
+      type: Object as PropType<{
+        id: string;
+        leitor: string;
+        livros: string[];
+        data_inicio: string;
+        data_validade: string;
+        status: string;
+        leitorNome?: string;
+        livrosNomes?: string;
+      }>,
       required: true
     }
   }

@@ -34,7 +34,6 @@
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th style="width: 100px;"></th>
                                     <th>Nome</th>
                                     <th>Livro</th>
                                     <th class="text-center">Status</th>
@@ -43,15 +42,16 @@
                             </thead>
                             <tbody>
                                 <tr v-for="(item, index) in emprestimoPaginado" :key="index">
+                                    <td>{{ item.leitorNome }}</td>
                                     <td>
-                                        <div class="d-flex justify-content-center">
-                                            <button class="btn btn-info btn-sm" @click="visualizarEmprestimo(item)">
-                                                <i class="mdi mdi-magnify"></i>
-                                            </button>
+                                        <div class="d-flex flex-wrap gap-1">
+                                            <span v-for="(titulo, idx) in (item.livrosNomes || '').split(' & ')"
+                                                :key="idx" class="badge badge-outline-primary">
+                                                {{ titulo }}
+                                            </span>
                                         </div>
                                     </td>
-                                    <td>{{ item.leitorNome }}</td>
-                                    <td>{{ item.livrosNomes }}</td>
+
                                     <td class="text-center">
                                         <span class="badge" :class="getBadgeClass(item.status)">
                                             {{ item.status }}
@@ -59,13 +59,11 @@
                                     </td>
                                     <td>
                                         <div class="d-flex justify-content-center">
-                                            <button class="btn btn-success btn-sm"
-                                                @click="atualizarStatus(item, 'Devolvido')">
+                                            <button class="btn btn-success btn-sm" @click="">
                                                 <i class="mdi mdi-check"></i>
                                             </button>
-                                            <button class="btn btn-danger btn-sm ms-2 gap1"
-                                                @click="atualizarStatus(item, 'Cancelado')">
-                                                <i class="mdi mdi-close"></i>
+                                            <button class="btn btn-danger btn-sm ms-2 gap1" @click="">
+                                                <i class="mdi mdi-pencil"></i>
                                             </button>
                                         </div>
                                     </td>
@@ -171,24 +169,21 @@ export default defineComponent({
                 const leitores = resLeitores.data;
                 const livros = resLivros.data;
 
-                this.emprestimo = resEmprestimos.data
-                    .map((emp: any) => {
-                        const leitorEncontrado = leitores.find((l: any) => l.id === emp.leitor);
+                this.emprestimo = resEmprestimos.data.map((emp: any) => {
+                    const leitorEncontrado = leitores.find((l: any) => l.id === emp.leitor);
 
-                        const nomesLivros = emp.livros.map((livroId: string) => {
-                            const livro = livros.find((l: any) => l.id === livroId);
-                            return livro ? livro.titulo : 'Livro não encontrado';
-                        });
+                    const nomesLivros = emp.livros.map((livroId: string) => {
+                        const livro = livros.find((l: any) => l.id === livroId);
+                        return livro ? livro.titulo : 'Livro não encontrado';
+                    });
 
-                        return {
-                            ...emp,
-                            leitorNome: leitorEncontrado ? leitorEncontrado.nome : 'Leitor não encontrado',
-                            livrosNomes: nomesLivros.join(' & ')
-                        };
-                    })
-                    .filter((emp: any) => emp.status === 'Ativo' || emp.status === 'Vencido'); // ✅ até aqui
+                    return {
+                        ...emp,
+                        leitorNome: leitorEncontrado ? leitorEncontrado.nome : 'Leitor não encontrado',
+                        livrosNomes: nomesLivros.join(' & ')
+                    };
+                });
 
-                // Agora feche com chave
             } catch (erro: any) {
                 console.error('Erro ao buscar empréstimos:', erro);
                 Swal.fire({
@@ -263,44 +258,6 @@ export default defineComponent({
                     return 'badge-outline-success';
                 default:
                     return 'badge-outline-secondary';
-            }
-        },
-
-        async atualizarStatus(item: Emprestimo, novoStatus: string) {
-            const statusFormatado = novoStatus === 'Devolvido' ? 'devolver' : 'cancelar';
-
-            const resultado = await Swal.fire({
-                title: `Deseja realmente ${statusFormatado} este empréstimo?`,
-                text: `Essa ação irá alterar o status para "${novoStatus}".`,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#28a745',
-                cancelButtonColor: '#d33',
-                confirmButtonText: `Sim, ${statusFormatado}`,
-                cancelButtonText: 'Cancelar'
-            });
-
-            if (resultado.isConfirmed) {
-                try {
-                    await axios.patch(`http://localhost:3000/emprestar/${item.id}`, {
-                        status: novoStatus
-                    });
-
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Status atualizado!',
-                        text: `O status foi alterado para "${novoStatus}" com sucesso.`
-                    });
-
-                    this.buscarEmprestimo(); // Recarrega os dados
-                } catch (erro: any) {
-                    console.error('Erro ao atualizar status:', erro);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Erro ao atualizar',
-                        text: erro.message || 'Tente novamente.'
-                    });
-                }
             }
         }
     }

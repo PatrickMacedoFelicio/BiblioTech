@@ -22,7 +22,7 @@
                     <span class="menu-icon">
                         <i class="mdi mdi-book-open"></i>
                     </span>
-                    <span class="menu-title">Emprestimo</span>
+                    <span class="menu-title">Emprestar Livros</span>
                 </RouterLink>
             </li>
 
@@ -32,6 +32,15 @@
                         <i class="mdi mdi-book-minus"></i>
                     </span>
                     <span class="menu-title">Devolução</span>
+                </RouterLink>
+            </li>
+
+            <li class="nav-item menu-items">
+                <RouterLink class="nav-link" to="/consultar/emprestimos">
+                    <span class="menu-icon">
+                        <i class="mdi mdi-book-open"></i>
+                    </span>
+                    <span class="menu-title">Todos os Emprestimos</span>
                 </RouterLink>
             </li>
 

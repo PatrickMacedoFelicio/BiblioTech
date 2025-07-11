@@ -74,6 +74,11 @@ const router = createRouter({
       component: () => import('../views/Others/Emprestar.vue'),
     },
     {
+      path: '/consultar/emprestimos',
+      name: 'conultar-emprestimos',
+      component: () => import('../views/Others/Todos-Emprestimos.vue'),
+    },
+    {
       path: '/Devolucao',
       name: 'devolucao',
       component: () => import('../views/Others/Devolucao.vue'),

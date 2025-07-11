@@ -7,13 +7,25 @@
       </div>
       <div class="modal-body">
         <div class="grid-container">
-          <div class="grid-item"><strong class="cor">Leitor: </strong> {{ emprestimos.leitor }}</div>
-          <div class="grid-item"><strong class="cor">Livros: </strong> {{ emprestimos.livros }}</div>
-          <div class="grid-item"><strong class="cor">Data de Emprestimo: </strong> {{ emprestimos.data_inicio }}</div>
-          <div class="grid-item"><strong class="cor">Data de Vencimento: </strong> {{ emprestimos.data_validade }}</div>
-          <div class="grid-item"><strong class="cor">Status: </strong> {{ emprestimos.status }}</div>
+
+          <div class="grid-item" style="grid-column: 1 / -1;">
+            <div class="livros-container mt-2">
+              <strong class="cor">Livros: </strong>
+              <span v-for="(titulo, idx) in (emprestar.livrosNomes || emprestar.livros.join(',')).split(' & ')"
+                :key="idx" :class="['badge', idx === 1 ? 'badge-outline-warning' : 'badge-outline-info']">
+                {{ titulo }}
+              </span>
+            </div>
+          </div>
+
+          <div class="grid-item"><strong class="cor">Leitor: </strong> {{ emprestar.leitorNome || emprestar.leitor }}
+          </div>
+          <div class="grid-item"><strong class="cor">Data de Emprestimo: </strong> {{ emprestar.data_inicio }}</div>
+          <div class="grid-item"><strong class="cor">Data de Vencimento: </strong> {{ emprestar.data_validade }}</div>
+          <div class="grid-item"><strong class="cor">Status: </strong> {{ emprestar.status }}</div>
         </div>
       </div>
+
       <div class="modal-footer">
         <button class="btn btn-secondary" @click="$emit('fechar')">Fechar</button>
       </div>
@@ -22,24 +34,27 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'; 
+import { defineComponent } from 'vue';
 import type { PropType } from 'vue';
 
 
 export default defineComponent({
   name: 'ModalDevolucao',
   props: {
-    visivel: Boolean,
-    emprestimos: {
+    visivel: {
+      type: Boolean,
+      required: true
+    },
+    emprestar: {
       type: Object as PropType<{
         id: string;
         leitor: string;
-        livros: [''];
+        livros: string[];
         data_inicio: string;
         data_validade: string;
         status: string;
-        leitorNome: string;
-        livrosNomes: string;
+        leitorNome?: string;
+        livrosNomes?: string;
       }>,
       required: true
     }
@@ -72,6 +87,14 @@ export default defineComponent({
   overflow-y: auto;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
 }
+
+.livros-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
 
 .modal-header,
 .modal-footer {
