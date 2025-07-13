@@ -110,8 +110,9 @@ interface Emprestimo {
     id: string,
     leitor: string,
     livros: string[];
-    data_inicio: string,
-    data_validade: string,
+    data_inicio: Date,
+    data_validade: Date,
+    data_devolucao: Date;
     status: string,
     leitorNome?: string,
     livrosNomes?: string
@@ -132,6 +133,7 @@ export default defineComponent({
                 livros: [''],
                 data_inicio: '',
                 data_validade: '',
+                data_devolucao: '',
                 status: '',
             },
             paginaAtual: 1,

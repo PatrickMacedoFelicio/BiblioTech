@@ -98,6 +98,7 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import { Toast } from '@/common/toast';
 
+
 export default defineComponent({
   name: 'Emprestimo',
 
@@ -266,7 +267,8 @@ export default defineComponent({
         livros: [''],
         data_inicio: hoje,
         data_validade: '',
-        status: ''
+        status: '',
+        data_devolucao: null
       };
       this.v$.$reset();
     }

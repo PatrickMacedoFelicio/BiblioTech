@@ -22,6 +22,7 @@
           </div>
           <div class="grid-item"><strong class="cor">Data de Emprestimo: </strong> {{ emprestar.data_inicio }}</div>
           <div class="grid-item"><strong class="cor">Data de Vencimento: </strong> {{ emprestar.data_validade }}</div>
+          <div class="grid-item"><strong class="cor">Devolução: </strong> {{ emprestar.data_devolucao }}</div>
           <div class="grid-item"><strong class="cor">Status: </strong> {{ emprestar.status }}</div>
         </div>
       </div>
@@ -50,8 +51,9 @@ export default defineComponent({
         id: string;
         leitor: string;
         livros: string[];
-        data_inicio: string;
-        data_validade: string;
+        data_inicio: Date;
+        data_validade: Date;
+        data_devolucao: Date;
         status: string;
         leitorNome?: string;
         livrosNomes?: string;
