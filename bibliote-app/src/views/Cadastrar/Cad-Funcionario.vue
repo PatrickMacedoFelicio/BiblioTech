@@ -3,7 +3,7 @@
     <div class="card">
       <div class="card-body">
         <form @submit.prevent="salvar">
-          <h3 class="card-title">Cadastro de Funcionário</h3>
+          <h3 class="card-title">{{ ehEdicao ? 'Atualização de' : 'Cadastro de' }} Funcionário</h3>
 
           <div class="form-group row">
             <div class="col">
@@ -148,6 +148,7 @@ export default defineComponent({
   data() {
     return {
       funcionario: {
+        id: '',
         nome: '',
         cpf: '',
         cargo: '',
@@ -248,59 +249,40 @@ export default defineComponent({
       if (!valido) return;
 
       const confirmado = await Swal.fire({
-        title: 'Confirmar cadastro?',
-        text: 'Deseja realmente cadastrar ao estoque?',
+        title: this.ehEdicao ? 'Confirmar atualização?' : 'Confirmar cadastro?',
+        text: this.ehEdicao ? 'Deseja atualizar as informações deste Funcionário?' : 'Deseja realmente cadastrar este Funcionário?',
         icon: 'question',
         showCancelButton: true,
         confirmButtonColor: '#28a745',
         cancelButtonColor: '#6c757d',
-        confirmButtonText: 'Sim, cadastrar!',
+        confirmButtonText: this.ehEdicao ? 'Sim, atualizar!' : 'Sim, cadastrar!',
         cancelButtonText: 'Cancelar'
       });
 
       if (!confirmado.isConfirmed) return;
 
+
       const novoFuncionario = {
-        id: Math.random().toString(36).substring(2, 8),
-        nome: this.funcionario.nome,
-        cpf: this.funcionario.cpf,
-        cargo: this.funcionario.cargo,
-        telefone: this.funcionario.telefone,
-        email: this.funcionario.email,
-        data_admissao: this.funcionario.data_admissao,
-        cep: this.funcionario.cep,
-        rua: this.funcionario.rua,
-        bairro: this.funcionario.bairro,
-        numero: this.funcionario.numero,
-        estado: this.funcionario.estado,
-        cidade: this.funcionario.cidade,
+        ...this.funcionario,
+        id: this.ehEdicao ? this.id : Math.random().toString(36).substring(2, 8)
       };
 
       try {
-        await axios.post('http://localhost:3000/funcionarios', novoFuncionario);
-        Toast.fire({
-          icon: 'success',
-          title: 'Funcionário cadastrado com sucesso!'
-        });
-        this.limparCampos();
-        await this.carregarFuncionario();
-      } catch (erro: any) {
-        let mensagemErro = 'Não foi possível salvar o funcionário.';
-
-        if (erro.response) {
-          mensagemErro = `Erro ${erro.response.status}: ${erro.response.statusText}`;
-        } else if (erro.request) {
-          mensagemErro = 'Sem resposta do servidor. Verifique sua conexão.';
-        } else if (erro.message) {
-          mensagemErro = erro.message;
+        if (this.ehEdicao) {
+          await axios.put(`http://localhost:3000/funcionarios/${this.id}`, novoFuncionario);
+          Toast.fire({ icon: 'success', title: 'Funcionário atualizado com sucesso!' });
+        } else {
+          await axios.post('http://localhost:3000/funcionarios', novoFuncionario);
+          Toast.fire({ icon: 'success', title: 'Funcionário cadastrados com sucesso!' });
         }
 
+        this.$router.push('/consultar/funcionario');
+      } catch (erro) {
         Swal.fire({
           icon: 'error',
-          title: 'Erro ao cadastrar o funcionário',
-          text: mensagemErro
+          title: 'Erro ao salvar',
+          text: 'Erro inesperado.'
         });
-        console.error('Erro completo:', erro);
       }
     },
 
@@ -313,8 +295,37 @@ export default defineComponent({
       }
     },
 
+    // para edição das coisas
+    async carregarDados() {
+      try {
+        const resposta = await axios.get(`http://localhost:3000/funcionarios/${this.id}`);
+        this.funcionario = {
+          id: resposta.data.id,
+          nome: resposta.data.nome,
+          cpf: resposta.data.cpf,
+          cargo: resposta.data.cargo,
+          telefone: resposta.data.telefone,
+          email: resposta.data.email,
+          data_admissao: resposta.data.data_admissao,
+          cep: resposta.data.cep,
+          rua: resposta.data.rua,
+          bairro: resposta.data.bairro,
+          numero: resposta.data.numero,
+          estado: resposta.data.estado,
+          cidade: resposta.data.cidade
+        };
+      } catch (erro) {
+        Toast.fire({
+          icon: 'error',
+          title: 'Erro ao carregar o funcionário para edição'
+        });
+        this.$router.push('/consultar/funcionario');
+      }
+    },
+
     limparCampos() {
       this.funcionario = {
+        id: '',
         nome: '',
         cpf: '',
         cargo: '',
@@ -329,6 +340,24 @@ export default defineComponent({
         cidade: null
       };
       this.v$.$reset();
+    }
+  },
+
+  async mounted() {
+    await this.carregarFuncionario();
+
+    if (this.ehEdicao) {
+      await this.carregarDados();
+    }
+  },
+
+  // Sessão de puxar id para editar
+  computed: {
+    id() {
+      return this.$route.params.id || null;
+    },
+    ehEdicao() {
+      return !!this.id;
     }
   }
 });

@@ -155,7 +155,7 @@
   "fornecedores": [
     {
       "id": "lf8alq",
-      "nome": "Distribuidora Literária LTDA",
+      "nome": "Distribuidora Literária LTDA ",
       "cnpj": "66.610.502/8357-69",
       "cep": "68319-999",
       "rua": "Rua do Saber",
@@ -163,7 +163,7 @@
       "estado": "DF",
       "cidade": "Brasília",
       "telefone": "(61) 91086-6650",
-      "email": "distribuidoraliterárialtda@exemplo.com"
+      "email": "distribuidoraliterarialtda@exemplo.com"
     },
     {
       "id": "ahugee",

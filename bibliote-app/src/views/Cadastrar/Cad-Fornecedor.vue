@@ -3,7 +3,7 @@
     <div class="card">
       <div class="card-body">
         <form @submit.prevent="salvar">
-          <h3 class="card-title">Cadastro de Fornecedor</h3>
+          <h3 class="card-title">{{ ehEdicao ? 'Atualização de' : 'Cadastro de' }} Fornecedor</h3>
 
           <div class="form-group row">
             <div class="col">
@@ -131,6 +131,7 @@ export default defineComponent({
   data() {
     return {
       fornecedor: {
+        id: '',
         nome: '',
         cnpj: '',
         cep: '',
@@ -243,56 +244,40 @@ export default defineComponent({
       if (!valido) return;
 
       const confirmado = await Swal.fire({
-        title: 'Confirmar cadastro?',
-        text: 'Deseja realmente cadastrar este fornecedor?',
+        title: this.ehEdicao ? 'Confirmar atualização?' : 'Confirmar cadastro?',
+        text: this.ehEdicao ? 'Deseja atualizar as informações deste Fornecedor?' : 'Deseja realmente cadastrar este Fornecedor?',
         icon: 'question',
         showCancelButton: true,
         confirmButtonColor: '#28a745',
         cancelButtonColor: '#6c757d',
-        confirmButtonText: 'Sim, cadastrar!',
+        confirmButtonText: this.ehEdicao ? 'Sim, atualizar!' : 'Sim, cadastrar!',
         cancelButtonText: 'Cancelar'
       });
 
       if (!confirmado.isConfirmed) return;
 
+
       const novoFornecedor = {
-        id: Math.random().toString(36).substring(2, 8),
-        nome: this.fornecedor.nome,
-        cnpj: this.fornecedor.cnpj,
-        cep: this.fornecedor.cep,
-        rua: this.fornecedor.rua,
-        bairro: this.fornecedor.bairro,
-        estado: this.fornecedor.estado,
-        cidade: this.fornecedor.cidade,
-        telefone: this.fornecedor.telefone,
-        email: this.fornecedor.email,
+        ...this.fornecedor,
+        id: this.ehEdicao ? this.id : Math.random().toString(36).substring(2, 8)
       };
 
       try {
-        await axios.post('http://localhost:3000/fornecedores', novoFornecedor);
-        Toast.fire({
-          icon: 'success',
-          title: 'Fornecedor cadastrado com sucesso!'
-        });
-        this.limparCampos();
-        await this.carregarFornecedor();
-      } catch (erro: any) {
-        let mensagemErro = 'Não foi possível salvar fornecedor.';
-
-        if (erro.response) {
-          mensagemErro = `Erro ${erro.response.status}: ${erro.response.statusText}`;
-        } else if (erro.request) {
-          mensagemErro = 'Sem resposta do servidor. Verifique sua conexão.';
-        } else if (erro.message) {
-          mensagemErro = erro.message;
+        if (this.ehEdicao) {
+          await axios.put(`http://localhost:3000/fornecedores/${this.id}`, novoFornecedor);
+          Toast.fire({ icon: 'success', title: 'Fornecedor atualizado com sucesso!' });
+        } else {
+          await axios.post('http://localhost:3000/fornecedores', novoFornecedor);
+          Toast.fire({ icon: 'success', title: 'Fornecedor cadastrados com sucesso!' });
         }
 
+        this.$router.push('/consultar/fornecedor');
+      } catch (erro) {
         Swal.fire({
           icon: 'error',
-          title: 'Erro ao cadastrar o fornecedor',
-          text: mensagemErro
+          title: 'Erro ao salvar',
+          text: 'Erro inesperado.'
         });
-        console.error('Erro completo:', erro);
       }
     },
 
@@ -305,8 +290,35 @@ export default defineComponent({
       }
     },
 
+    // para edição das coisas
+    async carregarDados() {
+      try {
+        const resposta = await axios.get(`http://localhost:3000/fornecedores/${this.id}`);
+        this.fornecedor = {
+          id: resposta.data.id,
+          nome: resposta.data.nome,
+          cnpj: resposta.data.cnpj,
+          cep: resposta.data.cep,
+          rua: resposta.data.rua,
+          bairro: resposta.data.bairro,
+          estado: resposta.data.estado,
+          cidade: resposta.data.cidade,
+          telefone: resposta.data.telefone,
+          email: resposta.data.email,
+        };
+      } catch (erro) {
+        Toast.fire({
+          icon: 'error',
+          title: 'Erro ao carregar o forncedor para edição'
+        });
+        this.$router.push('/consultar/fornecedor');
+      }
+    },
+
+
     limparCampos() {
       this.fornecedor = {
+        id: '',
         nome: '',
         cnpj: '',
         cep: '',
@@ -323,6 +335,20 @@ export default defineComponent({
 
   async mounted() {
     await this.carregarFornecedor();
+
+    if (this.ehEdicao) {
+      await this.carregarDados();
+    }
+  },
+
+  // Sessão de puxar id para editar
+  computed: {
+    id() {
+      return this.$route.params.id || null;
+    },
+    ehEdicao() {
+      return !!this.id;
+    }
   }
 });
 </script>

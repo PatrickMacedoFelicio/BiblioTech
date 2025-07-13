@@ -3,7 +3,8 @@
     <div class="card">
       <div class="card-body">
         <form @submit.prevent="salvar">
-          <h3 class="card-title">Cadastro de leitor</h3>
+          <h3 class="card-title">{{ ehEdicao ? 'Atualização de' : 'Cadastro de' }} Leitor</h3>
+
           <div class="form-group row">
             <div class="col">
               <label>Nome Completo</label>
@@ -205,19 +206,27 @@ export default defineComponent({
   },
 
   watch: {
-    'CadLeitores.estado'(uf: string) {
-      if (!uf) return;
-      fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${uf}/municipios`)
-        .then(res => res.json())
-        .then(data => {
-          this.cidades = data.map((cidade: any) => cidade.nome);
-          if (this.CadLeitores.cidade && this.estadoPorCep === uf) {
-          } else {
-            this.CadLeitores.cidade = '';
-          }
-        });
-    }
-  },
+  'CadLeitores.estado'(uf: string) {
+    if (!uf) return;
+
+    fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${uf}/municipios`)
+      .then(res => res.json())
+      .then(data => {
+        this.cidades = data.map((cidade: any) => cidade.nome);
+
+        // Se a cidade atual não está na nova lista, zera
+        if (!this.cidades.includes(this.CadLeitores.cidade)) {
+          this.CadLeitores.cidade = '';
+        }
+      })
+      .catch(erro => {
+        console.error('Erro ao buscar cidades:', erro);
+      });
+  }
+}
+,
+
+  
 
   validations() {
     return {
@@ -260,58 +269,40 @@ export default defineComponent({
       if (!valido) return;
 
       const confirmado = await Swal.fire({
-        title: 'Confirmar cadastro?',
-        text: 'Deseja realmente cadastrar leitores?',
+        title: this.ehEdicao ? 'Confirmar atualização?' : 'Confirmar cadastro?',
+        text: this.ehEdicao ? 'Deseja atualizar as informações deste leitor?' : 'Deseja realmente cadastrar este leitor?',
         icon: 'question',
         showCancelButton: true,
         confirmButtonColor: '#28a745',
         cancelButtonColor: '#6c757d',
-        confirmButtonText: 'Sim, cadastrar!',
+        confirmButtonText: this.ehEdicao ? 'Sim, atualizar!' : 'Sim, cadastrar!',
         cancelButtonText: 'Cancelar'
       });
 
       if (!confirmado.isConfirmed) return;
 
+
       const novoLeitor = {
-        id: Math.random().toString(36).substring(2, 8),
-        nome: this.CadLeitores.nome,
-        email: this.CadLeitores.email,
-        cpf: this.CadLeitores.cpf,
-        telefone: this.CadLeitores.telefone,
-        dataNasc: this.CadLeitores.dataNasc,
-        Rua: this.CadLeitores.Rua,
-        Bairro: this.CadLeitores.Bairro,
-        Numero: this.CadLeitores.Numero,
-        cep: this.CadLeitores.cep,
-        estado: this.CadLeitores.estado,
-        cidade: this.CadLeitores.cidade,
+        ...this.CadLeitores,
+        id: this.ehEdicao ? this.id : Math.random().toString(36).substring(2, 8)
       };
 
       try {
-        await axios.post('http://localhost:3000/leitores', novoLeitor);
-        Toast.fire({
-          icon: 'success',
-          title: 'Leitor cadastrado com sucesso!'
-        });
-        this.$router.push('/consultar/leitor');
-        await this.carregarLeitor();
-      } catch (erro: any) {
-        let mensagemErro = 'Não foi possível salvar o leitor.';
-
-        if (erro.response) {
-          mensagemErro = `Erro ${erro.response.status}: ${erro.response.statusText}`;
-        } else if (erro.request) {
-          mensagemErro = 'Sem resposta do servidor. Verifique sua conexão.';
-        } else if (erro.message) {
-          mensagemErro = erro.message;
+        if (this.ehEdicao) {
+          await axios.put(`http://localhost:3000/leitores/${this.id}`, novoLeitor);
+          Toast.fire({ icon: 'success', title: 'Leitor atualizadp com sucesso!' });
+        } else {
+          await axios.post('http://localhost:3000/leitores', novoLeitor);
+          Toast.fire({ icon: 'success', title: 'Leitor cadastrado com sucesso!' });
         }
 
+        this.$router.push('/consultar/leitor');
+      } catch (erro) {
         Swal.fire({
           icon: 'error',
-          title: 'Erro ao cadastrar o leitor',
-          text: mensagemErro
+          title: 'Erro ao salvar',
+          text: 'Erro inesperado.'
         });
-        console.error('Erro completo:', erro);
       }
     },
 
@@ -352,7 +343,7 @@ export default defineComponent({
 
     limparCampos() {
       this.CadLeitores = {
-        id:'',
+        id: '',
         nome: '',
         email: '',
         cpf: '',

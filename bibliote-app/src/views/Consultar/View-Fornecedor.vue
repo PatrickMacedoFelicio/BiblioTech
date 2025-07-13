@@ -48,7 +48,7 @@
                       <button class="btn btn-info btn-sm" @click="visualizarFornecedor(item)">
                         <i class="mdi mdi-magnify"></i>
                       </button>
-                      <button class="btn btn-success btn-sm ms-2 gap1">
+                      <button class="btn btn-success btn-sm ms-2 gap1" @click="editarFornecedor(item.id)">
                         <i class="mdi mdi-pencil"></i>
                       </button>
                       <button class="btn btn-danger btn-sm ms-2 gap1" @click="confirmarExclusao(item)">
@@ -189,6 +189,11 @@ export default defineComponent({
           text: erro.message || 'Tente novamente mais tarde.'
         });
       }
+    },
+
+    //Edição
+    async editarFornecedor(id: string) {
+      this.$router.push(`/editar/fornecedor/${id}`);
     },
 
     irParaPagina(pagina: number) {
