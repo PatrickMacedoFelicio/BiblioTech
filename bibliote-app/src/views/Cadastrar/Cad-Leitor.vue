@@ -223,10 +223,8 @@ export default defineComponent({
         console.error('Erro ao buscar cidades:', erro);
       });
   }
-}
-,
-
-  
+},
+ 
 
   validations() {
     return {

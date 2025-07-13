@@ -59,7 +59,7 @@
                                     </td>
                                     <td>
                                         <div class="d-flex justify-content-center">
-                                            <button class="btn btn-info btn-sm" @click="visualizarFornecedor(item)">
+                                            <button class="btn btn-info btn-sm" @click="visualizarEmprestimo(item)">
                                                 <i class="mdi mdi-magnify"></i>
                                             </button>
                                             <button class="btn btn-success btn-sm ms-2 gap1">
@@ -236,7 +236,7 @@ export default defineComponent({
             }
         },
 
-        visualizarEmprestimo(cat: Emprestimo) {
+         visualizarEmprestimo(cat: Emprestimo) {
             this.emprestimoSelecionado = cat;
             this.mostrarModal = true;
         },

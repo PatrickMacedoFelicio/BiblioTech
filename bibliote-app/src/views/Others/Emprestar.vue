@@ -114,6 +114,7 @@ export default defineComponent({
         livros: [''],
         data_inicio: hoje,
         data_validade: '',
+        data_devolucao: null,
         status: ''
       },
       emprestimos: [] as any[],
