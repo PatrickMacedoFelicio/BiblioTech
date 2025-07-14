@@ -20,9 +20,7 @@
                      placeholder="Digite o nome do gênero..." />
             </div>
             <div class="col col-lg-2 d-flex align-items-end">
-              <button class="btn btn-success btn-fw btn-lg w-100 btn-icon-text" @click="buscarGeneros">
-                Buscar
-              </button>
+              <RouterLink class="btn btn-success btn-fw btn-lg w-100 btn-icon-text" to="/cadastrar/categoria"><strong>Genero</strong></RouterLink>
             </div>
           </div>
 

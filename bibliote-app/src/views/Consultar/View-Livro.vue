@@ -40,7 +40,7 @@
               <tbody>
                 <tr v-for="livro in livrosPaginados" :key="livro.id">
                   <td>{{ livro.titulo }}</td>
-                  <td>{{ livro.ISBN }}</td>
+                  <td>{{ livro.isbn }}</td>
                   <td>{{ livro.autor }}</td>
                   <td>{{ livro.nomeCategoria }}</td>
                   <td>
@@ -88,15 +88,16 @@ import { defineComponent } from 'vue';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import ModalLivro from '@/components/modals/ModalLivro.vue';
+import { api } from '@/common/http';
 
 interface Livro {
-  id: string;
+  id: number;
   titulo: string;
   autor: string;
-  ISBN: string;
-  ano_publicacao: string;
+  isbn: string;
+  anoPublicacao: string;
   editora: string;
-  categoria: string;
+  generoId: number;
   sinopse: string;
   nomeCategoria?: string;
 }
@@ -113,16 +114,7 @@ export default defineComponent({
       paginaAtual: 1,
       itensPorPagina: 8,
       mostrarModal: false,
-      livroSelecionado: {
-        id: '',
-        titulo: '',
-        autor: '',
-        ISBN: '',
-        ano_publicacao: '',
-        editora: '',
-        categoria: '',
-        sinopse: ''
-      }
+      livroSelecionado: {} as Livro,
     };
   },
 
@@ -150,15 +142,15 @@ export default defineComponent({
     async buscarLivros() {
       this.paginaAtual = 1;
       try {
-        const [resLivro, resCategorias ] = await Promise.all([
-          await axios.get('http://localhost:3000/livros'),
-          await axios.get('http://localhost:3000/categorias')
+        const [resLivro, resGeneros ] = await Promise.all([
+          await axios.get('/livros'),
+          await axios.get('/generos')
         ]);
 
-        this.categorias = resCategorias.data;
+        this.categorias = resGeneros.data;
 
         this.livros = resLivro.data.map((item: Livro) => {
-          const categoriaEncontrada = this.categorias.find(cat => cat.id === item.categoria);
+          const categoriaEncontrada = this.categorias.find(cat => cat.id === item.generoId);
           return {
             ...item,
             nomeCategoria: categoriaEncontrada ? categoriaEncontrada.nome : 'Categoria não encontrada'
@@ -201,7 +193,7 @@ export default defineComponent({
       });
     },
 
-    async excluirLivro(id: string) {
+    async excluirLivro(id: number) {
       try {
         await axios.delete(`http://localhost:3000/livros/${id}`);
         this.livros = this.livros.filter(l => l.id !== id);
@@ -221,7 +213,7 @@ export default defineComponent({
     },
 
     //Edição
-    async editarEstoque(id: string) {
+    async editarEstoque(id: number) {
       this.$router.push(`/editar/livro/${id}`);
     },
 

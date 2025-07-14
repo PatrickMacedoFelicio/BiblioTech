@@ -10,10 +10,10 @@
         <div class="grid-container">
           <div class="grid-item"><strong class="cor">Título:</strong> {{ livro.titulo }}</div>
           <div class="grid-item"><strong class="cor">Autor:</strong> {{ livro.autor }}</div>
-          <div class="grid-item"><strong class="cor">ISBN:</strong> {{ livro.ISBN }}</div>
-          <div class="grid-item"><strong class="cor">Ano de Publicação:</strong> {{ livro.ano_publicacao }}</div>
+          <div class="grid-item"><strong class="cor">isbn:</strong> {{ livro.isbn }}</div>
+          <div class="grid-item"><strong class="cor">Ano de Publicação:</strong> {{ livro.anoPublicacao }}</div>
           <div class="grid-item"><strong class="cor">Editora:</strong> {{ livro.editora }}</div>
-          <div class="grid-item"><strong class="cor">Categoria:</strong> {{ livro.categoria }}</div>
+          <div class="grid-item"><strong class="cor">generoId:</strong> {{ livro.generoId }}</div>
           <div class="grid-item" style="grid-column: 1 / -1;">
             <strong class="cor">Sinopse:</strong><br /> {{ livro.sinopse }}
           </div>
@@ -40,13 +40,13 @@ export default defineComponent({
     },
     livro: {
       type: Object as PropType<{
-        id: string;
+        id: number;
         titulo: string;
         autor: string;
-        ISBN: string;
-        ano_publicacao: string;
+        isbn: string;
+        anoPublicacao: string;
         editora: string;
-        categoria: string;
+        generoId: number;
         sinopse: string;
       }>,
       required: true

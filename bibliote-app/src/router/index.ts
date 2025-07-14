@@ -96,8 +96,8 @@ const router = createRouter({
       component: () => import('../views/Cadastrar/Cad-Estoque.vue'),
     },
     {
-      path: '/editar/categoria/:id',
-      name: 'editarCategoria',
+      path: '/editar/Genero/:id',
+      name: 'editarGenero',
       component: () => import('../views/Cadastrar/Cad-Categoria.vue'),
     },
     {

@@ -120,7 +120,7 @@ export default defineComponent({
           await api.put(`/generos/${this.id}`, novoGenero)
           Toast.fire({ icon: 'success', title: 'Genero atualizada com sucesso!' });
         } else {
-          await api.post('/generos', novoGenero)
+          await api.post(`/generos`, novoGenero)
           Toast.fire({ icon: 'success', title: 'Genero cadastrada com sucesso!' });
         }
 
