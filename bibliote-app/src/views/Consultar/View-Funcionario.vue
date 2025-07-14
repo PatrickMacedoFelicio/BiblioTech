@@ -87,13 +87,14 @@
 </template>
 
 <script lang="ts">
+import { api } from '@/common/http';
 import { defineComponent } from 'vue';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import ModalFuncionario from '@/components/modals/ModalFuncionario.vue';
 
 interface Funcionario {
-  id: string,
+  id: number,
   nome: string,
   cpf: string,
   cargo: string,
@@ -119,7 +120,7 @@ export default defineComponent({
       paginaAtual: 1,
       mostrarModal: false,
       itensPorPagina: 8,
-      funcionarioSelecionado: { id: '', nome: '', cpf: '', cargo: '', telefone: '', email: '', data_admissao: '', cep: '', rua: '', bairro: '', numero: '', estado: '', cidade: '' }
+      funcionarioSelecionado: {} as Funcionario
     };
   },
 
@@ -147,7 +148,7 @@ export default defineComponent({
     async buscarFuncionarios() {
       this.paginaAtual = 1;
       try {
-        const response = await axios.get('http://localhost:3000/funcionarios');
+        const response = await api.get('/funcionarios');
         this.funcionario = response.data;
       } catch (erro: any) {
         console.error('Erro ao buscar o funcionário:', erro);
@@ -179,9 +180,9 @@ export default defineComponent({
     },
 
 
-    async excluirFuncionario(id: string) {
+    async excluirFuncionario(id: number) {
       try {
-        await axios.delete(`http://localhost:3000/funcionarios/${id}`);
+        await api.delete(`/funcionarios/${id}`);
         this.funcionario = this.funcionario.filter(cat => cat.id !== id);
 
         Swal.fire({
@@ -200,7 +201,7 @@ export default defineComponent({
     },
 
     //Edição
-    async editarFuncionario(id: string) {
+    async editarFuncionario(id: number) {
       this.$router.push(`/editar/funcionario/${id}`);
     },
 

@@ -83,13 +83,14 @@
 </template>
 
 <script lang="ts">
+import { api } from '@/common/http';
 import { defineComponent } from 'vue';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import ModalFornecedor from '@/components/modals/ModalFornecedor.vue';
 
 interface Fornecedor {
-  id: string,
+  id: number,
   nome: string,
   cnpj: string,
   cep: string,
@@ -112,7 +113,7 @@ export default defineComponent({
       paginaAtual: 1,
       mostrarModal: false,
       itensPorPagina: 8,
-      fornecedorSelecionado: { nome: '', cnpj: '', cep: '', rua: '', bairro: '', estado: '', cidade: '', telefone: '', email: '' }
+      fornecedorSelecionado: {} as Fornecedor
     };
   },
 
@@ -140,7 +141,7 @@ export default defineComponent({
     async buscarFornecedores() {
       this.paginaAtual = 1;
       try {
-        const response = await axios.get('http://localhost:3000/fornecedores');
+        const response = await api.get('/fornecedores');
         this.fornecedor = response.data;
       } catch (erro: any) {
         console.error('Erro ao buscar o fornecedor:', erro);
@@ -171,9 +172,9 @@ export default defineComponent({
     },
 
 
-    async excluirFornecedor(id: string) {
+    async excluirFornecedor(id: number) {
       try {
-        await axios.delete(`http://localhost:3000/fornecedores/${id}`);
+        await api.delete(`/fornecedores/${id}`);
         this.fornecedor = this.fornecedor.filter(cat => cat.id !== id);
 
         Swal.fire({
@@ -192,7 +193,7 @@ export default defineComponent({
     },
 
     //Edição
-    async editarFornecedor(id: string) {
+    async editarFornecedor(id: number) {
       this.$router.push(`/editar/fornecedor/${id}`);
     },
 

@@ -56,7 +56,7 @@
             </div>
             <div class="col">
               <label>Rua</label>
-              <input class="form-control form-control-lg" type="text" v-model="fornecedor.rua" placeholder="Rua" />
+              <input class="form-control form-control-lg" type="text" v-model="fornecedor.rua" placeholder="Digite a rua" />
               <div class="text-danger" v-if="v$.fornecedor.rua.$error">
                 <small>{{ v$.fornecedor.rua.$errors[0].$message }}</small>
               </div>
@@ -64,9 +64,17 @@
             <div class="col">
               <label>Bairro</label>
               <input class="form-control form-control-lg" type="text" v-model="fornecedor.bairro"
-                placeholder="Bairro" />
+                placeholder="Digite o bairro" />
               <div class="text-danger" v-if="v$.fornecedor.bairro.$error">
                 <small>{{ v$.fornecedor.bairro.$errors[0].$message }}</small>
+              </div>
+            </div>
+            <div class="col">
+              <label>Número</label>
+              <input class="form-control form-control-lg" type="text" v-model="fornecedor.numero"
+                placeholder="Digite o número" />
+              <div class="text-danger" v-if="v$.fornecedor.numero.$error">
+                <small>{{ v$.fornecedor.numero.$errors[0].$message }}</small>
               </div>
             </div>
           </div>
@@ -113,9 +121,10 @@
 
 
 <script lang="ts">
+import { api } from '@/common/http';
 import { defineComponent } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
-import { required, email, minLength, helpers } from '@vuelidate/validators';
+import { required, email, minLength, helpers, numeric } from '@vuelidate/validators';
 import { mask } from 'vue-the-mask';
 import axios from 'axios';
 import Swal from 'sweetalert2';
@@ -131,7 +140,6 @@ export default defineComponent({
   data() {
     return {
       fornecedor: {
-        id: '',
         nome: '',
         cnpj: '',
         cep: '',
@@ -139,8 +147,10 @@ export default defineComponent({
         bairro: '',
         estado: '',
         cidade: '',
+        numero: '',
         telefone: '',
         email: '',
+        livrosIds: 0,
       },
       estados: [
         { uf: 'AC', nome: 'Acre' },
@@ -173,6 +183,7 @@ export default defineComponent({
       ],
       cidades: [] as string[],
       fornecedores: [] as any[],
+      listarLivro: [] as any[],
       dialog: false
     };
   },
@@ -215,6 +226,7 @@ export default defineComponent({
         bairro: { required: helpers.withMessage('Bairro é obrigatório', required) },
         cep: { required: helpers.withMessage('CEP é obrigatório', required) },
         estado: { required: helpers.withMessage('Estado é obrigatório', required) },
+        numero: { required: helpers.withMessage('Número é obrigatório', required) },
         cidade: { required: helpers.withMessage('Cidade é obrigatório', required) },
       }
     };
@@ -264,10 +276,10 @@ export default defineComponent({
 
       try {
         if (this.ehEdicao) {
-          await axios.put(`http://localhost:3000/fornecedores/${this.id}`, novoFornecedor);
+          await api.put(`/fornecedores/${this.id}`, novoFornecedor);
           Toast.fire({ icon: 'success', title: 'Fornecedor atualizado com sucesso!' });
         } else {
-          await axios.post('http://localhost:3000/fornecedores', novoFornecedor);
+          await api.post('/fornecedores', novoFornecedor);
           Toast.fire({ icon: 'success', title: 'Fornecedor cadastrados com sucesso!' });
         }
 
@@ -283,7 +295,7 @@ export default defineComponent({
 
     async carregarFornecedor() {
       try {
-        const resposta = await axios.get('http://localhost:3000/fornecedores');
+        const resposta = await api.get('/fornecedores');
         this.fornecedor = resposta.data;
       } catch (erro) {
         console.error('Erro ao carregar fornecedor:', erro);
@@ -293,9 +305,8 @@ export default defineComponent({
     // para edição das coisas
     async carregarDados() {
       try {
-        const resposta = await axios.get(`http://localhost:3000/fornecedores/${this.id}`);
+        const resposta = await api.get(`/fornecedores/${this.id}`);
         this.fornecedor = {
-          id: resposta.data.id,
           nome: resposta.data.nome,
           cnpj: resposta.data.cnpj,
           cep: resposta.data.cep,
@@ -304,7 +315,9 @@ export default defineComponent({
           estado: resposta.data.estado,
           cidade: resposta.data.cidade,
           telefone: resposta.data.telefone,
+          numero: resposta.data.numero,
           email: resposta.data.email,
+          livrosIds: resposta.data.livrosIds
         };
       } catch (erro) {
         Toast.fire({
@@ -318,7 +331,6 @@ export default defineComponent({
 
     limparCampos() {
       this.fornecedor = {
-        id: '',
         nome: '',
         cnpj: '',
         cep: '',
@@ -326,8 +338,10 @@ export default defineComponent({
         bairro: '',
         estado: '',
         cidade: '',
+        numero: '',
         telefone: '',
         email: '',
+        livrosIds: 0,
       };
       this.v$.$reset();
     }

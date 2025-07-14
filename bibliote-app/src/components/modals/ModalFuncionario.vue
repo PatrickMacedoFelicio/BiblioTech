@@ -40,7 +40,7 @@ export default defineComponent({
     visivel: Boolean,
     funcionario: {
       type: Object as PropType<{
-        id: string;
+        id: number;
         nome: string;
         cpf: string;
         cargo: string;
