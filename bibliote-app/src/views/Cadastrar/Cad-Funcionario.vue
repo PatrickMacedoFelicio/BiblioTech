@@ -49,9 +49,9 @@
             </div>
             <div class="col">
               <label>Data de Admissão</label>
-              <input class="form-control form-control-lg" v-model="funcionario.data_admissao" type="date">
-              <div class="text-danger" v-if="v$.funcionario.data_admissao.$error">
-                <small>{{ v$.funcionario.data_admissao.$errors[0].$message }}</small>
+              <input class="form-control form-control-lg" v-model="funcionario.dataAdmissao" type="date">
+              <div class="text-danger" v-if="v$.funcionario.dataAdmissao.$error">
+                <small>{{ v$.funcionario.dataAdmissao.$errors[0].$message }}</small>
               </div>
             </div>
           </div>
@@ -130,6 +130,7 @@
 </template>
 
 <script lang="ts">
+import { api } from '@/common/http';
 import { defineComponent } from 'vue';
 import { mask } from 'vue-the-mask';
 import { required, minLength, helpers, email } from '@vuelidate/validators';
@@ -148,13 +149,12 @@ export default defineComponent({
   data() {
     return {
       funcionario: {
-        id: '',
         nome: '',
         cpf: '',
         cargo: '',
         telefone: '',
         email: '',
-        data_admissao: '',
+        dataAdmissao: '',
         cep: '',
         rua: '',
         bairro: '',
@@ -214,7 +214,7 @@ export default defineComponent({
           required: helpers.withMessage('Telefone é obrigatório', required),
           minLength: helpers.withMessage('Telefone deve ter ao menos 10 dígitos', minLength(10))
         },
-        data_admissao: {
+        dataAdmissao: {
           required: helpers.withMessage('Data de admissão é obrigatória', required)
         },
         rua: { required: helpers.withMessage('Rua é obrigatório', required) },
@@ -264,15 +264,14 @@ export default defineComponent({
 
       const novoFuncionario = {
         ...this.funcionario,
-        id: this.ehEdicao ? this.id : Math.random().toString(36).substring(2, 8)
       };
 
       try {
         if (this.ehEdicao) {
-          await axios.put(`http://localhost:3000/funcionarios/${this.id}`, novoFuncionario);
+          await api.put(`/funcionarios/${this.id}`, novoFuncionario);
           Toast.fire({ icon: 'success', title: 'Funcionário atualizado com sucesso!' });
         } else {
-          await axios.post('http://localhost:3000/funcionarios', novoFuncionario);
+          await api.post('/funcionarios', novoFuncionario);
           Toast.fire({ icon: 'success', title: 'Funcionário cadastrados com sucesso!' });
         }
 
@@ -288,7 +287,7 @@ export default defineComponent({
 
     async carregarFuncionario() {
       try {
-        const resposta = await axios.get('http://localhost:3000/funcionarios');
+        const resposta = await api.get('/funcionarios');
         this.funcionarios = resposta.data;
       } catch (erro) {
         console.error('Erro ao carregar funcionarios:', erro);
@@ -298,15 +297,14 @@ export default defineComponent({
     // para edição das coisas
     async carregarDados() {
       try {
-        const resposta = await axios.get(`http://localhost:3000/funcionarios/${this.id}`);
+        const resposta = await api.get(`/funcionarios/${this.id}`);
         this.funcionario = {
-          id: resposta.data.id,
           nome: resposta.data.nome,
           cpf: resposta.data.cpf,
           cargo: resposta.data.cargo,
           telefone: resposta.data.telefone,
           email: resposta.data.email,
-          data_admissao: resposta.data.data_admissao,
+          dataAdmissao: resposta.data.dataAdmissao,
           cep: resposta.data.cep,
           rua: resposta.data.rua,
           bairro: resposta.data.bairro,
@@ -325,13 +323,12 @@ export default defineComponent({
 
     limparCampos() {
       this.funcionario = {
-        id: '',
         nome: '',
         cpf: '',
         cargo: '',
         telefone: '',
         email: '',
-        data_admissao: '',
+        dataAdmissao: '',
         cep: '',
         rua: '',
         bairro: '',

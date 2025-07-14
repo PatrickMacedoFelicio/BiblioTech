@@ -100,7 +100,7 @@ interface Funcionario {
   cargo: string,
   telefone: string,
   email: string,
-  data_admissao: string,
+  dataAdmissao: string,
   cep: string,
   rua: string,
   bairro: string,

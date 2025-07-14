@@ -12,7 +12,7 @@
           <div class="grid-item"><strong class="cor">Cargo:</strong> {{ funcionario.cargo }}</div>
           <div class="grid-item"><strong class="cor">Telefone:</strong> {{ funcionario.telefone }}</div>
           <div class="grid-item"><strong class="cor">E-mail:</strong> {{ funcionario.email }}</div>
-          <div class="grid-item"><strong class="cor">Data de Admissão:</strong> {{ funcionario.data_admissao }}</div>
+          <div class="grid-item"><strong class="cor">Data de Admissão:</strong> {{ funcionario.dataAdmissao }}</div>
           <div class="grid-item"><strong class="cor">CEP:</strong> {{ funcionario.cep }}</div>
           <div class="grid-item"><strong class="cor">Rua:</strong> {{ funcionario.rua }}</div>
           <div class="grid-item"><strong class="cor">Bairro:</strong> {{ funcionario.bairro }}</div>
@@ -46,7 +46,7 @@ export default defineComponent({
         cargo: string;
         telefone: string;
         email: string;
-        data_admissao: string;
+        dataAdmissao: string;
         cep: string;
         rua: string;
         bairro: string;

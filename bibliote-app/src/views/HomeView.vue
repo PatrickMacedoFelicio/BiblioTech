@@ -102,6 +102,7 @@
 import { defineComponent, onMounted, ref } from 'vue'
 import Chart from 'chart.js/auto';
 import axios from 'axios';
+import { api } from '@/common/http';
 
 
 export default defineComponent({
@@ -115,7 +116,7 @@ export default defineComponent({
 
     const carregarLeitores = async () => {
       try {
-        const resposta = await axios.get('http://localhost:3000/leitores')
+        const resposta = await api.get('/clientes')
         totalLeitores.value = resposta.data.length
       } catch (erro) {
         console.error('Erro ao carregar leitores:', erro)
@@ -124,7 +125,7 @@ export default defineComponent({
 
     const carregarEmprestimo = async () => {
       try {
-        const resposta = await axios.get('http://localhost:3000/emprestar')
+        const resposta = await api.get('/emprestimos')
         const ativos = resposta.data.filter((emp: any) => emp.status === 'Ativo')
         const vencido = resposta.data.filter((emp: any) => emp.status === 'Vencido')
         totalEmprAtivo.value = ativos.length
