@@ -40,10 +40,10 @@
               <label>ISBN</label>
               <div id="bloodhound">
                 <input class="typeahead form-control form-control-lg" type="text" placeholder="Digite o ISBN"
-                  v-model="livro.ISBN">
+                  v-model="livro.isbn">
 
-                <div class="text-danger" v-if="v$.livro.ISBN.$errors.length && v$.livro.ISBN.$dirty">
-                  <p v-for="error of v$.livro.ISBN.$errors" :key="error.$uid">
+                <div class="text-danger" v-if="v$.livro.isbn.$errors.length && v$.livro.isbn.$dirty">
+                  <p v-for="error of v$.livro.isbn.$errors" :key="error.$uid">
                     <small>{{ error.$message }}</small>
                   </p>
                 </div>
@@ -53,11 +53,10 @@
             <div class="col">
               <label>Ano de publicação</label>
               <div id="bloodhound">
-                <input class="typeahead form-control form-control-lg" type="date" v-model="livro.ano_publicacao">
+                <input class="typeahead form-control form-control-lg" type="date" v-model="livro.anoPublicacao">
 
-                <div class="text-danger"
-                  v-if="v$.livro.ano_publicacao.$errors.length && v$.livro.ano_publicacao.$dirty">
-                  <p v-for="error of v$.livro.ano_publicacao.$errors" :key="error.$uid">
+                <div class="text-danger" v-if="v$.livro.anoPublicacao.$errors.length && v$.livro.anoPublicacao.$dirty">
+                  <p v-for="error of v$.livro.anoPublicacao.$errors" :key="error.$uid">
                     <small>{{ error.$message }}</small>
                   </p>
                 </div>
@@ -80,16 +79,16 @@
             </div>
             <div class="col">
               <label for="exampleFormControlSelect1">Categoria</label>
-              <select class="form-control form-control-lg" id="exampleFormControlSelect1" v-model="livro.categoria">
+              <select class="form-control form-control-lg" id="exampleFormControlSelect1" v-model="livro.generoId">
                 <option value="" disabled>Selecione a categoria...</option>
-                <option v-for="(cate, index) in listarCategorias" :key="index" :value="cate.id">
+                <option v-for="(cate, index) in listarGenero" :key="index" :value="cate.id">
                   {{ cate.nome }}
                 </option>
               </select>
 
 
-              <div class="text-danger" v-if="v$.livro.categoria.$errors.length && v$.livro.categoria.$dirty">
-                <p v-for="error of v$.livro.categoria.$errors" :key="error.$uid">
+              <div class="text-danger" v-if="v$.livro.generoId.$errors.length && v$.livro.generoId.$dirty">
+                <p v-for="error of v$.livro.generoId.$errors" :key="error.$uid">
                   <small>{{ error.$message }}</small>
                 </p>
               </div>
@@ -126,6 +125,7 @@
 </template>
 
 <script lang="ts">
+import { api } from "@/common/http";
 import { defineComponent } from "vue";
 import { useVuelidate } from '@vuelidate/core';
 import { required, email, minLength, helpers } from '@vuelidate/validators';
@@ -154,17 +154,16 @@ export default defineComponent({
   data() {
     return {
       livro: {
-        id: '',
         titulo: '',
         autor: '',
-        ISBN: '',
-        ano_publicacao: '',
+        isbn: '',
+        anoPublicacao: '',
         editora: '',
-        categoria: '',
+        generoId: '',
         sinopse: '',
       },
       livros: [] as any[],
-      listarCategorias: [] as any[],
+      listarGenero: [] as any[],
 
     };
   },
@@ -178,16 +177,16 @@ export default defineComponent({
         autor: {
           required: helpers.withMessage('Autor é obrigatorio!', required)
         },
-        ISBN: {
+        isbn: {
           required: helpers.withMessage('ISBN é obrigatorio!', required)
         },
-        ano_publicacao: {
+        anoPublicacao: {
           required: helpers.withMessage('Ano de publicação é obrigatorio!', required)
         },
         editora: {
           required: helpers.withMessage('Editora é obrigatorio!', required)
         },
-        categoria: {
+        generoId: {
           required: helpers.withMessage('Categoria é obrigatorio!', required)
         },
         sinopse: {
@@ -217,15 +216,14 @@ export default defineComponent({
 
       const livroFinal = {
         ...this.livro,
-        id: this.ehEdicao ? this.id : Math.random().toString(36).substring(2, 8)
       };
 
       try {
         if (this.ehEdicao) {
-          await axios.put(`http://localhost:3000/livros/${this.id}`, livroFinal);
+          await api.put(`/livros/${this.id}`, livroFinal);
           Toast.fire({ icon: 'success', title: 'Livro atualizado com sucesso!' });
         } else {
-          await axios.post('http://localhost:3000/livros', livroFinal);
+          await api.post(`/livros`, livroFinal);
           Toast.fire({ icon: 'success', title: 'Livro cadastrado com sucesso!' });
         }
 
@@ -241,7 +239,7 @@ export default defineComponent({
 
     async carregarLivro() {
       try {
-        const resposta = await axios.get('http://localhost:3000/livros');
+        const resposta = await api.get('/livros');
         this.livros = resposta.data;
       } catch (erro) {
         console.error('Erro ao carregar livros:', erro);
@@ -251,15 +249,14 @@ export default defineComponent({
     // para edição das coisas
     async carregarDados() {
       try {
-        const resposta = await axios.get(`http://localhost:3000/livros/${this.id}`);
+        const resposta = await api.get(`/livros/${this.id}`);
         this.livro = {
-          id: resposta.data.id,
           titulo: resposta.data.titulo,
           autor: resposta.data.autor,
-          ISBN: resposta.data.ISBN,
-          ano_publicacao: resposta.data.ano_publicacao,
+          isbn: resposta.data.ISBN,
+          anoPublicacao: resposta.data.ano_publicacao,
           editora: resposta.data.editora,
-          categoria: resposta.data.categoria,
+          generoId: resposta.data.generoId,
           sinopse: resposta.data.sinopse,
         };
       } catch (erro) {
@@ -272,39 +269,39 @@ export default defineComponent({
     },
 
     // carregar as categorias para pegar no combobox
-    async carregarCategorias() {
+    async carregarGenero() {
       try {
-        const resposta = await axios.get('http://localhost:3000/categorias');
-        this.listarCategorias = resposta.data;
+        const resposta = await api.get('/generos');
+        this.listarGenero = resposta.data;
       } catch (erro) {
-        console.error('Erro ao carregar categorias:', erro);
+        console.error('Erro ao carregar gêneros:', erro);
         Toast.fire({
           icon: 'error',
-          title: 'Erro ao carregar os categorias'
+          title: 'Erro ao carregar Gêneros'
         });
       }
     },
 
     limparCampos() {
       this.livro = {
-        id: '',
         titulo: '',
         autor: '',
-        ISBN: '',
-        ano_publicacao: '',
+        isbn: '',
+        anoPublicacao: '',
         editora: '',
-        categoria: '',
+        generoId: '',
         sinopse: '',
       };
     },
   },
   async mounted() {
     await this.carregarLivro();
-    await this.carregarCategorias();
+    await this.carregarGenero();
 
     if (this.ehEdicao) {
       await this.carregarDados();
     }
-  }
+  },
+
 });
 </script>

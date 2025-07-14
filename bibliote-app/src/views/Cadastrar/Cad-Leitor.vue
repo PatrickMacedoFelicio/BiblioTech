@@ -9,9 +9,9 @@
             <div class="col">
               <label>Nome Completo</label>
               <input class="form-control form-control-lg" type="text" placeholder="Digite o nome completo"
-                v-model="CadLeitores.nome" />
-              <div class="text-danger" v-if="v$.CadLeitores.nome.$errors.length && v$.CadLeitores.nome.$dirty">
-                <p v-for="error of v$.CadLeitores.nome.$errors" :key="error.$uid">
+                v-model="CadCliente.nome" />
+              <div class="text-danger" v-if="v$.CadCliente.nome.$errors.length && v$.CadCliente.nome.$dirty">
+                <p v-for="error of v$.CadCliente.nome.$errors" :key="error.$uid">
                   <small>{{ error.$message }}</small>
                 </p>
               </div>
@@ -19,9 +19,9 @@
             <div class="col">
               <label>E-mail</label>
               <input class="form-control form-control-lg" type="text" placeholder="Digite o e-mail"
-                v-model="CadLeitores.email" />
-              <div class="text-danger" v-if="v$.CadLeitores.email.$errors.length && v$.CadLeitores.email.$dirty">
-                <p v-for="error of v$.CadLeitores.email.$errors" :key="error.$uid">
+                v-model="CadCliente.email" />
+              <div class="text-danger" v-if="v$.CadCliente.email.$errors.length && v$.CadCliente.email.$dirty">
+                <p v-for="error of v$.CadCliente.email.$errors" :key="error.$uid">
                   <small>{{ error.$message }}</small>
                 </p>
               </div>
@@ -31,10 +31,10 @@
           <div class="form-group row">
             <div class="col">
               <label>CPF</label>
-              <input class="form-control form-control-lg" type="text" v-model="CadLeitores.cpf"
-                v-mask="'###.###.###-##'" placeholder="Digite o CPF" />
-              <div class="text-danger" v-if="v$.CadLeitores.cpf.$errors.length && v$.CadLeitores.cpf.$dirty">
-                <p v-for="error of v$.CadLeitores.cpf.$errors" :key="error.$uid">
+              <input class="form-control form-control-lg" type="text" v-model="CadCliente.cpf" v-mask="'###.###.###-##'"
+                placeholder="Digite o CPF" />
+              <div class="text-danger" v-if="v$.CadCliente.cpf.$errors.length && v$.CadCliente.cpf.$dirty">
+                <p v-for="error of v$.CadCliente.cpf.$errors" :key="error.$uid">
                   <small>{{ error.$message }}</small>
                 </p>
               </div>
@@ -42,18 +42,19 @@
             <div class="col">
               <label>Telefone</label>
               <input class="form-control form-control-lg" type="text" v-mask="'(##) #####-####'"
-                placeholder="Digite o Telefone" v-model="CadLeitores.telefone" />
-              <div class="text-danger" v-if="v$.CadLeitores.telefone.$errors.length && v$.CadLeitores.telefone.$dirty">
-                <p v-for="error of v$.CadLeitores.telefone.$errors" :key="error.$uid">
+                placeholder="Digite o Telefone" v-model="CadCliente.telefone" />
+              <div class="text-danger" v-if="v$.CadCliente.telefone.$errors.length && v$.CadCliente.telefone.$dirty">
+                <p v-for="error of v$.CadCliente.telefone.$errors" :key="error.$uid">
                   <small>{{ error.$message }}</small>
                 </p>
               </div>
             </div>
             <div class="col">
               <label>Data de Nascimento</label>
-              <input class="form-control form-control-lg" type="date" v-model="CadLeitores.dataNasc" />
-              <div class="text-danger" v-if="v$.CadLeitores.dataNasc.$errors.length && v$.CadLeitores.dataNasc.$dirty">
-                <p v-for="error of v$.CadLeitores.dataNasc.$errors" :key="error.$uid">
+              <input class="form-control form-control-lg" type="date" v-model="CadCliente.dataNascimento" />
+              <div class="text-danger"
+                v-if="v$.CadCliente.dataNascimento.$errors.length && v$.CadCliente.dataNascimento.$dirty">
+                <p v-for="error of v$.CadCliente.dataNascimento.$errors" :key="error.$uid">
                   <small>{{ error.$message }}</small>
                 </p>
               </div>
@@ -65,19 +66,14 @@
             <div class="col">
               <label>CEP</label>
               <input class="form-control-lg form-control" type="text" v-mask="'#####-###'" placeholder="CEP"
-                v-model="CadLeitores.cep" @blur="buscarCep" />
-              <div class="text-danger" v-if="v$.CadLeitores.cep.$errors.length && v$.CadLeitores.cep.$dirty">
-                <p v-for="error of v$.CadLeitores.cep.$errors" :key="error.$uid">
-                  <small>{{ error.$message }}</small>
-                </p>
-              </div>
+                v-model="CadCliente.cep" @blur="buscarCep" />
             </div>
             <div class="col">
               <label>Rua</label>
               <input class="form-control form-control-lg" type="text" placeholder="Nome da rua"
-                v-model="CadLeitores.Rua" />
-              <div class="text-danger" v-if="v$.CadLeitores.Rua.$errors.length && v$.CadLeitores.Rua.$dirty">
-                <p v-for="error of v$.CadLeitores.Rua.$errors" :key="error.$uid">
+                v-model="CadCliente.rua" />
+              <div class="text-danger" v-if="v$.CadCliente.rua.$errors.length && v$.CadCliente.rua.$dirty">
+                <p v-for="error of v$.CadCliente.rua.$errors" :key="error.$uid">
                   <small>{{ error.$message }}</small>
                 </p>
               </div>
@@ -85,9 +81,9 @@
             <div class="col">
               <label>Bairro</label>
               <input class="form-control form-control-lg" type="text" placeholder="Digite o bairro"
-                v-model="CadLeitores.Bairro" />
-              <div class="text-danger" v-if="v$.CadLeitores.Bairro.$errors.length && v$.CadLeitores.Bairro.$dirty">
-                <p v-for="error of v$.CadLeitores.Bairro.$errors" :key="error.$uid">
+                v-model="CadCliente.bairro" />
+              <div class="text-danger" v-if="v$.CadCliente.bairro.$errors.length && v$.CadCliente.bairro.$dirty">
+                <p v-for="error of v$.CadCliente.bairro.$errors" :key="error.$uid">
                   <small>{{ error.$message }}</small>
                 </p>
               </div>
@@ -95,9 +91,9 @@
             <div class="col">
               <label>Número</label>
               <input class="form-control form-control-lg" type="text" placeholder="Número da casa"
-                v-model="CadLeitores.Numero" />
-              <div class="text-danger" v-if="v$.CadLeitores.Numero.$errors.length && v$.CadLeitores.Numero.$dirty">
-                <p v-for="error of v$.CadLeitores.Numero.$errors" :key="error.$uid">
+                v-model="CadCliente.numero" />
+              <div class="text-danger" v-if="v$.CadCliente.numero.$errors.length && v$.CadCliente.numero.$dirty">
+                <p v-for="error of v$.CadCliente.numero.$errors" :key="error.$uid">
                   <small>{{ error.$message }}</small>
                 </p>
               </div>
@@ -107,26 +103,26 @@
           <div class="form-group row">
             <div class="col">
               <label>Estado</label>
-              <select class="form-control form-control-lg" v-model="CadLeitores.estado">
+              <select class="form-control form-control-lg" v-model="CadCliente.estado">
                 <option value="" disabled selected>Selecione seu estado...</option>
-                <option v-for="estado in estados" :key="estado.uf" :value="estado.uf">
+                <option v-for="estado in Estados" :key="estado.uf" :value="estado.uf">
                   {{ estado.nome }}
                 </option>
               </select>
-              <div class="text-danger" v-if="v$.CadLeitores.estado.$errors.length && v$.CadLeitores.estado.$dirty">
-                <p v-for="error of v$.CadLeitores.estado.$errors" :key="error.$uid">
+              <div class="text-danger" v-if="v$.CadCliente.estado.$errors.length && v$.CadCliente.estado.$dirty">
+                <p v-for="error of v$.CadCliente.estado.$errors" :key="error.$uid">
                   <small>{{ error.$message }}</small>
                 </p>
               </div>
             </div>
             <div class="col">
               <label>Cidade</label>
-              <select class="form-control form-control-lg" v-model="CadLeitores.cidade">
+              <select class="form-control form-control-lg" v-model="CadCliente.cidade">
                 <option value="" disabled selected>Selecione sua cidade...</option>
-                <option v-for="cidade in cidades" :key="cidade" :value="cidade">{{ cidade }}</option>
+                <option v-for="cidade in Cidades" :key="cidade" :value="cidade">{{ cidade }}</option>
               </select>
-              <div class="text-danger" v-if="v$.CadLeitores.cidade.$errors.length && v$.CadLeitores.nome.$dirty">
-                <p v-for="error of v$.CadLeitores.cidade.$errors" :key="error.$uid">
+              <div class="text-danger" v-if="v$.CadCliente.cidade.$errors.length && v$.CadCliente.cidade.$dirty">
+                <p v-for="error of v$.CadCliente.cidade.$errors" :key="error.$uid">
                   <small>{{ error.$message }}</small>
                 </p>
               </div>
@@ -149,11 +145,11 @@
 </template>
 
 <script lang="ts">
+import { api } from "@/common/http";
 import { defineComponent } from "vue";
 import { useVuelidate } from '@vuelidate/core';
 import { required, email, minLength, helpers } from '@vuelidate/validators';
 import { mask } from 'vue-the-mask';
-import axios from 'axios';
 import Swal from 'sweetalert2';
 import { Toast } from '@/common/toast';
 
@@ -174,22 +170,21 @@ export default defineComponent({
 
   data() {
     return {
-      CadLeitores: {
-        id: '',
+      CadCliente: {
         nome: '',
         email: '',
         cpf: '',
         telefone: '',
-        dataNasc: '',
-        Rua: '',
-        Bairro: '',
-        Numero: '',
+        dataNascimento: '',
+        rua: '',
+        bairro: '',
+        numero: '',
         cep: '',
         estado: '',
-        cidade: '',
+        cidade: ''
       },
-      cidades: [] as string[],
-      estados: [
+      Cidades: [] as string[],
+      Estados: [
         { uf: 'AC', nome: 'Acre' }, { uf: 'AL', nome: 'Alagoas' }, { uf: 'AP', nome: 'Amapá' },
         { uf: 'AM', nome: 'Amazonas' }, { uf: 'BA', nome: 'Bahia' }, { uf: 'CE', nome: 'Ceará' },
         { uf: 'DF', nome: 'Distrito Federal' }, { uf: 'ES', nome: 'Espírito Santo' }, { uf: 'GO', nome: 'Goiás' },
@@ -206,56 +201,50 @@ export default defineComponent({
   },
 
   watch: {
-  'CadLeitores.estado'(uf: string) {
-    if (!uf) return;
-
-    fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${uf}/municipios`)
-      .then(res => res.json())
-      .then(data => {
-        this.cidades = data.map((cidade: any) => cidade.nome);
-
-        // Se a cidade atual não está na nova lista, zera
-        if (!this.cidades.includes(this.CadLeitores.cidade)) {
-          this.CadLeitores.cidade = '';
-        }
-      })
-      .catch(erro => {
-        console.error('Erro ao buscar cidades:', erro);
-      });
-  }
-},
- 
+    'CadCliente.estado'(uf: string) {
+      if (!uf) return;
+      fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${uf}/municipios`)
+        .then(res => res.json())
+        .then(data => {
+          this.Cidades = data.map((cidade: any) => cidade.nome);
+          if (!this.Cidades.includes(this.CadCliente.cidade)) {
+            this.CadCliente.cidade = '';
+          }
+        })
+        .catch(err => console.error('Erro ao buscar cidades:', err));
+    }
+  },
 
   validations() {
     return {
-      CadLeitores: {
-        nome: { minLength: helpers.withMessage('O nome deve ter no mínimo 8 carácteres!', minLength(8)), required: helpers.withMessage('Nome é obrigatorio!', required) },
-        email: { email: helpers.withMessage('Este e-mail não é considerado valido!', email), required: helpers.withMessage('E-mail é obrigatorio', required) },
+      CadCliente: {
+        nome: { minLength: helpers.withMessage('O nome deve ter no mínimo 8 caracteres!', minLength(8)), required: helpers.withMessage('Nome é obrigatório!', required) },
+        email: { email: helpers.withMessage('E-mail inválido!', email), required: helpers.withMessage('E-mail é obrigatório', required) },
         cpf: { required: helpers.withMessage('CPF é obrigatório', required) },
         telefone: { required: helpers.withMessage('Telefone é obrigatório', required), minLength: helpers.withMessage('Telefone deve ter ao menos 10 dígitos', minLength(10)) },
-        dataNasc: { required: helpers.withMessage('Data de nascimento é obrigatória', required), dataFuturo },
-        Rua: { required: helpers.withMessage('Rua é obrigatório', required) },
-        Bairro: { required: helpers.withMessage('Bairro é obrigatório', required) },
-        Numero: { required: helpers.withMessage('Número da casa é obrigatório', required) },
+        dataNascimento: { required: helpers.withMessage('Data de nascimento é obrigatória', required), dataFuturo },
+        rua: { required: helpers.withMessage('Rua é obrigatória', required) },
+        bairro: { required: helpers.withMessage('Bairro é obrigatório', required) },
+        numero: { required: helpers.withMessage('Número é obrigatório', required) },
         cep: {},
         estado: { required: helpers.withMessage('Estado é obrigatório', required) },
-        cidade: { required: helpers.withMessage('Cidade é obrigatório', required) }
+        cidade: { required: helpers.withMessage('Cidade é obrigatória', required) }
       }
     };
   },
 
   methods: {
     async buscarCep() {
-      const cep = this.CadLeitores.cep.replace(/\D/g, '');
+      const cep = this.CadCliente.cep.replace(/\D/g, '');
       if (cep.length !== 8) return;
       try {
         const res = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
         const data = await res.json();
         if (data.erro) return;
-        this.CadLeitores.Rua = data.logradouro;
-        this.CadLeitores.Bairro = data.bairro;
-        this.CadLeitores.estado = data.uf;
-        this.CadLeitores.cidade = data.localidade;
+        this.CadCliente.rua = data.logradouro;
+        this.CadCliente.bairro = data.bairro;
+        this.CadCliente.estado = data.uf;
+        this.CadCliente.cidade = data.localidade;
         this.estadoPorCep = data.uf;
       } catch (error) {
         console.error('Erro ao buscar CEP:', error);
@@ -279,18 +268,17 @@ export default defineComponent({
 
       if (!confirmado.isConfirmed) return;
 
-
       const novoLeitor = {
-        ...this.CadLeitores,
-        id: this.ehEdicao ? this.id : Math.random().toString(36).substring(2, 8)
+        ...this.CadCliente,
+        dataNascimento: new Date(this.CadCliente.dataNascimento).toISOString()
       };
 
       try {
         if (this.ehEdicao) {
-          await axios.put(`http://localhost:3000/leitores/${this.id}`, novoLeitor);
-          Toast.fire({ icon: 'success', title: 'Leitor atualizadp com sucesso!' });
+          await api.put(`/clientes/${this.id}`, novoLeitor);
+          Toast.fire({ icon: 'success', title: 'Leitor atualizado com sucesso!' });
         } else {
-          await axios.post('http://localhost:3000/leitores', novoLeitor);
+          await api.post(`/clientes`, novoLeitor);
           Toast.fire({ icon: 'success', title: 'Leitor cadastrado com sucesso!' });
         }
 
@@ -306,25 +294,12 @@ export default defineComponent({
 
     async carregarDados() {
       try {
-        const resposta = await axios.get(`http://localhost:3000/leitores/${this.id}`);
-        this.CadLeitores = {
-          id: resposta.data.id,
-          nome: resposta.data.nome,
-          email: resposta.data.email,
-          cpf: resposta.data.cpf,
-          telefone: resposta.data.telefone,
-          dataNasc: resposta.data.dataNasc,
-          Rua: resposta.data.Rua,
-          Bairro: resposta.data.Bairro,
-          Numero: resposta.data.Numero,
-          cep: resposta.data.cep,
-          estado: resposta.data.estado,
-          cidade: resposta.data.cidade,
-        };
+        const resposta = await api.get(`/clientes/${this.id}`);
+        this.CadCliente = resposta.data;
       } catch (erro) {
         Toast.fire({
           icon: 'error',
-          title: 'Erro ao carregar a categoria para edição'
+          title: 'Erro ao carregar leitor para edição'
         });
         this.$router.push('/consultar/leitor');
       }
@@ -332,24 +307,23 @@ export default defineComponent({
 
     async carregarLeitor() {
       try {
-        const resposta = await axios.get('http://localhost:3000/leitores');
-        this.CadLeitores = resposta.data;
+        const resposta = await api.get('/clientes');
+        this.CadCliente = resposta.data;
       } catch (erro) {
         console.error('Erro ao carregar leitores:', erro);
       }
     },
 
     limparCampos() {
-      this.CadLeitores = {
-        id: '',
+      this.CadCliente = {
         nome: '',
         email: '',
         cpf: '',
         telefone: '',
-        dataNasc: '',
-        Rua: '',
-        Bairro: '',
-        Numero: '',
+        dataNascimento: '',
+        rua: '',
+        bairro: '',
+        numero: '',
         cep: '',
         estado: '',
         cidade: ''
@@ -359,8 +333,6 @@ export default defineComponent({
   },
 
   async mounted() {
-    await this.carregarLeitor();
-
     if (this.ehEdicao) {
       await this.carregarDados();
     }
@@ -374,6 +346,5 @@ export default defineComponent({
       return !!this.id;
     }
   }
-
 });
 </script>

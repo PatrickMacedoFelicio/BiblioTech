@@ -84,22 +84,23 @@
 </template>
 
 <script lang="ts">
+import { api } from '@/common/http';
 import { defineComponent } from 'vue';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import ModalLeitor from '@/components/modals/ModalLeitor.vue';
 
 interface Leitor {
-  id: string,
+  id: number,
   nome: string,
   email: string,
   telefone: string,
   cpf: string,
   dataNasc: string,
   cep: string,
-  Rua: string,
-  Bairro: string,
-  Numero: string,
+  rua: string,
+  bairro: string,
+  numero: string,
   estado: string,
   cidade: string,
 }
@@ -141,7 +142,8 @@ export default defineComponent({
     async buscarLeitores() {
       this.paginaAtual = 1;
       try {
-        const response = await axios.get('http://localhost:3000/leitores');
+
+        const response = await api.get('/clientes');
         this.leitores = response.data;
       } catch (erro: any) {
         Swal.fire({
@@ -169,9 +171,9 @@ export default defineComponent({
       });
     },
 
-    async excluirLeitor(id: string) {
+    async excluirLeitor(id: number) {
       try {
-        await axios.delete(`http://localhost:3000/leitores/${id}`);
+        await api.delete(`/clientes/${id}`); 
         this.leitores = this.leitores.filter(l => l.id !== id);
         Swal.fire({
           icon: 'success',
@@ -188,7 +190,7 @@ export default defineComponent({
     },
 
     //Edição
-    async editarFornecedor(id: string) {
+    async editarFornecedor(id: number) {
       this.$router.push(`/editar/leitor/${id}`);
     },
 

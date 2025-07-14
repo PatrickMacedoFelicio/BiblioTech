@@ -52,10 +52,10 @@ import { required, minLength, helpers } from '@vuelidate/validators';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { Toast } from '@/common/toast';
+import { api } from '@/common/http';
 
 
 interface Categoria {
-  id: string;
   nome: string;
   descricao: string;
 }
@@ -70,7 +70,6 @@ export default defineComponent({
   data() {
     return {
       categoria: {
-        id: '',
         nome: '',
         descricao: ''
       } as Categoria,
@@ -112,18 +111,17 @@ export default defineComponent({
       if (!confirmado.isConfirmed) return;
 
 
-      const novaCategoria = {
+      const novoGenero = {
         ...this.categoria,
-        id: this.ehEdicao ? this.id : Math.random().toString(36).substring(2, 8)
       };
 
       try {
         if (this.ehEdicao) {
-          await axios.put(`http://localhost:3000/categorias/${this.id}`, novaCategoria);
-          Toast.fire({ icon: 'success', title: 'Categoria atualizada com sucesso!' });
+          await api.put(`/generos/${this.id}`, novoGenero)
+          Toast.fire({ icon: 'success', title: 'Genero atualizada com sucesso!' });
         } else {
-          await axios.post('http://localhost:3000/categorias', novaCategoria);
-          Toast.fire({ icon: 'success', title: 'Categoria cadastrada com sucesso!' });
+          await api.post('/generos', novoGenero)
+          Toast.fire({ icon: 'success', title: 'Genero cadastrada com sucesso!' });
         }
 
         this.$router.push('/consultar/categoria');
@@ -136,41 +134,37 @@ export default defineComponent({
       }
     },
 
-    async carregarCategorias() {
+    async carregarGeneros() {
       try {
-        const resposta = await axios.get('http://localhost:3000/categorias');
+        const resposta = await api.get('/generos');
         this.categorias = resposta.data;
       } catch (erro) {
-        console.error('Erro ao carregar categorias:', erro);
+        console.error('Erro ao carregar generos:', erro);
       }
     },
 
     // para edição das coisas
     async carregarDados() {
       try {
-        const resposta = await axios.get(`http://localhost:3000/categorias/${this.id}`);
-        this.categoria = {
-          id: resposta.data.id,
-          nome: resposta.data.nome,
-          descricao: resposta.data.descricao
-        };
+        const resposta = await api.get(`/generos/${this.id}`);
+        this.categoria = resposta.data;
       } catch (erro) {
         Toast.fire({
           icon: 'error',
-          title: 'Erro ao carregar a categoria para edição'
+          title: 'Erro ao carregar genero para edição'
         });
         this.$router.push('/consultar/categoria');
       }
     },
 
     limparCampos() {
-      this.categoria = { id: '', nome: '', descricao: '' };
+      this.categoria = { nome: '', descricao: '' };
       this.v$.$reset();
     },
   },
 
   async mounted() {
-    await this.carregarCategorias();
+    await this.carregarGeneros();
 
     if (this.ehEdicao) {
       await this.carregarDados();

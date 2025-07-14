@@ -30,7 +30,10 @@ export default defineComponent({
   props: {
     visivel: Boolean,
     categoria: {
-      type: Object as PropType<{ nome: string; descricao: string }>,
+      type: Object as PropType<{ 
+        id: number;
+        nome: string; 
+        descricao: string }>,
       required: true
     }
   }

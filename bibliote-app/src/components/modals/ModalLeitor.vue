@@ -13,9 +13,9 @@
           <div class="grid-item"><p><strong class="cor">CPF: </strong> {{ leitor.cpf }}</p></div>
           <div class="grid-item"><p><strong class="cor">Data de Nascimento: </strong> {{ leitor.dataNasc }}</p></div>
           <div class="grid-item"><p><strong class="cor">CEP: </strong> {{ leitor.cep }}</p></div>
-          <div class="grid-item"><p><strong class="cor">Rua: </strong> {{ leitor.Rua }}</p></div>
-          <div class="grid-item"><p><strong class="cor">Bairro: </strong> {{ leitor.Bairro }}</p></div>
-          <div class="grid-item"><p><strong class="cor">Número: </strong> {{ leitor.Numero }}</p></div>
+          <div class="grid-item"><p><strong class="cor">Rua: </strong> {{ leitor.rua }}</p></div>
+          <div class="grid-item"><p><strong class="cor">Bairro: </strong> {{ leitor.bairro }}</p></div>
+          <div class="grid-item"><p><strong class="cor">Número: </strong> {{ leitor.numero }}</p></div>
           <div class="grid-item"><p><strong class="cor">Estado: </strong> {{ leitor.estado }}</p></div>
           <div class="grid-item"><p><strong class="cor">Cidade: </strong> {{ leitor.cidade }}</p></div>
         </div>
@@ -38,16 +38,16 @@ export default defineComponent({
     visivel: Boolean,
     leitor: {
       type: Object as PropType<{
-        id: string,
+        id: number,
         nome: string,
         email: string,
         telefone: string,
         cpf: string,
         dataNasc: string,
         cep: string,
-        Rua: string,
-        Bairro: string,
-        Numero: string,
+        rua: string,
+        bairro: string,
+        numero: string,
         estado: string,
         cidade: string,
       }>,

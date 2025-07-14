@@ -1,10 +1,10 @@
 <template>
   <div class="page-header">
-    <h3 class="card-title">Consulta de Categoria</h3>
+    <h3 class="card-title">Consulta de Gêneros</h3>
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="#">Consultar</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Categoria</li>
+        <li class="breadcrumb-item active" aria-current="page">Gêneros</li>
       </ol>
     </nav>
   </div>
@@ -15,14 +15,12 @@
         <div class="card-body">
           <div class="form-group row">
             <div class="col-5">
-              <label>Categoria</label>
-              <div id="the-basics">
-                <input class="typeahead form-control form-control-lg" type="text" v-model="filtro"
-                  placeholder="Digite o nome da categoria..." />
-              </div>
+              <label>Gênero</label>
+              <input class="form-control form-control-lg" type="text" v-model="filtro"
+                     placeholder="Digite o nome do gênero..." />
             </div>
             <div class="col col-lg-2 d-flex align-items-end">
-              <button class="btn btn-success btn-fw btn-lg w-100 btn-icon-text" @click="buscarCategoria">
+              <button class="btn btn-success btn-fw btn-lg w-100 btn-icon-text" @click="buscarGeneros">
                 Buscar
               </button>
             </div>
@@ -31,49 +29,48 @@
           <div class="table-responsive">
             <table class="table">
               <thead>
-                <tr>
-                  <th>Título</th>
-                  <th>Descrição</th>
-                  <th class="text-center">Ações</th>
-                </tr>
+              <tr>
+                <th>Nome</th>
+                <th>Descrição</th>
+                <th class="text-center">Ações</th>
+              </tr>
               </thead>
               <tbody>
-                <tr v-for="(item, index) in categoriaPaginado" :key="index">
-                  <td>{{ item.nome }}</td>
-                  <td>{{ item.descricao.length > 50 ? item.descricao.slice(0, 100) + '...' : item.descricao }}</td>
-                  <td>
-                    <div class="d-flex justify-content-center">
-                      <button class="btn btn-info btn-sm" @click="visualizarCategoria(item)">
-                        <i class="mdi mdi-magnify"></i>
-                      </button>
-                      <button class="btn btn-success btn-sm ms-2 gap1" @click="editarCategoria(item.id)">
-                        <i class="mdi mdi-pencil"></i>
-                      </button>
-                      <button class="btn btn-danger btn-sm ms-2 gap1" @click="confirmarExclusao(item)">
-                        <i class="mdi mdi-delete"></i>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
+              <tr v-for="(item, index) in generosPaginado" :key="index">
+                <td>{{ item.nome }}</td>
+                <td>{{ item.descricao.length > 50 ? item.descricao.slice(0, 100) + '...' : item.descricao }}</td>
+                <td>
+                  <div class="d-flex justify-content-center">
+                    <button class="btn btn-info btn-sm" @click="visualizarGenero(item)">
+                      <i class="mdi mdi-magnify"></i>
+                    </button>
+                    <button class="btn btn-success btn-sm ms-2 gap1" @click="editarGenero(item.id)">
+                      <i class="mdi mdi-pencil"></i>
+                    </button>
+                    <button class="btn btn-danger btn-sm ms-2 gap1" @click="confirmarExclusao(item)">
+                      <i class="mdi mdi-delete"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
               </tbody>
             </table>
           </div>
-          <!-- Caso não tenha nenhuma info -->
-          <div v-if="categoriaFiltrado.length === 0">
-            <p class="text-center text-muted">Nenhum item encontrado.</p>
+
+          <div v-if="generosFiltrados.length === 0">
+            <p class="text-center text-muted">Nenhum gênero encontrado.</p>
           </div>
 
-          <!-- DENTRO da <template>, mas FORA da tabela -->
-          <ModalCategoria :visivel="mostrarModal" :categoria="categoriaSelecionada" @fechar="fecharModal" />
+          <!-- Modal -->
+          <ModalCategoria :visivel="mostrarModal" :categoria="generoSelecionado" @fechar="fecharModal" />
+
           <!-- Paginação -->
           <div class="pagination mt-4">
             <button class="page-link" :disabled="paginaAtual === 1" @click="paginaAtual--">Anterior</button>
-
             <button v-for="pagina in totalPaginas" :key="pagina" class="page-link"
-              :class="{ active: pagina === paginaAtual }" @click="irParaPagina(pagina)">
+                    :class="{ active: pagina === paginaAtual }" @click="irParaPagina(pagina)">
               {{ pagina }}
             </button>
-
             <button class="page-link" :disabled="paginaAtual === totalPaginas" @click="paginaAtual++">Próxima</button>
           </div>
         </div>
@@ -87,69 +84,69 @@ import { defineComponent } from 'vue';
 import Swal from 'sweetalert2';
 import axios from 'axios';
 import ModalCategoria from '@/components/modals/ModalCategoria.vue';
+import { api } from '@/common/http';
 
-interface Categoria {
-  id: string;
+
+interface Genero {
+  id: number;
   nome: string;
   descricao: string;
 }
 
 export default defineComponent({
-  name: 'ConsultarCategoria',
+  name: 'ConsultarGenero',
   components: { ModalCategoria },
 
   data() {
     return {
       filtro: '',
-      categoria: [] as Categoria[],
+      generos: [] as Genero[],
       mostrarModal: false,
-      categoriaSelecionada: { nome: '', descricao: '' },
+      generoSelecionado: {} as Genero,
       paginaAtual: 1,
       itensPorPagina: 8,
     };
   },
 
   computed: {
-    categoriaFiltrado() {
+    generosFiltrados(): Genero[] {
       const texto = this.filtro.toLowerCase();
-      return this.categoria.filter(item =>
+      return this.generos.filter(item =>
         item.nome?.toLowerCase().includes(texto)
       );
     },
     totalPaginas(): number {
-      return Math.ceil(this.categoriaFiltrado.length / this.itensPorPagina);
+      return Math.ceil(this.generosFiltrados.length / this.itensPorPagina);
     },
-    categoriaPaginado(): Categoria[] {
+    generosPaginado(): Genero[] {
       const inicio = (this.paginaAtual - 1) * this.itensPorPagina;
-      return this.categoriaFiltrado.slice(inicio, inicio + this.itensPorPagina);
+      return this.generosFiltrados.slice(inicio, inicio + this.itensPorPagina);
     },
   },
 
   mounted() {
-    this.buscarCategoria();
+    this.buscarGeneros();
   },
 
   methods: {
-    async buscarCategoria() {
+    async buscarGeneros() {
       this.paginaAtual = 1;
       try {
-        const response = await axios.get('http://localhost:3000/categorias');
-        this.categoria = response.data;
+        const response = await api.get('/generos');
+        this.generos = response.data;
       } catch (erro: any) {
-        console.error('Erro ao buscar categorias:', erro);
         Swal.fire({
           icon: 'error',
-          title: 'Erro ao buscar categorias',
+          title: 'Erro ao buscar gêneros',
           text: erro.message || 'Verifique se o servidor está rodando.'
         });
       }
     },
 
-    //Exclução das coisas
-    confirmarExclusao(item: Categoria) {
+    confirmarExclusao(item: Genero) {
       Swal.fire({
         title: 'Tem certeza?',
-        text: `Deseja excluir a categoria "${item.nome}"?`,
+        text: `Deseja excluir o gênero "${item.nome}"?`,
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#d33',
@@ -158,46 +155,45 @@ export default defineComponent({
         cancelButtonText: 'Cancelar'
       }).then((result) => {
         if (result.isConfirmed) {
-          this.excluirCategoria(item.id);
+          this.excluirGenero(item.id);
         }
       });
     },
 
-    async excluirCategoria(id: string) {
+    async excluirGenero(id: number) {
       try {
-        await axios.delete(`http://localhost:3000/categorias/${id}`);
-        this.categoria = this.categoria.filter(cat => cat.id !== id);
+        await api.delete(`/generos/${id}`);
+        this.generos = this.generos.filter(g => g.id !== id);
 
         Swal.fire({
           icon: 'success',
           title: 'Excluído!',
-          text: 'A categoria foi removida com sucesso.'
+          text: 'O gênero foi removido com sucesso.'
         });
       } catch (erro: any) {
-        console.error('Erro ao excluir:', erro);
         Swal.fire({
           icon: 'error',
-          title: 'Erro ao excluir categoria',
+          title: 'Erro ao excluir gênero',
           text: erro.message || 'Tente novamente mais tarde.'
         });
       }
     },
 
-    //consultar as categorias com modal
-    visualizarCategoria(cat: Categoria) {
-      this.categoriaSelecionada = cat;
+    visualizarGenero(genero: Genero) {
+      this.generoSelecionado = genero;
       this.mostrarModal = true;
     },
+
     fecharModal() {
       this.mostrarModal = false;
     },
+
     irParaPagina(pagina: number) {
       this.paginaAtual = pagina;
     },
 
-    // Edição das coisas
-    async editarCategoria(id: string){
-      this.$router.push(`/editar/categoria/${id}`);
+    editarGenero(id: number) {
+      this.$router.push(`/editar/genero/${id}`);
     }
   }
 });
