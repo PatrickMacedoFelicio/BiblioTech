@@ -8,7 +8,7 @@
       <div class="modal-body">
         <div class="grid-container">
           <div class="grid-item"><strong class="cor">Titulo do Livro:</strong> {{ estoque.tituloLivro }}</div>
-          <div class="grid-item"><strong class="cor">Código de Barras:</strong> {{ estoque.codigoBarras }}</div>
+          <div class="grid-item"><strong class="cor">Código de Barras:</strong> {{ estoque.codigoDeBarras }}</div>
           <div class="grid-item"><strong class="cor">Quantidade:</strong> {{ estoque.quantidade }}</div>
         </div>
       </div>
@@ -30,7 +30,7 @@ export default defineComponent({
     estoque: {
       type: Object as PropType<{
         tituloLivro: string;
-        codigoBarras: string;
+        codigoDeBarras: string;
         quantidade: number;
       }>,
       required: true

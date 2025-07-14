@@ -8,14 +8,14 @@
             <div class="col-6">
               <label>Título do Livro</label>
 
-              <select class="form-control form-control-lg" v-model="estoque.livro">
+              <select class="form-control form-control-lg" v-model="estoque.livroId">
                 <option disabled value="">Selecione um livro...</option>
                 <option v-for="livro in listarLivros" :key="livro.id" :value="livro.id">
                   {{ livro.titulo }}
                 </option>
               </select>
-              <div class="text-danger" v-if="v$.estoque.livro.$error">
-                <small>{{ v$.estoque.livro.$errors[0].$message }}</small>
+              <div class="text-danger" v-if="v$.estoque.livroId.$error">
+                <small>{{ v$.estoque.livroId.$errors[0].$message }}</small>
               </div>
 
 
@@ -29,10 +29,10 @@
           <div class="form-group row">
             <div class="col">
               <label>Código de Barras</label>
-              <input class="form-control form-control-lg" type="text" v-model="estoque.codigoBarras"
+              <input class="form-control form-control-lg" type="text" v-model="estoque.codigoDeBarras"
                 placeholder="Digite o código de barras" />
-              <div class="text-danger" v-if="v$.estoque.codigoBarras.$error">
-                <small>{{ v$.estoque.codigoBarras.$errors[0].$message }}</small>
+              <div class="text-danger" v-if="v$.estoque.codigoDeBarras.$error">
+                <small>{{ v$.estoque.codigoDeBarras.$errors[0].$message }}</small>
               </div>
             </div>
 
@@ -60,6 +60,7 @@
 </template>
 
 <script lang="ts">
+import { api } from '@/common/http';
 import { defineComponent } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
 import { required, minValue, helpers } from '@vuelidate/validators';
@@ -87,10 +88,9 @@ export default defineComponent({
   data() {
     return {
       estoque: {
-        id: '',
-        codigoBarras: '',
+        codigoDeBarras: '',
         quantidade: 0,
-        livro: '',
+        livroId: 0,
       },
       estoques: [] as any[],
       listarLivros: [] as any[],
@@ -102,14 +102,14 @@ export default defineComponent({
   validations() {
     return {
       estoque: {
-        codigoBarras: {
+        codigoDeBarras: {
           required: helpers.withMessage('Código de barras é obrigatório', required)
         },
         quantidade: {
           required: helpers.withMessage('Quantidade é obrigatória', required),
           minValue: helpers.withMessage('Deve ser no mínimo 1', minValue(1))
         },
-        livro: {
+        livroId: {
           required: helpers.withMessage('Escolher um livro é obrigatorio!', required)
         }
       }
@@ -136,15 +136,14 @@ export default defineComponent({
 
       const estoqueFinal = {
         ...this.estoque,
-        id: this.ehEdicao ? this.id : Math.random().toString(36).substring(2, 8)
       };
 
       try {
         if (this.ehEdicao) {
-          await axios.put(`http://localhost:3000/estoques/${this.id}`, estoqueFinal);
+          await api.put(`/estoques/${this.id}`, estoqueFinal);
           Toast.fire({ icon: 'success', title: 'Estoque atualizado com sucesso!' });
         } else {
-          await axios.post('http://localhost:3000/estoques', estoqueFinal);
+          await api.post('/estoques', estoqueFinal);
           Toast.fire({ icon: 'success', title: 'Estoque cadastrado com sucesso!' });
         }
 
@@ -160,7 +159,7 @@ export default defineComponent({
 
     async carregarEstoque() {
       try {
-        const resposta = await axios.get('http://localhost:3000/estoques');
+        const resposta = await api.get('/estoques');
         this.estoques = resposta.data;
       } catch (erro) {
         console.error('Erro ao carregar estoque:', erro);
@@ -170,12 +169,11 @@ export default defineComponent({
     // para edição das coisas
     async carregarDados() {
       try {
-        const resposta = await axios.get(`http://localhost:3000/estoques/${this.id}`);
+        const resposta = await api.get(`/estoques/${this.id}`);
         this.estoque = {
-          id: resposta.data.id,
-          codigoBarras: resposta.data.codigoBarras,
+          codigoDeBarras: resposta.data.codigoDeBarras,
           quantidade: resposta.data.quantidade,
-          livro: resposta.data.livro
+          livroId: resposta.data.livroId
         };
       } catch (erro) {
         Toast.fire({
@@ -189,7 +187,7 @@ export default defineComponent({
     // carregar os livros para pegar no combobox
     async carregarLivros() {
       try {
-        const resposta = await axios.get('http://localhost:3000/livros');
+        const resposta = await api.get('/livros');
         this.listarLivros = resposta.data;
       } catch (erro) {
         console.error('Erro ao carregar livros:', erro);
@@ -203,10 +201,9 @@ export default defineComponent({
 
     limparCampos() {
       this.estoque = {
-        id: '',
-        codigoBarras: '',
+        codigoDeBarras: '',
         quantidade: 0,
-        livro: ''
+        livroId: 0
       };
       this.v$.$reset();
     }

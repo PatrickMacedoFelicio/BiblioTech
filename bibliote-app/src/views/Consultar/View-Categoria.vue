@@ -19,8 +19,8 @@
               <input class="form-control form-control-lg" type="text" v-model="filtro"
                      placeholder="Digite o nome do gênero..." />
             </div>
-            <div class="col col-lg-2 d-flex align-items-end">
-              <RouterLink class="btn btn-success btn-fw btn-lg w-100 btn-icon-text" to="/cadastrar/categoria"><strong>Genero</strong></RouterLink>
+            <div class="col  d-flex align-items-end">
+              <RouterLink class="btn btn-success btn-fw btn-lg btn-icon-text" to="/cadastrar/categoria"><strong>+ Gênero</strong></RouterLink>
             </div>
           </div>
 

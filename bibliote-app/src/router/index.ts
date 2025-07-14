@@ -56,7 +56,7 @@ const router = createRouter({
     {
       path: '/cadastrar/categoria',
       name: 'categoria',
-      component: () => import('../views/Cadastrar/Cad-Categoria.vue'),
+      component: () => import('../views/Cadastrar/Cad-Genero.vue'),
     },
     {
       path: '/cadastrar/estoque',
@@ -98,7 +98,7 @@ const router = createRouter({
     {
       path: '/editar/Genero/:id',
       name: 'editarGenero',
-      component: () => import('../views/Cadastrar/Cad-Categoria.vue'),
+      component: () => import('../views/Cadastrar/Cad-Genero.vue'),
     },
     {
       path: '/editar/livro/:id',

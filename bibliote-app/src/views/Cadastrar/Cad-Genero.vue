@@ -3,12 +3,12 @@
     <div class="card">
       <div class="card-body">
         <form @submit.prevent="salvar">
-          <h3 class="card-title">{{ ehEdicao ? 'Atualização de' : 'Cadastro de' }} Categoria</h3>
+          <h3 class="card-title">{{ ehEdicao ? 'Atualização de' : 'Cadastro de' }} Gêneros</h3>
 
           <div class="form-group row">
             <div class="col">
               <label class="form-label">Nome da Categoria</label>
-              <input type="text" class="form-control" v-model="categoria.nome"
+              <input type="text" class="form-control" v-model="categoria.nome" 
                 placeholder="Digite o nome da categoria..." />
               <div class="text-danger" v-if="v$.categoria.nome.$errors.length">
                 <p v-for="error of v$.categoria.nome.$errors" :key="error.$uid">

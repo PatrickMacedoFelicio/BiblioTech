@@ -42,7 +42,7 @@
                             <tbody>
                                 <tr v-for="item in estoquePaginado" :key="item.id">
                                     <td>{{ item.tituloLivro }}</td>
-                                    <td>{{ item.codigoBarras }}</td>
+                                    <td>{{ item.codigoDeBarras }}</td>
                                     <td class="text-center">{{ item.quantidade }}</td>
                                     <td class="text-center">
                                         <button class="btn btn-purple btn-sm" @click="visualizarEstoque(item)">
@@ -88,16 +88,17 @@
 </template>
 
 <script lang="ts">
+import { api } from '@/common/http';
 import { defineComponent } from 'vue';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import ModalEstoque from '@/components/modals/ModalEstoque.vue';
 
 interface Estoque {
-    id: string;
-    codigoBarras: string;
+    id: number;
+    codigoDeBarras: string;
     quantidade: number;
-    livro: string;
+    livroId: string;
     tituloLivro: string;
 }
 
@@ -113,7 +114,7 @@ export default defineComponent({
             paginaAtual: 1,
             mostrarModal: false,
             itensPorPagina: 8,
-            estoqueSelecionado: { tituloLivro: '', codigoBarras: '', quantidade: 0 },
+            estoqueSelecionado: {} as Estoque,
         };
     },
 
@@ -142,14 +143,14 @@ export default defineComponent({
             this.paginaAtual = 1;
             try {
                 const [resEstoque, resLivros] = await Promise.all([
-                    axios.get('http://localhost:3000/estoques'),
-                    axios.get('http://localhost:3000/livros')
+                    api.get('/estoques'),
+                    api.get('/livros')
                 ]);
 
                 this.livros = resLivros.data;
 
                 this.estoque = resEstoque.data.map((item: Estoque) => {
-                    const livroEncontrado = this.livros.find(l => l.id === item.livro);
+                    const livroEncontrado = this.livros.find(l => l.id === item.livroId);
                     return {
                         ...item,
                         tituloLivro: livroEncontrado ? livroEncontrado.titulo : 'Livro não encontrado'
@@ -187,9 +188,9 @@ export default defineComponent({
         },
 
         // Excluir
-        async excluirCategoria(id: string) {
+        async excluirCategoria(id: number) {
             try {
-                await axios.delete(`http://localhost:3000/estoques/${id}`);
+                await api.delete(`/estoques/${id}`);
                 this.estoque = this.estoque.filter(cat => cat.id !== id);
 
                 Swal.fire({
@@ -208,7 +209,7 @@ export default defineComponent({
         },
 
         //Edição
-        async editarEstoque(id: string) {
+        async editarEstoque(id: number) {
             this.$router.push(`/editar/estoque/${id}`);
         },
 

@@ -143,8 +143,8 @@ export default defineComponent({
       this.paginaAtual = 1;
       try {
         const [resLivro, resGeneros ] = await Promise.all([
-          await axios.get('/livros'),
-          await axios.get('/generos')
+          await api.get('/livros'),
+          await api.get('/generos')
         ]);
 
         this.categorias = resGeneros.data;
@@ -195,7 +195,7 @@ export default defineComponent({
 
     async excluirLivro(id: number) {
       try {
-        await axios.delete(`http://localhost:3000/livros/${id}`);
+        await api.delete(`http://localhost:3000/livros/${id}`);
         this.livros = this.livros.filter(l => l.id !== id);
         Swal.fire({
           icon: 'success',

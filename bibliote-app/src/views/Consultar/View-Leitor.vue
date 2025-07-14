@@ -19,10 +19,8 @@
               <input class="form-control form-control-lg" type="text" v-model="filtro"
                 placeholder="Digite o nome do leitor..." />
             </div>
-            <div class="col col-lg-2 d-flex align-items-end">
-              <button class="btn btn-success btn-fw btn-lg w-100 btn-icon-text" @click="buscarLeitores">
-                Buscar
-              </button>
+            <div class="col  d-flex align-items-end">
+              <RouterLink class="btn btn-success btn-fw btn-lg btn-icon-text" to="/cadastrar/leitor"><strong>+ Leitor</strong></RouterLink>
             </div>
           </div>
 
@@ -96,7 +94,7 @@ interface Leitor {
   email: string,
   telefone: string,
   cpf: string,
-  dataNasc: string,
+  dataNascimento: string,
   cep: string,
   rua: string,
   bairro: string,
@@ -119,7 +117,7 @@ export default defineComponent({
       leitorSelecionado: {} as Leitor,
     };
   },
-
+ 
   computed: {
     leitoresFiltrados(): Leitor[] {
       const texto = this.filtro.toLowerCase();

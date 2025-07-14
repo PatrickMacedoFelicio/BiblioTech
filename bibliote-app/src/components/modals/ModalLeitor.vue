@@ -11,7 +11,7 @@
           <div class="grid-item"><p><strong class="cor">E-mail: </strong> {{ leitor.email }}</p></div>
           <div class="grid-item"><p><strong class="cor">Telefone: </strong> {{ leitor.telefone }}</p></div>
           <div class="grid-item"><p><strong class="cor">CPF: </strong> {{ leitor.cpf }}</p></div>
-          <div class="grid-item"><p><strong class="cor">Data de Nascimento: </strong> {{ leitor.dataNasc }}</p></div>
+          <div class="grid-item"><p><strong class="cor">Data de Nascimento: </strong> {{ leitor.dataNascimento }}</p></div>
           <div class="grid-item"><p><strong class="cor">CEP: </strong> {{ leitor.cep }}</p></div>
           <div class="grid-item"><p><strong class="cor">Rua: </strong> {{ leitor.rua }}</p></div>
           <div class="grid-item"><p><strong class="cor">Bairro: </strong> {{ leitor.bairro }}</p></div>
@@ -43,7 +43,7 @@ export default defineComponent({
         email: string,
         telefone: string,
         cpf: string,
-        dataNasc: string,
+        dataNascimento: string,
         cep: string,
         rua: string,
         bairro: string,
