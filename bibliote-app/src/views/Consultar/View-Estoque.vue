@@ -98,8 +98,8 @@ interface Estoque {
     id: number;
     codigoDeBarras: string;
     quantidade: number;
-    livroId: string;
-    tituloLivro: string;
+    livroId: number;
+    tituloLivro?: string;
 }
 
 export default defineComponent({
@@ -149,11 +149,12 @@ export default defineComponent({
 
                 this.livros = resLivros.data;
 
-                this.estoque = resEstoque.data.map((item: Estoque) => {
-                    const livroEncontrado = this.livros.find(l => l.id === item.livroId);
+                this.estoque = resEstoque.data.map((item: any) => {
+                    const livroId = item.livro?.id;
+                    const livroEncontrado = this.livros.find(l => l.id === livroId);
                     return {
                         ...item,
-                        tituloLivro: livroEncontrado ? livroEncontrado.titulo : 'Livro não encontrado'
+                        tituloLivro: livroEncontrado ? livroEncontrado.titulo : 'Livro não encontrado',
                     };
                 });
 

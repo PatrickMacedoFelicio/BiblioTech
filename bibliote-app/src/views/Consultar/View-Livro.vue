@@ -142,15 +142,16 @@ export default defineComponent({
     async buscarLivros() {
       this.paginaAtual = 1;
       try {
-        const [resLivro, resGeneros ] = await Promise.all([
+        const [resLivro, resGeneros] = await Promise.all([
           await api.get('/livros'),
           await api.get('/generos')
         ]);
 
         this.categorias = resGeneros.data;
 
-        this.livros = resLivro.data.map((item: Livro) => {
-          const categoriaEncontrada = this.categorias.find(cat => cat.id === item.generoId);
+        this.livros = resLivro.data.map((item: any) => {
+          const generoId = item.genero?.id;
+          const categoriaEncontrada = this.categorias.find(cat => cat.id === generoId);
           return {
             ...item,
             nomeCategoria: categoriaEncontrada ? categoriaEncontrada.nome : 'Categoria não encontrada'
