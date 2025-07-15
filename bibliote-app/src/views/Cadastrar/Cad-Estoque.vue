@@ -173,7 +173,7 @@ export default defineComponent({
         this.estoque = {
           codigoDeBarras: resposta.data.codigoDeBarras,
           quantidade: resposta.data.quantidade,
-          livroId: resposta.data.livroId
+          livroId: resposta.data.livro?.id || '',
         };
       } catch (erro) {
         Toast.fire({

@@ -253,10 +253,10 @@ export default defineComponent({
         this.livro = {
           titulo: resposta.data.titulo,
           autor: resposta.data.autor,
-          isbn: resposta.data.ISBN,
-          anoPublicacao: resposta.data.ano_publicacao,
+          isbn: resposta.data.isbn,
+          anoPublicacao: resposta.data.anoPublicacao,
           editora: resposta.data.editora,
-          generoId: resposta.data.generoId,
+          generoId: resposta.data.genero?.id || '',
           sinopse: resposta.data.sinopse,
         };
       } catch (erro) {
@@ -271,7 +271,9 @@ export default defineComponent({
     // carregar as categorias para pegar no combobox
     async carregarGenero() {
       try {
+
         const resposta = await api.get('/generos');
+        console.log('Livro carregado:', resposta.data);
         this.listarGenero = resposta.data;
       } catch (erro) {
         console.error('Erro ao carregar gêneros:', erro);

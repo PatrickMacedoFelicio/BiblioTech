@@ -13,7 +13,11 @@
           <div class="grid-item"><strong class="cor">isbn:</strong> {{ livro.isbn }}</div>
           <div class="grid-item"><strong class="cor">Ano de Publicação:</strong> {{ livro.anoPublicacao }}</div>
           <div class="grid-item"><strong class="cor">Editora:</strong> {{ livro.editora }}</div>
-          <div class="grid-item"><strong class="cor">generoId:</strong> {{ livro.generoId }}</div>
+          <div class="grid-item">
+            <strong class="cor">Gênero:</strong>
+            {{ livro.genero?.nome ?? 'Gênero não informado' }}
+          </div>
+
           <div class="grid-item" style="grid-column: 1 / -1;">
             <strong class="cor">Sinopse:</strong><br /> {{ livro.sinopse }}
           </div>
@@ -46,9 +50,11 @@ export default defineComponent({
         isbn: string;
         anoPublicacao: string;
         editora: string;
-        generoId: number;
         sinopse: string;
-      }>,
+        genero?: {
+          id: number;
+          nome: string;
+        }}>,
       required: true
     }
   }
@@ -132,4 +138,3 @@ export default defineComponent({
   }
 }
 </style>
- 

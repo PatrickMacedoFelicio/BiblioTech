@@ -100,6 +100,7 @@ interface Fornecedor {
   cidade: string,
   telefone: string,
   email: string,
+  livrosIds: [number]
 }
 
 export default defineComponent({
