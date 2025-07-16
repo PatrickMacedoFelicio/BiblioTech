@@ -22,9 +22,10 @@
                                 placeholder="Digite o título..." />
                         </div>
                         <div class="col-2 d-flex align-items-end">
-                            <button class="btn btn-success w-100 btn-lg" @click="buscarEstoque">
-                                Buscar
-                            </button>
+                            <div class="col  d-flex align-items-end">
+                                <RouterLink class="btn btn-success btn-fw btn-lg btn-icon-text" to="/cadastrar/estoque">
+                                    <strong>+ Estoque</strong></RouterLink>
+                            </div>
                         </div>
                     </div>
 

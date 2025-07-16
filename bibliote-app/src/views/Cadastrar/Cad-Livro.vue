@@ -66,7 +66,7 @@
             <div class="col">
               <label>Editora</label>
               <div id="bloodhound">
-                <input class="typeahead form-control form-control-lg" type="text" placeholder="Digite o e-mail"
+                <input class="typeahead form-control form-control-lg" type="text" placeholder="Digite a editora"
                   v-model="livro.editora">
 
                 <div class="text-danger" v-if="v$.livro.editora.$errors.length && v$.livro.editora.$dirty">
