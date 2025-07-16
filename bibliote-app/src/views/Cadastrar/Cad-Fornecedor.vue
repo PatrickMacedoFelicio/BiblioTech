@@ -53,7 +53,7 @@
               <div class="col">
                 <label>CEP</label>
                 <input class="form-control form-control-lg" type="text" placeholder="Digite o CEP" v-mask="'#####-###'"
-                  v-model="fornecedor.cep" @blur="buscarCep">
+                  v-model="fornecedor.cep">
               </div>
               <div class="col">
                 <label>Rua</label>
@@ -92,7 +92,6 @@
             </div>
           </div>
 
-          <!-- Etapa 2: Livros Associados -->
           <div v-if="etapaAtual === 2">
             <h4 class="card-title">Livros Associados</h4>
 
@@ -247,26 +246,6 @@ export default defineComponent({
   },
 
   methods: {
-    async buscarCep() {
-      const cep = this.fornecedor.cep.replace(/\D/g, '');
-      if (cep.length !== 8) return;
-      try {
-        const res = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
-        const data = await res.json();
-        if (data.erro) {
-          Toast.fire({ icon: 'error', title: 'CEP não encontrado ou inválido.' });
-          return;
-        }
-        this.fornecedor.rua = data.logradouro;
-        this.fornecedor.bairro = data.bairro;
-        this.fornecedor.cidade = data.localidade;
-        this.fornecedor.estado = data.uf;
-        await this.carregarCidadesPorEstado(data.uf);
-      } catch (e) {
-        Toast.fire({ icon: 'error', title: 'Erro ao buscar CEP. Tente novamente.' });
-      }
-    },
-
     proximaEtapa() {
       this.etapaAtual++;
     },

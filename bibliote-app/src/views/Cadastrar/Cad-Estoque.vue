@@ -7,7 +7,6 @@
           <div class="form-group row align-items-end">
             <div class="col-6">
               <label>Título do Livro</label>
-
               <select class="form-control form-control-lg" v-model="estoque.livroId">
                 <option disabled value="">Selecione um livro...</option>
                 <option v-for="livro in listarLivros" :key="livro.id" :value="livro.id">
@@ -22,7 +21,7 @@
             </div>
             <div class="col-2 text-end">
               <router-link class="btn btn-info btn-lg px-4 py-3" to="/cadastrar/livro">
-                <strong>+</strong>
+                <strong>+ Livro</strong>
               </router-link>
             </div>
           </div>
@@ -67,7 +66,6 @@ import { required, minValue, helpers } from '@vuelidate/validators';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { Toast } from '@/common/toast';
-import "vue3-select/dist/vue3-select.css"
 
 export default defineComponent({
   name: 'CadastroEstoque',

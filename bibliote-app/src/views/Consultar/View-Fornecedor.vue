@@ -20,9 +20,8 @@
                 placeholder="Digite o nome do fornecedor..." />
             </div>
             <div class="col col-lg-2 d-flex align-items-end">
-              <button class="btn btn-success btn-fw btn-lg w-100 btn-icon-text" @click="buscarFornecedores">
-                Buscar
-              </button>
+              <RouterLink class="btn btn-success btn-fw btn-lg btn-icon-text" to="/cadastrar/fornecedor">
+                <strong>+ Fornecedor</strong></RouterLink>
             </div>
           </div>
 
