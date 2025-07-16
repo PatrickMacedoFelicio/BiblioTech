@@ -103,9 +103,11 @@ foreign key (FornecedorId) references Fornecedor(Id)
 
 select * from cliente;
 
-select * from emprestimo;
-
+select * from estoque;
+select * from livro;
 select * from emprestimolivro;
+
+select * from emprestimo;
 
 
 delete from emprestimolivro where id < 100;

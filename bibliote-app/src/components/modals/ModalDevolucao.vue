@@ -6,13 +6,13 @@
         <button class="btn-close" @click="$emit('fechar')">&times;</button>
       </div>
       <div class="modal-body">
+        <h5 class="cor mb-3">Informações do Empréstimo</h5>
         <div class="grid-container">
-
           <div class="grid-item" style="grid-column: 1 / -1;">
             <div class="livros-container mt-2">
               <strong class="cor">Livros: </strong>
               <span
-                v-for="(titulo, idx) in (emprestimo.livrosNomes || '').split(', ')"
+                v-for="(titulo, idx) in (emprestimo.livrosNomes || '').split(/\s*,\s*/)"
                 :key="idx"
                 class="badge badge-outline-info"
               >
@@ -38,13 +38,13 @@
 
           <div class="grid-item">
             <strong class="cor">Data de Devolução: </strong>
-            {{ formatarData(emprestimo.dataDevolucao) || 'Não devolvido' }}
+            {{ emprestimo.dataDevolucao ? formatarData(emprestimo.dataDevolucao) : 'Não devolvido' }}
           </div>
 
           <div class="grid-item">
             <strong class="cor">Status: </strong>
             <span :class="['badge', getBadgeClass(emprestimo.status)]">
-              {{ emprestimo.status || 'N/D' }}
+              {{ emprestimo.status ? capitalize(emprestimo.status) : 'Não informado' }}
             </span>
           </div>
         </div>
@@ -54,6 +54,7 @@
         <button class="btn btn-secondary" @click="$emit('fechar')">Fechar</button>
       </div>
     </div>
+
     <div v-else-if="visivel" class="modal-content">
       <p>Carregando detalhes do empréstimo...</p>
       <div class="modal-footer">
@@ -69,9 +70,9 @@ import type { PropType } from 'vue';
 
 interface Emprestimo {
   id: number;
-  clienteId: number | null; // CORRIGIDO: Pode ser number ou null
+  clienteId: number | null;
   clienteNome: string;
-  funcionarioId: number | null; // CORRIGIDO: Pode ser number ou null
+  funcionarioId: number | null;
   dataInicio: string;
   dataPrevista: string;
   dataDevolucao: string | null;
@@ -89,8 +90,8 @@ export default defineComponent({
     },
     emprestimo: {
       type: Object as PropType<Emprestimo | null>,
-      required: false, 
-      default: null, 
+      required: false,
+      default: null,
     },
   },
   methods: {
@@ -105,19 +106,23 @@ export default defineComponent({
       }
     },
     getBadgeClass(status: string): string {
-      switch (status.toLowerCase()) { // Adicionado .toLowerCase() para consistência
+      switch (status.toLowerCase()) {
         case 'devolvido':
           return 'badge-success';
         case 'cancelado':
           return 'badge-danger';
         case 'ativo':
-        case 'em_andamento':
           return 'badge-warning';
-        case 'vencido': // Adicionado caso para "Vencido" se você quiser um estilo específico no modal
-          return 'badge-danger'; // Ou 'badge-warning' se quiser o mesmo do "Em Andamento"
+        case 'em_andamento':
+          return 'badge-normal';
+        case 'vencido':
+          return 'badge-danger';
         default:
           return 'badge-secondary';
       }
+    },
+    capitalize(str: string): string {
+      return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
     },
   },
 });
@@ -198,6 +203,11 @@ export default defineComponent({
   background-color: #6c757d;
 }
 
+.badge-normal {
+  background-color: #007bff;
+  color: white;
+}
+
 .badge-outline-info {
   color: #17a2b8;
   border: 1px solid #17a2b8;
@@ -223,7 +233,6 @@ export default defineComponent({
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 }
 
-/* Responsivo */
 @media (max-width: 768px) {
   .grid-container {
     grid-template-columns: 1fr;

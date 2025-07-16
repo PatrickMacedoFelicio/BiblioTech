@@ -138,13 +138,13 @@ export default defineComponent({
       const livroFiltro = this.filtroLivro.toLowerCase();
       const leitorFiltro = this.filtroLeitor.toLowerCase();
 
-      // Filtra por status: 'Ativo' (ou 'EM_ANDAMENTO') e 'Vencido'
-      const statusFiltro = ['ativo', 'em_andamento', 'vencido']; 
+
+      const statusFiltro = ['ativo', 'em_andamento', 'vencido'];
 
       return this.emprestimos.filter(e => {
         const matchesLivro = e.livrosNomes.toLowerCase().includes(livroFiltro);
         const matchesLeitor = e.clienteNome.toLowerCase().includes(leitorFiltro);
-        // Verifica se o status do empréstimo está na lista de status permitidos
+
         const matchesStatus = statusFiltro.includes(e.status.toLowerCase());
 
         return matchesLivro && matchesLeitor && matchesStatus;
@@ -172,7 +172,6 @@ export default defineComponent({
           id: e.id,
           clienteId: e.cliente?.id ?? null,
           clienteNome: e.cliente?.nome || 'Leitor não encontrado',
-          
           funcionarioId: e.funcionario?.id ?? null,
           dataInicio: e.dataInicio,
           dataPrevista: e.dataPrevista,
@@ -181,41 +180,101 @@ export default defineComponent({
           livrosIds: e.livros ? e.livros.map((l: any) => l.id) : [],
           livrosNomes: e.livros ? e.livros.map((l: any) => l.titulo).join(', ') : '',
         }));
+
+        const hoje = new Date().toISOString().split('T')[0];
+
+        for (const emprestimo of this.emprestimos) {
+          const statusAtual = emprestimo.status.toLowerCase();
+          if (
+            statusAtual !== 'devolvido' &&
+            statusAtual !== 'cancelado' &&
+            emprestimo.dataPrevista < hoje &&
+            statusAtual !== 'vencido'
+          ) {
+            await api.put(`/emprestimos/${emprestimo.id}`, {
+              ...emprestimo,
+              status: 'Vencido',
+            });
+          }
+        }
+
+        // Recarregar os dados após atualizar vencidos
+        const resAtualizado = await api.get('/emprestimos');
+        this.emprestimos = resAtualizado.data.map((e: any) => ({
+          id: e.id,
+          clienteId: e.cliente?.id ?? null,
+          clienteNome: e.cliente?.nome || 'Leitor não encontrado',
+          funcionarioId: e.funcionario?.id ?? null,
+          dataInicio: e.dataInicio,
+          dataPrevista: e.dataPrevista,
+          dataDevolucao: e.dataDevolucao,
+          status: e.status,
+          livrosIds: e.livros ? e.livros.map((l: any) => l.id) : [],
+          livrosNomes: e.livros ? e.livros.map((l: any) => l.titulo).join(', ') : '',
+        }));
+
       } catch (error: any) {
         console.error('Erro ao buscar empréstimos:', error);
         Swal.fire('Erro', 'Falha ao carregar empréstimos: ' + error.message, 'error');
       }
     },
 
-     async atualizarStatus(emprestimo: Emprestimo, novoStatus: string) {
-    // Impede a atualização se o status for o mesmo
-    if (emprestimo.status.toLowerCase() === novoStatus.toLowerCase()) return;
+    async atualizarStatus(emprestimo: Emprestimo, novoStatus: string) {
+      if (emprestimo.status.toLowerCase() === novoStatus.toLowerCase()) return;
 
-    const emprestimoAtualizado: any = {
-      dataInicio: emprestimo.dataInicio,
-      dataPrevista: emprestimo.dataPrevista,
-      status: novoStatus,
-      livrosIds: emprestimo.livrosIds || [],
-      clienteId: emprestimo.clienteId,
-      funcionarioId: emprestimo.funcionarioId,
-      dataDevolucao: ['Devolvido', 'Cancelado'].includes(novoStatus) 
-                       ? new Date().toISOString().split('T')[0] 
-                       : emprestimo.dataDevolucao,
-    };
+      const confirmado = await Swal.fire({
+        title: `Confirmar ${novoStatus.toLowerCase()}?`,
+        text: `Deseja realmente marcar este empréstimo como ${novoStatus.toLowerCase()}?`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#28a745',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Sim',
+        cancelButtonText: 'Cancelar'
+      });
 
-    // --- ADICIONE ESTE CONSOLE.LOG AQUI ---
-    console.log('Objeto de empréstimo sendo enviado para atualização:', emprestimoAtualizado);
-    // --- FIM DO CONSOLE.LOG ---
+      if (!confirmado.isConfirmed) return;
 
-    try {
-      await api.put(`/emprestimos/${emprestimo.id}`, emprestimoAtualizado);
-      Swal.fire('Sucesso', `Status atualizado para ${novoStatus}`, 'success');
-      this.buscarEmprestimos(); // Recarrega os dados para refletir a mudança
-    } catch (error: any) {
-      console.error('Erro ao atualizar status:', error);
-      Swal.fire('Erro', 'Falha ao atualizar status: ' + error.message, 'error');
+      const emprestimoAtualizado: any = {
+        dataInicio: emprestimo.dataInicio,
+        dataPrevista: emprestimo.dataPrevista,
+        status: novoStatus,
+        livrosIds: emprestimo.livrosIds || [],
+        clienteId: emprestimo.clienteId,
+        funcionarioId: emprestimo.funcionarioId,
+        dataDevolucao: ['Devolvido', 'Cancelado'].includes(novoStatus)
+          ? new Date().toISOString().split('T')[0]
+          : emprestimo.dataDevolucao,
+      };
+
+      try {
+        await api.put(`/emprestimos/${emprestimo.id}`, emprestimoAtualizado);
+
+        // Atualiza estoque se for Devolvido ou Cancelado
+        if (['Devolvido', 'Cancelado'].includes(novoStatus)) {
+          const resEstoque = await api.get('/estoques');
+
+          for (const livroId of emprestimo.livrosIds) {
+            const estoque = resEstoque.data.find((e: any) => e.livro.id === livroId);
+
+            if (estoque) {
+              await api.put(`/estoques/${estoque.id}`, {
+                quantidade: estoque.quantidade + 1,
+                codigoDeBarras: estoque.codigoDeBarras,
+                livroId: estoque.livro.id
+              });
+            }
+          }
+        }
+
+        Swal.fire('Sucesso', `Status atualizado para ${novoStatus}`, 'success');
+        this.buscarEmprestimos();
+      } catch (error: any) {
+        console.error('Erro ao atualizar status:', error);
+        Swal.fire('Erro', 'Falha ao atualizar status: ' + (error.message || 'Erro desconhecido'), 'error');
+      }
     }
-  },
+    ,
 
     visualizarEmprestimo(emprestimo: Emprestimo) {
       this.emprestimoSelecionado = emprestimo;
@@ -225,20 +284,20 @@ export default defineComponent({
     fecharModal() {
       this.mostrarModal = false;
       this.emprestimoSelecionado = null;
-      this.buscarEmprestimos(); 
+      this.buscarEmprestimos();
     },
 
     getBadgeClass(status: string): string {
-      switch (status.toLowerCase()) { // Usar toLowerCase para comparar
+      switch (status.toLowerCase()) {
         case 'ativo':
         case 'em_andamento':
-          return 'badge-warning'; // Mantém o amarelo para "Em Andamento"
+          return 'badge-normal';
         case 'vencido':
-          return 'badge-danger'; // Vermelho para "Vencido"
+          return 'badge-warning';
         case 'devolvido':
           return 'badge-success';
         case 'cancelado':
-          return 'badge-secondary'; // Cinza para "Cancelado" (ou outra cor que preferir)
+          return 'badge-secondary';
         default:
           return 'badge-secondary';
       }
@@ -258,22 +317,27 @@ export default defineComponent({
 
 .badge-success {
   background-color: #28a745;
-  color: white; /* Adicionado para garantir texto branco em badges de sucesso */
+  color: white;
 }
 
 .badge-danger {
   background-color: #dc3545;
-  color: white; /* Adicionado para garantir texto branco em badges de perigo */
+  color: white;
 }
 
 .badge-warning {
   background-color: #ffc107;
-  color: black; /* Mantém texto preto para badges de aviso */
+  color: black;
 }
 
 .badge-secondary {
   background-color: #6c757d;
-  color: white; /* Adicionado para garantir texto branco em badges secundários */
+  color: white;
+}
+
+.badge-normal {
+  background-color: #007bff;
+  color: white;
 }
 
 .pagination .page-link {

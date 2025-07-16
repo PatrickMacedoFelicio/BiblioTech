@@ -28,17 +28,17 @@
     <div class="col-sm-4 grid-margin">
       <div class="card">
         <div class="card-body">
-          <h4>Quantidade de Emprestimos</h4>
+          <h4>Emprestimos em Aberto</h4>
           <div class="row">
             <div class="col-8 col-sm-12 col-xl-8 my-auto">
               <div class="d-flex d-sm-block d-md-flex align-items-center">
-                <h2 class="text-danger mb-0">{{ totalEmprAtivo }}</h2>
+                <h2 class="text-success mb-0">{{ totalEmprAtivo }}</h2>
                 <h2 class="ml-2 mb-0 font-weight-medium"> Emprestimos</h2>
               </div>
               <h6 class="text-muted font-weight-normal">Finalizados e em andamento</h6>
             </div>
             <div class="col-4 col-sm-12 col-xl-4 text-center text-xl-right">
-              <i class="icon-lg mdi mdi-book-open-page-variant text-danger ml-auto"></i>
+              <i class="icon-lg mdi mdi-book-open-page-variant text-success ml-auto"></i>
             </div>
           </div>
         </div>
@@ -52,13 +52,13 @@
           <div class="row">
             <div class="col-8 col-sm-12 col-xl-8 my-auto">
               <div class="d-flex d-sm-block d-md-flex align-items-center">
-                <h2 class="text-success mb-0">{{ totalEmprVencido }}</h2>
+                <h2 class="text-danger mb-0">{{ totalEmprVencido }}</h2>
                 <h2 class="ml-2 mb-0 font-weight-medium"> Vencidos</h2>
               </div>
               <h6 class="text-muted font-weight-normal">Total com o status vencido</h6>
             </div>
             <div class="col-4 col-sm-12 col-xl-4 text-center text-xl-right">
-              <i class="icon-lg mdi mdi-monitor text-success ml-auto"></i>
+              <i class="icon-lg mdi mdi-monitor text-danger ml-auto"></i>
             </div>
           </div>
         </div>
@@ -100,18 +100,31 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, ref } from 'vue'
-import Chart from 'chart.js/auto';
-import axios from 'axios';
-import { api } from '@/common/http';
-
+import Chart from 'chart.js/auto'
+import { api } from '@/common/http'
 
 export default defineComponent({
   name: 'IndexView',
   setup() {
-    // as metricas de cima
     const totalLeitores = ref(0)
     const totalEmprAtivo = ref(0)
     const totalEmprVencido = ref(0)
+
+    const labels = ref<string[]>([])
+    const valores = ref<number[]>([])
+
+    const colors = [
+      '#f13678', 
+      '#00e5ff',
+      '#ffea00',
+      '#ff3d00', 
+      '#00ff6a', 
+      '#8c00ff', 
+      '#ff00c8', 
+      '#1de9b6', 
+      '#ff9100', 
+      '#2979ff'  
+    ]
 
 
     const carregarLeitores = async () => {
@@ -126,7 +139,7 @@ export default defineComponent({
     const carregarEmprestimo = async () => {
       try {
         const resposta = await api.get('/emprestimos')
-        const ativos = resposta.data.filter((emp: any) => emp.status === 'Ativo')
+        const ativos = resposta.data.filter((emp: any) => emp.status === 'EM_ANDAMENTO')
         const vencido = resposta.data.filter((emp: any) => emp.status === 'Vencido')
         totalEmprAtivo.value = ativos.length
         totalEmprVencido.value = vencido.length
@@ -135,105 +148,102 @@ export default defineComponent({
       }
     }
 
+    const carregarGraficoGeneros = async () => {
+      try {
+        // 1) Buscar todos os empréstimos e todos os livros
+        const [emprestimosRes, livrosRes] = await Promise.all([
+          api.get('/emprestimos'),
+          api.get('/livros')
+        ])
 
-    // O grafico
-    const labels = [
-      'Ficção', 'Suspense', 'Romance', 'Ação',
-      'Fantasia', 'Biografia', 'Ciência', 'História',
-      'Terror', 'Comédia'
-    ]
+        const emprestimos = emprestimosRes.data
+        const livros = livrosRes.data
 
-    const valores = [236, 593, 371, 190, 420, 155, 288, 300, 110, 260]
+        // 2) Criar um mapa de idLivro -> nomeGenero
+        const mapaGeneros: Record<number, string> = {}
+        livros.forEach((livro: any) => {
+          const genero =
+            livro.genero?.nome ||
+            livro.generoNome ||
+            livro.genero ||
+            'Desconhecido'
 
-    const colors = [
-      '#4CAF50', '#FFC107', '#E0E0E0', '#32CD32',
-      '#FF5733', '#8E44AD', '#3498DB', '#E91E63',
-      '#F39C12', '#00BCD4'
-    ]
+          mapaGeneros[livro.id] = genero
+        })
 
-    const quickChecks = [
-      {
-        icon: 'mdi mdi-file-document',
-        iconBg: 'bg-primary',
-        title: 'Livros Emprestados Atrasados!',
-        subtitle: 'Broadcast web app mockup',
-        time: '15 minutes ago',
-        tasks: '30 tasks, 5 issues'
-      },
-      {
-        icon: 'mdi mdi-cloud-download',
-        iconBg: 'bg-success',
-        title: 'Wordpress Development',
-        subtitle: 'Upload new design',
-        time: '1 hour ago',
-        tasks: '23 tasks, 5 issues'
-      },
-      {
-        icon: 'mdi mdi-clock',
-        iconBg: 'bg-info',
-        title: 'Project meeting',
-        subtitle: 'New project discussion',
-        time: '35 minutes ago',
-        tasks: '15 tasks, 2 issues'
-      },
-      {
-        icon: 'mdi mdi-email-open',
-        iconBg: 'bg-danger',
-        title: 'Broadcast Mail',
-        subtitle: 'Sent release details to team',
-        time: '55 minutes ago',
-        tasks: '35 tasks, 7 issues'
-      },
-      {
-        icon: 'mdi mdi-chart-pie',
-        iconBg: 'bg-warning',
-        title: 'UI Design',
-        subtitle: 'New application planning',
-        time: '50 minutes ago',
-        tasks: '27 tasks, 4 issues'
+        // 3) Contar os gêneros baseados nos empréstimos
+        const contagem: Record<string, number> = {}
+
+        emprestimos.forEach((emp: any) => {
+          if (emp.livros) {
+            emp.livros.forEach((livro: any) => {
+              const genero = mapaGeneros[livro.id] || 'Desconhecido'
+              contagem[genero] = (contagem[genero] || 0) + 1
+            })
+          }
+        })
+
+        // 4) Ordenar e pegar os 10 primeiros
+        const generosOrdenados = Object.entries(contagem)
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 10)
+
+        labels.value = generosOrdenados.map(([nome]) => nome)
+        valores.value = generosOrdenados.map(([, total]) => total)
+      } catch (erro) {
+        console.error('Erro ao carregar gráfico de gêneros:', erro)
       }
-    ]
+    }
 
-    onMounted(() => {
-      const canvas = document.getElementById('transaction-history') as HTMLCanvasElement | null
-      if (!canvas) return
 
-      new Chart(canvas, {
-        type: 'doughnut',
-        data: {
-          labels,
-          datasets: [{
-            data: valores,
-            backgroundColor: colors,
-            borderWidth: 0
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          cutout: '70%',
-          plugins: {
-            legend: { display: false },
-            tooltip: {
-              callbacks: {
-                label: (context) => {
-                  const label = context.label || ''
-                  const value = context.formattedValue || ''
-                  return `${label}: ${value} empréstimos`
+
+    onMounted(async () => {
+      await carregarLeitores()
+      await carregarEmprestimo()
+      await carregarGraficoGeneros()
+
+      const canvas = document.getElementById('transaction-history') as HTMLCanvasElement
+      if (canvas && labels.value.length > 0) {
+        new Chart(canvas, {
+          type: 'doughnut',
+          data: {
+            labels: labels.value,
+            datasets: [{
+              data: valores.value,
+              backgroundColor: colors.slice(0, labels.value.length),
+              borderWidth: 0
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '70%',
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                callbacks: {
+                  label: (context) => {
+                    const label = context.label || ''
+                    const value = context.formattedValue || ''
+                    return `${label}: ${value} empréstimos`
+                  }
                 }
               }
             }
           }
-        }
-      })
-      carregarLeitores();
-      carregarEmprestimo();
+        })
+      }
     })
 
-    return { totalLeitores, labels, colors, quickChecks, totalEmprAtivo, totalEmprVencido }
+    return {
+      totalLeitores,
+      totalEmprAtivo,
+      totalEmprVencido,
+      labels,
+      valores,
+      colors
+    }
   }
-
-
 })
 </script>
 

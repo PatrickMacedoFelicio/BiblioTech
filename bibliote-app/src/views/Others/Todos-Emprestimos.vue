@@ -53,7 +53,7 @@
                                         </td>
                                         <td class="text-center">
                                             <span class="badge" :class="getBadgeClass(item.status)">{{ item.status
-                                            }}</span>
+                                                }}</span>
                                         </td>
                                         <td class="text-center">
                                             <button class="btn btn-info btn-sm" @click="visualizarEmprestimo(item)">
@@ -169,7 +169,6 @@ export default defineComponent({
                     id: e.id,
                     clienteId: e.cliente?.id ?? null,
                     clienteNome: e.cliente?.nome || 'Leitor não encontrado',
-
                     funcionarioId: e.funcionario?.id ?? null,
                     dataInicio: e.dataInicio,
                     dataPrevista: e.dataPrevista,
@@ -178,6 +177,39 @@ export default defineComponent({
                     livrosIds: e.livros ? e.livros.map((l: any) => l.id) : [],
                     livrosNomes: e.livros ? e.livros.map((l: any) => l.titulo).join(', ') : '',
                 }));
+
+                const hoje = new Date().toISOString().split('T')[0];
+
+                for (const emprestimo of this.emprestimos) {
+                    const statusAtual = emprestimo.status.toLowerCase();
+                    if (
+                        statusAtual !== 'devolvido' &&
+                        statusAtual !== 'cancelado' &&
+                        emprestimo.dataPrevista < hoje &&
+                        statusAtual !== 'vencido'
+                    ) {
+                        await api.put(`/emprestimos/${emprestimo.id}`, {
+                            ...emprestimo,
+                            status: 'Vencido',
+                        });
+                    }
+                }
+
+                // Recarregar os dados após atualizar vencidos
+                const resAtualizado = await api.get('/emprestimos');
+                this.emprestimos = resAtualizado.data.map((e: any) => ({
+                    id: e.id,
+                    clienteId: e.cliente?.id ?? null,
+                    clienteNome: e.cliente?.nome || 'Leitor não encontrado',
+                    funcionarioId: e.funcionario?.id ?? null,
+                    dataInicio: e.dataInicio,
+                    dataPrevista: e.dataPrevista,
+                    dataDevolucao: e.dataDevolucao,
+                    status: e.status,
+                    livrosIds: e.livros ? e.livros.map((l: any) => l.id) : [],
+                    livrosNomes: e.livros ? e.livros.map((l: any) => l.titulo).join(', ') : '',
+                }));
+
             } catch (error: any) {
                 console.error('Erro ao buscar empréstimos:', error);
                 Swal.fire('Erro', 'Falha ao carregar empréstimos: ' + error.message, 'error');
@@ -245,7 +277,7 @@ export default defineComponent({
                 case 'EM_ANDAMENTO':
                     return 'badge-normal';
                 case 'Vencido':
-                    return 'badge-danger';
+                    return 'badge-warning';
                 default:
                     return 'badge-secondary';
             }
@@ -282,7 +314,7 @@ export default defineComponent({
 
 .badge-normal {
     background-color: #007bff;
-     color: white;
+    color: white;
 }
 
 .pagination .page-link {
