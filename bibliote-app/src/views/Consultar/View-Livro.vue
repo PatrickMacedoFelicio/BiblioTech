@@ -196,7 +196,7 @@ export default defineComponent({
 
     async excluirLivro(id: number) {
       try {
-        await api.delete(`http://localhost:3000/livros/${id}`);
+        await api.delete(`/livros/${id}`);
         this.livros = this.livros.filter(l => l.id !== id);
         Swal.fire({
           icon: 'success',
