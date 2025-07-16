@@ -21,11 +21,10 @@
                             <input id="filtro" v-model="filtro" type="text" class="form-control form-control-lg"
                                 placeholder="Digite o título..." />
                         </div>
-                        <div class="col-2 d-flex align-items-end">
-                            <div class="col  d-flex align-items-end">
-                                <RouterLink class="btn btn-success btn-fw btn-lg btn-icon-text" to="/cadastrar/estoque">
-                                    <strong>+ Estoque</strong></RouterLink>
-                            </div>
+                        <div class="col  d-flex align-items-end">
+                            <RouterLink class="btn btn-success btn-fw btn-lg btn-icon-text" to="/cadastrar/estoque">
+                                <strong>+ Estoque</strong>
+                            </RouterLink>
                         </div>
                     </div>
 

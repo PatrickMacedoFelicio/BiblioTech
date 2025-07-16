@@ -19,7 +19,7 @@
               <input class="typeahead form-control form-control-lg" type="text" v-model="filtro"
                 placeholder="Digite o nome do funcionário..." />
             </div>
-            <div class="col col-lg-2 d-flex align-items-end">
+            <div class="col  d-flex align-items-end">
               <RouterLink class="btn btn-success btn-fw btn-lg btn-icon-text" to="/cadastrar/funcionario">
                 <strong>+ Funcionario</strong></RouterLink>
             </div>
