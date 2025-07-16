@@ -16,18 +16,14 @@
           <div class="card-body">
 
             <div class="form-group row">
-              <div class="col-4">
-                <label>Livro</label>
-                <input class="form-control form-control-lg" type="text" v-model="filtroLivro"
-                  placeholder="Digite o livro..." />
-              </div>
-              <div class="col-4">
+              <div class="col-6">
                 <label>Nome do leitor</label>
                 <input class="form-control form-control-lg" type="text" v-model="filtroLeitor"
                   placeholder="Digite o nome do leitor..." />
               </div>
-              <div class="col-2 d-flex align-items-end">
-                <button class="btn btn-success w-100 btn-lg" @click="buscarEmprestimos">Buscar</button>
+              <div class="col  d-flex align-items-end">
+                <RouterLink class="btn btn-success btn-fw btn-lg btn-icon-text" to="/Emprestimo"><strong>+
+                    Emprestar</strong></RouterLink>
               </div>
             </div>
 

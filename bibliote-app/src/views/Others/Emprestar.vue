@@ -331,7 +331,12 @@ export default defineComponent({
     await this.carregarLivros();
     await this.carregarLeitores();
     await this.carregarFuncionarios();
+
+    if (this.ehEdicao) {
+      await this.carregarDados();
+    }
   },
+
 
   computed: {
     id() {

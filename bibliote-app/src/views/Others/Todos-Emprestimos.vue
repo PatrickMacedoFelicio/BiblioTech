@@ -1,11 +1,11 @@
 <template>
     <div>
         <div class="page-header">
-            <h3 class="card-title">Devolução</h3>
+            <h3 class="card-title">Todos os Emprestimos</h3>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="#">Consultar</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Devoluções</li>
+                    <li class="breadcrumb-item active" aria-current="page">Emprestimo</li>
                 </ol>
             </nav>
         </div>
@@ -15,20 +15,18 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="form-group row">
-                            <div class="col-4">
-                                <label>Livro</label>
-                                <input class="form-control form-control-lg" type="text" v-model="filtroLivro"
-                                    placeholder="Digite o livro..." />
-                            </div>
-                            <div class="col-4">
+                            <div class="col-6">
                                 <label>Nome do leitor</label>
                                 <input class="form-control form-control-lg" type="text" v-model="filtroLeitor"
                                     placeholder="Digite o nome do leitor..." />
                             </div>
-                            <div class="col-2 d-flex align-items-end">
-                                <button class="btn btn-success w-100 btn-lg" @click="buscarEmprestimos">Buscar</button>
+                            <div class="col  d-flex align-items-end">
+                                <RouterLink class="btn btn-success btn-fw btn-lg btn-icon-text" to="/Emprestimo">
+                                    <strong>+ Emprestar</strong></RouterLink>
                             </div>
+
                         </div>
+
 
                         <div class="table-responsive mt-4">
                             <table class="table">
@@ -59,12 +57,13 @@
                                             <button class="btn btn-info btn-sm" @click="visualizarEmprestimo(item)">
                                                 <i class="mdi mdi-magnify"></i>
                                             </button>
-                                            <button class="btn btn-success btn-sm gap1"
-                                                @click="editarEmprestimo(item.id)">
+                                            <button class="btn btn-success btn-sm gap1" @click="confirmarEdicao(item)"
+                                                :disabled="item.status === 'Devolvido' || item.status === 'Cancelado'">
                                                 <i class="mdi mdi-pencil"></i>
                                             </button>
                                             <button class="btn btn-danger btn-sm ms-2 gap1"
-                                                @click="excluirEmprestimo(item.id)">
+                                                @click="confirmarExclusao(item)"
+                                                :disabled="item.status === 'Devolvido' || item.status === 'Cancelado'">
                                                 <i class="mdi mdi-delete"></i>
                                             </button>
                                         </td>
@@ -126,7 +125,6 @@ export default defineComponent({
     data() {
         return {
             emprestimos: [] as Emprestimo[],
-            filtroLivro: '',
             filtroLeitor: '',
             paginaAtual: 1,
             itensPorPagina: 8,
@@ -137,14 +135,12 @@ export default defineComponent({
 
     computed: {
         emprestimosFiltrados(): Emprestimo[] {
-            const livroFiltro = this.filtroLivro.toLowerCase();
             const leitorFiltro = this.filtroLeitor.toLowerCase();
 
             return this.emprestimos.filter(e => {
-                const matchesLivro = e.livrosNomes.toLowerCase().includes(livroFiltro);
                 const matchesLeitor = e.clienteNome.toLowerCase().includes(leitorFiltro);
 
-                return matchesLivro && matchesLeitor;
+                return matchesLeitor;
             });
         },
         totalPaginas(): number {
@@ -155,6 +151,15 @@ export default defineComponent({
             return this.emprestimosFiltrados.slice(start, start + this.itensPorPagina);
         },
     },
+
+    emprestimosFiltrados(): Emprestimo[] {
+        const leitorFiltro = this.filtroLeitor.toLowerCase();
+
+        return this.emprestimos.filter(e =>
+            e.clienteNome.toLowerCase().includes(leitorFiltro)
+        );
+    },
+
 
     mounted() {
         this.buscarEmprestimos();
@@ -195,7 +200,6 @@ export default defineComponent({
                     }
                 }
 
-                // Recarregar os dados após atualizar vencidos
                 const resAtualizado = await api.get('/emprestimos');
                 this.emprestimos = resAtualizado.data.map((e: any) => ({
                     id: e.id,
@@ -217,6 +221,8 @@ export default defineComponent({
         },
 
         confirmarExclusao(item: Emprestimo) {
+            if (item.status === 'Devolvido' || item.status === 'Cancelado') return;
+
             Swal.fire({
                 title: 'Tem certeza?',
                 text: `Deseja excluir o empréstimo do livro(s): "${item.livrosNomes}" para o leitor(a): "${item.clienteNome}"?`,
@@ -252,7 +258,23 @@ export default defineComponent({
             }
         },
 
-        //Edição
+        confirmarEdicao(item: Emprestimo) {
+            if (item.status === 'Devolvido' || item.status === 'Cancelado') return;
+
+            Swal.fire({
+                title: 'Deseja editar este empréstimo?',
+                text: `Leitor: ${item.clienteNome}\nLivro(s): ${item.livrosNomes}`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Sim, editar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    this.editarEmprestimo(item.id);
+                }
+            });
+        },
+
         async editarEmprestimo(id: number) {
             this.$router.push(`/editar/empretimo${id}`);
         },
@@ -330,7 +352,6 @@ export default defineComponent({
     color: white;
 }
 
-/* Styles for badge-outline-primary, badge-outline-danger etc. */
 .badge-outline-primary {
     color: #007bff;
     border: 1px solid #007bff;
@@ -365,5 +386,13 @@ export default defineComponent({
     padding: 0.25em 0.5em;
     border-radius: 0.25rem;
     font-size: 0.9rem;
+}
+
+.table button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: #e0e0e0 !important;
+    color: #888 !important;
+    border-color: #ccc !important;
 }
 </style>
