@@ -1,6 +1,6 @@
 create database Bibliotech;
 
-use Bibliotech;
+use bibliotech;
 
 create table Cliente (
 Id int primary key auto_increment,
@@ -102,3 +102,14 @@ foreign key (FornecedorId) references Fornecedor(Id)
 
 
 select * from cliente;
+
+select * from emprestimo;
+
+select * from emprestimolivro;
+
+
+delete from emprestimolivro where id < 100;
+delete from emprestimo where id < 100;
+
+
+

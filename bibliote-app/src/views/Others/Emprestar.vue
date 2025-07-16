@@ -8,7 +8,6 @@
               <form @submit.prevent="salvar">
                 <h3 class="card-title">{{ ehEdicao ? 'Atualização de' : '' }} Empréstimo de Livro</h3>
 
-                <!-- LEITOR -->
                 <div class="form-group row">
                   <div class="col-12">
                     <h3 class="card-title-info">Dados do Empréstimo</h3>
@@ -25,7 +24,6 @@
                   </div>
                 </div>
 
-                <!-- FUNCIONÁRIO -->
                 <div class="form-group row">
                   <div class="col-12">
                     <label>Funcionário</label>
@@ -41,16 +39,18 @@
                   </div>
                 </div>
 
-                <!-- LIVROS -->
                 <div class="form-group">
                   <label>Livros</label>
                   <div class="form-group row align-items-end" v-for="(livroId, index) in emprestimo.livrosIds"
                     :key="index">
                     <div class="col-md-10">
-                      <select class="form-control form-control-lg" v-model="emprestimo.livrosIds[index]">
+                      <select class="form-control form-control-lg" v-model="emprestimo.livrosIds[index]"
+                        @change="handleLivroChange(index, ($event.target as HTMLSelectElement).value)">
                         <option :value="null" disabled>Selecione o livro...</option>
-                        <option v-for="livro in livrosDisponiveis(index)" :key="livro.id" :value="livro.id">
+                        <option v-for="livro in listarLivros" :key="livro.id" :value="livro.id"
+                          :disabled="livrosIndisponiveisNaSelecao.includes(livro.id) && livro.id !== emprestimo.livrosIds[index]">
                           {{ livro.titulo }}
+                          <span v-if="livro.id !== emprestimo.livrosIds[index] && livrosIndisponiveisNaSelecao.includes(livro.id)"> (Indisponível)</span>
                         </option>
                       </select>
                     </div>
@@ -73,7 +73,6 @@
                   </div>
                 </div>
 
-                <!-- DATAS -->
                 <h3 class="card-title-info">Datas</h3>
                 <div class="form-group row">
                   <div class="col-6">
@@ -89,7 +88,6 @@
                   </div>
                 </div>
 
-                <!-- BOTÕES -->
                 <div class="form-group row mt-4">
                   <div class="col-auto">
                     <button type="submit" class="btn btn-success btn-lg">Salvar</button>
@@ -115,6 +113,14 @@ import { useVuelidate } from '@vuelidate/core';
 import Swal from 'sweetalert2';
 import { Toast } from '@/common/toast';
 
+interface Estoque {
+  id: number;
+  quantidade: number;
+  codigoDeBarras: string;
+  livroId: number;
+  livro: any;
+}
+
 export default defineComponent({
   name: 'Emprestimo',
 
@@ -138,7 +144,10 @@ export default defineComponent({
       listarLivros: [] as any[],
       listarLeitor: [] as any[],
       listarFuncionarios: [] as any[],
-      dialog: false
+      dialog: false,
+      livrosSelecionadosAnteriormente: [] as (number | null)[],
+      livrosIndisponiveisNaSelecao: [] as number[],
+      estoqueAtualLocal: new Map<number, number>(),
     };
   },
 
@@ -160,6 +169,15 @@ export default defineComponent({
             'Selecione um livro válido!',
             (value: number[]) =>
               Array.isArray(value) && value.length > 0 && value.every(id => id && id > 0)
+          ),
+          estoqueDisponivel: helpers.withMessage(
+            'Um ou mais livros selecionados não têm estoque disponível!',
+            (value: number[]) => {
+              return value.every(id => {
+                if (id === null) return true;
+                return (this.estoqueAtualLocal.get(id) ?? 0) > 0;
+              });
+            }
           )
         },
         dataPrevista: {
@@ -173,6 +191,19 @@ export default defineComponent({
     async salvar() {
       const valido = await this.v$.$validate();
       if (!valido) return;
+
+      const livrosSemEstoqueParaEmprestar = this.emprestimo.livrosIds.filter(id => {
+          return (this.estoqueAtualLocal.get(id ?? 0) ?? 0) <= 0;
+      });
+
+      if (livrosSemEstoqueParaEmprestar.length > 0) {
+          Swal.fire({
+              icon: 'error',
+              title: 'Estoque Insuficiente!',
+              text: 'Um ou mais livros selecionados não possuem estoque disponível para empréstimo.'
+          });
+          return;
+      }
 
       const confirmado = await Swal.fire({
         title: 'Confirmar cadastro?',
@@ -219,44 +250,137 @@ export default defineComponent({
           title: 'Erro ao salvar',
           text: erro.response?.data?.title || 'Erro inesperado.'
         });
+        this.emprestimo.livrosIds.forEach(async (livroId) => {
+            if (livroId) {
+                await this.updateEstoque(livroId, 1);
+                this.estoqueAtualLocal.set(livroId, (this.estoqueAtualLocal.get(livroId) ?? 0) + 1);
+            }
+        });
       }
-    }
-    ,
+    },
 
-    async carregarEmprestimo() {
-      try {
-        const resposta = await api.get('/emprestimos');
-        this.emprestimos = resposta.data;
-      } catch (erro) {
-        console.error('Erro ao carregar Empréstimos:', erro);
+    async fetchEstoque(livroId: number): Promise<number> {
+        try {
+            const response = await api.get(`/estoques/${livroId}`);
+            const estoque: Estoque = response.data;
+            this.estoqueAtualLocal.set(livroId, estoque.quantidade);
+            return estoque.quantidade;
+        } catch (error: any) {
+            console.error(`Erro ao buscar estoque para o livro ${livroId}:`, error.response?.data || error);
+            Toast.fire({
+                icon: 'error',
+                title: `Erro ao buscar estoque do livro.`,
+                text: error.response?.data?.detail || 'Verifique se o endpoint /estoques/{id} está correto e ativo.'
+            });
+            this.estoqueAtualLocal.set(livroId, 0);
+            return 0;
+        }
+    },
+
+    async updateEstoque(livroId: number, change: number) {
+        try {
+            const currentEstoque = this.estoqueAtualLocal.get(livroId) ?? 0;
+            const newQuantidade = currentEstoque + change;
+
+            await api.put(`/estoques/${livroId}`, { quantidade: newQuantidade });
+            this.estoqueAtualLocal.set(livroId, newQuantidade);
+        } catch (error: any) {
+            console.error(`Erro ao atualizar estoque para o livro ${livroId} (mudança: ${change}):`, error.response?.data || error);
+            Toast.fire({
+                icon: 'error',
+                title: `Erro ao atualizar estoque do livro na API.`,
+                text: error.response?.data?.detail || 'Verifique se o endpoint PUT /estoques/{id} está correto e ativo.'
+            });
+        }
+    },
+
+    async handleLivroChange(index: number, newLivroIdValue: string | number | null) {
+      const newLivroId = newLivroIdValue === null ? null : Number(newLivroIdValue);
+      const livroIdAnterior = this.livrosSelecionadosAnteriormente[index];
+
+      if (livroIdAnterior && livroIdAnterior !== newLivroId) {
+        await this.updateEstoque(livroIdAnterior, 1);
+        const idx = this.livrosIndisponiveisNaSelecao.indexOf(livroIdAnterior);
+        if (idx > -1) {
+            this.livrosIndisponiveisNaSelecao.splice(idx, 1);
+        }
       }
+
+      if (newLivroId) {
+        const quantidadeReal = await this.fetchEstoque(newLivroId);
+
+        if (quantidadeReal <= 0) {
+          Swal.fire({
+            icon: 'warning',
+            title: 'Estoque Insuficiente!',
+            text: `O livro "${this.listarLivros.find(l => l.id === newLivroId)?.titulo}" não possui estoque disponível.`
+          });
+          this.emprestimo.livrosIds[index] = livroIdAnterior;
+          this.livrosSelecionadosAnteriormente[index] = livroIdAnterior;
+          if (!this.livrosIndisponiveisNaSelecao.includes(newLivroId)) {
+            this.livrosIndisponiveisNaSelecao.push(newLivroId);
+          }
+          this.v$.emprestimo.livrosIds.$touch();
+          return;
+        }
+
+        if (newLivroId !== livroIdAnterior) {
+            await this.updateEstoque(newLivroId, -1);
+            const idx = this.livrosIndisponiveisNaSelecao.indexOf(newLivroId);
+            if (idx > -1) {
+                this.livrosIndisponiveisNaSelecao.splice(idx, 1);
+            }
+        }
+      }
+
+      this.livrosSelecionadosAnteriormente[index] = newLivroId;
+
+      this.v$.emprestimo.livrosIds.$touch();
     },
 
     adicionarLivro() {
       if (this.emprestimo.livrosIds.length < 2) {
         this.emprestimo.livrosIds.push(null);
+        this.livrosSelecionadosAnteriormente.push(null);
       } else {
         Toast.fire({ icon: 'warning', title: 'Máximo de 2 livros por empréstimo.' });
       }
     },
 
-    removerLivro(index: number) {
+    async removerLivro(index: number) {
       if (this.emprestimo.livrosIds.length > 1) {
+        const livroIdRemovido = this.emprestimo.livrosIds[index];
+        if (livroIdRemovido) {
+            await this.updateEstoque(livroIdRemovido, 1);
+            const idx = this.livrosIndisponiveisNaSelecao.indexOf(livroIdRemovido);
+            if (idx > -1) {
+                this.livrosIndisponiveisNaSelecao.splice(idx, 1);
+            }
+        }
         this.emprestimo.livrosIds.splice(index, 1);
+        this.livrosSelecionadosAnteriormente.splice(index, 1);
         this.v$.$touch();
       }
     },
 
     livrosDisponiveis(index: number) {
-      const usados = [...this.emprestimo.livrosIds];
-      usados.splice(index, 1);
-      return this.listarLivros.filter(livro => !usados.includes(livro.id));
+      const livrosJaSelecionadosEmOutrosCampos = this.emprestimo.livrosIds.filter((_, i) => i !== index);
+      return this.listarLivros.filter(livro => {
+        if (livro.id === this.emprestimo.livrosIds[index]) {
+            return true;
+        }
+        return !livrosJaSelecionadosEmOutrosCampos.includes(livro.id) && 
+               !this.livrosIndisponiveisNaSelecao.includes(livro.id);
+      });
     },
 
     async carregarLivros() {
       try {
         const resposta = await api.get('/livros');
         this.listarLivros = resposta.data.sort((a: any, b: any) => a.titulo.localeCompare(b.titulo));
+        for (const livro of this.listarLivros) {
+            await this.fetchEstoque(livro.id);
+        }
       } catch (erro) {
         console.error('Erro ao carregar livros:', erro);
         Toast.fire({ icon: 'error', title: 'Erro ao carregar os livros' });
@@ -297,6 +421,13 @@ export default defineComponent({
           livrosIds: resposta.data.livros?.map((livro: any) => livro.id) || [null]
         };
 
+        if (this.ehEdicao && resposta.data.livros) {
+            for (const livroEmprestado of resposta.data.livros) {
+                this.estoqueAtualLocal.set(livroEmprestado.id, (this.estoqueAtualLocal.get(livroEmprestado.id) ?? 0) - 1);
+            }
+            this.livrosSelecionadosAnteriormente = [...this.emprestimo.livrosIds];
+        }
+
         console.log('Empréstimo carregado para edição:', JSON.stringify(this.emprestimo, null, 2));
       } catch (erro: any) {
         console.error('Erro ao carregar o empréstimo para edição:', erro.response?.data || erro);
@@ -308,8 +439,14 @@ export default defineComponent({
       }
     },
 
-    limparCampos() {
+    async limparCampos() {
       const hoje = new Date().toISOString().split('T')[0];
+
+      for (const livroId of this.emprestimo.livrosIds) {
+          if (livroId) {
+              await this.updateEstoque(livroId, 1);
+          }
+      }
 
       this.emprestimo = {
         clienteId: null,
@@ -321,6 +458,12 @@ export default defineComponent({
         livrosIds: [null]
       };
 
+      this.livrosSelecionadosAnteriormente = [null];
+      this.livrosIndisponiveisNaSelecao = [];
+      this.estoqueAtualLocal.clear();
+      
+      await this.carregarLivros(); 
+
       console.log('Campos resetados:', JSON.stringify(this.emprestimo, null, 2));
       this.v$.$reset();
     }
@@ -331,8 +474,10 @@ export default defineComponent({
     await this.carregarLeitores();
     await this.carregarFuncionarios();
 
-    if (this.ehEdicao) {
-      await this.carregarDados();
+    if (!this.ehEdicao) {
+        this.livrosSelecionadosAnteriormente = [...this.emprestimo.livrosIds];
+    } else {
+        await this.carregarDados();
     }
   },
 
