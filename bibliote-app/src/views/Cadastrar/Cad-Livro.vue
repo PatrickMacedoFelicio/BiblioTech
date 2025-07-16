@@ -221,11 +221,10 @@ export default defineComponent({
       try {
         if (this.ehEdicao) {
           await api.put(`/livros/${this.id}`, livroFinal);
-          Toast.fire({ icon: 'success', title: 'Livro atualizado com sucesso!' });
         } else {
           await api.post(`/livros`, livroFinal);
-          Toast.fire({ icon: 'success', title: 'Livro cadastrado com sucesso!' });
         }
+
 
         this.$router.push('/consultar/livro');
       } catch (erro) {

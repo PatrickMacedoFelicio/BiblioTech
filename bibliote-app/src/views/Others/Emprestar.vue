@@ -6,21 +6,37 @@
           <div class="row justify-content-center">
             <div class="col-md-9">
               <form @submit.prevent="salvar">
-                <h1 class="card-title">Emprestar Livros</h1>
+                <h3 class="card-title">{{ ehEdicao ? 'Atualização de' : '' }} Empréstimo de Livro</h3>
 
                 <!-- LEITOR -->
                 <div class="form-group row">
                   <div class="col-12">
                     <h3 class="card-title-info">Dados do Empréstimo</h3>
                     <label>Nome do Leitor</label>
-                    <select class="form-control form-control-lg" v-model="emprestimo.leitor">
-                      <option value="" disabled>Selecione o leitor...</option>
+                    <select class="form-control form-control-lg" v-model="emprestimo.clienteId">
+                      <option :value="null" disabled>Selecione o leitor...</option>
                       <option v-for="leitor in listarLeitor" :key="leitor.id" :value="leitor.id">
                         {{ leitor.nome }}
                       </option>
                     </select>
-                    <div class="text-danger" v-if="v$.emprestimo.leitor.$error">
-                      <small>{{ v$.emprestimo.leitor.$errors[0].$message }}</small>
+                    <div class="text-danger" v-if="v$.emprestimo.clienteId.$error">
+                      <small>{{ v$.emprestimo.clienteId.$errors[0].$message }}</small>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- FUNCIONÁRIO -->
+                <div class="form-group row">
+                  <div class="col-12">
+                    <label>Funcionário</label>
+                    <select class="form-control form-control-lg" v-model="emprestimo.funcionarioId">
+                      <option :value="null" disabled>Selecione o funcionário...</option>
+                      <option v-for="func in listarFuncionarios" :key="func.id" :value="func.id">
+                        {{ func.nome }}
+                      </option>
+                    </select>
+                    <div class="text-danger" v-if="v$.emprestimo.funcionarioId.$error">
+                      <small>{{ v$.emprestimo.funcionarioId.$errors[0].$message }}</small>
                     </div>
                   </div>
                 </div>
@@ -28,46 +44,47 @@
                 <!-- LIVROS -->
                 <div class="form-group">
                   <label>Livros</label>
-
-                  <div class="form-group row align-items-end" v-for="(livroId, index) in emprestimo.livros"
+                  <div class="form-group row align-items-end" v-for="(livroId, index) in emprestimo.livrosIds"
                     :key="index">
                     <div class="col-md-10">
-                      <select class="form-control form-control-lg" v-model="emprestimo.livros[index]">
-                        <option value="" disabled>Selecione o livro...</option>
+                      <select class="form-control form-control-lg" v-model="emprestimo.livrosIds[index]">
+                        <option :value="null" disabled>Selecione o livro...</option>
                         <option v-for="livro in livrosDisponiveis(index)" :key="livro.id" :value="livro.id">
                           {{ livro.titulo }}
                         </option>
                       </select>
                     </div>
-
                     <div class="col-md-2">
-                      <button v-if="index === emprestimo.livros.length - 1 && emprestimo.livros.length < 2"
+                      <button v-if="index === emprestimo.livrosIds.length - 1 && emprestimo.livrosIds.length < 2"
                         class="btn btn-info btn-lg w-100" type="button" @click="adicionarLivro"
                         title="Adicionar outro livro">
                         <strong>+</strong>
                       </button>
-
                       <button v-else class="btn btn-danger btn-lg w-100" type="button" @click="removerLivro(index)"
                         title="Remover livro">
                         <strong>X</strong>
                       </button>
                     </div>
                   </div>
+                  <div class="text-danger" v-if="v$.emprestimo.livrosIds.$error">
+                    <small v-for="erro in v$.emprestimo.livrosIds.$errors" :key="erro.$uid">
+                      {{ erro.$message }}
+                    </small>
+                  </div>
                 </div>
-
 
                 <!-- DATAS -->
                 <h3 class="card-title-info">Datas</h3>
                 <div class="form-group row">
                   <div class="col-6">
                     <label>Data de Empréstimo</label>
-                    <input class="form-control form-control-lg" v-model="emprestimo.data_inicio" type="date" readonly />
+                    <input class="form-control form-control-lg" v-model="emprestimo.dataInicio" type="date" readonly />
                   </div>
                   <div class="col-6">
-                    <label>Data de Devolução</label>
-                    <input class="form-control form-control-lg" v-model="emprestimo.data_validade" type="date" />
-                    <div class="text-danger" v-if="v$.emprestimo.data_validade.$error">
-                      <small>{{ v$.emprestimo.data_validade.$errors[0].$message }}</small>
+                    <label>Data de Devolução Prevista</label>
+                    <input class="form-control form-control-lg" v-model="emprestimo.dataPrevista" type="date" />
+                    <div class="text-danger" v-if="v$.emprestimo.dataPrevista.$error">
+                      <small>{{ v$.emprestimo.dataPrevista.$errors[0].$message }}</small>
                     </div>
                   </div>
                 </div>
@@ -91,13 +108,12 @@
 </template>
 
 <script lang="ts">
+import { api } from '@/common/http';
 import { defineComponent } from 'vue';
-import { required, helpers, maxLength } from '@vuelidate/validators';
+import { required, helpers } from '@vuelidate/validators';
 import { useVuelidate } from '@vuelidate/core';
-import axios from 'axios';
 import Swal from 'sweetalert2';
 import { Toast } from '@/common/toast';
-
 
 export default defineComponent({
   name: 'Emprestimo',
@@ -110,17 +126,18 @@ export default defineComponent({
     const hoje = new Date().toISOString().split('T')[0];
     return {
       emprestimo: {
-        id: '',
-        leitor: '',
-        livros: [''],
-        data_inicio: hoje,
-        data_validade: '',
-        data_devolucao: null,
-        status: ''
+        clienteId: null as number | null,
+        funcionarioId: null as number | null,
+        dataInicio: hoje,
+        dataPrevista: '',
+        dataDevolucao: null as string | null,
+        status: 'EM_ANDAMENTO',
+        livrosIds: [null as number | null]
       },
       emprestimos: [] as any[],
       listarLivros: [] as any[],
       listarLeitor: [] as any[],
+      listarFuncionarios: [] as any[],
       dialog: false
     };
   },
@@ -128,14 +145,25 @@ export default defineComponent({
   validations() {
     return {
       emprestimo: {
-        leitor: {
+        clienteId: {
           required: helpers.withMessage('Selecione um Leitor!', required)
         },
-        livros: {
-          required: helpers.withMessage('Selecione pelo menos um livro!', required),
+        funcionarioId: {
+          required: helpers.withMessage('Selecione um Funcionário!', required)
         },
-        data_validade: {
-          required: helpers.withMessage('Selecione uma data de Validade!', required),
+        livrosIds: {
+          required: helpers.withMessage(
+            'Selecione pelo menos um livro!',
+            (value: number[]) => Array.isArray(value) && value.length > 0
+          ),
+          validLivros: helpers.withMessage(
+            'Selecione um livro válido!',
+            (value: number[]) =>
+              Array.isArray(value) && value.length > 0 && value.every(id => id && id > 0)
+          )
+        },
+        dataPrevista: {
+          required: helpers.withMessage('Selecione uma data de Validade!', required)
         }
       }
     };
@@ -159,46 +187,47 @@ export default defineComponent({
 
       if (!confirmado.isConfirmed) return;
 
-      const novoEmprestimo = {
-        id: Math.random().toString(36).substring(2, 8),
-        leitor: this.emprestimo.leitor,
-        livros: this.emprestimo.livros,
-        data_inicio: this.emprestimo.data_inicio,
-        data_validade: this.emprestimo.data_validade,
-        status: this.emprestimo.status = "Ativo"
+      // ✅ NOVO OBJETO, DE ACORDO COM O SWAGGER
+      const novoEmprestimo: any = {
+        clienteId: this.emprestimo.clienteId,
+        funcionarioId: this.emprestimo.funcionarioId,
+        livrosIds: this.emprestimo.livrosIds,
+        dataInicio: new Date(this.emprestimo.dataInicio).toISOString(),
+        dataPrevista: new Date(this.emprestimo.dataPrevista).toISOString(),
+        status: this.emprestimo.status
       };
 
-      try {
-        await axios.post('http://localhost:3000/emprestar', novoEmprestimo);
-        Toast.fire({
-          icon: 'success',
-          title: 'Empréstimo cadastrado com sucesso!'
-        });
-        this.limparCampos();
-        await this.carregarEmprestimo();
-      } catch (erro: any) {
-        let mensagemErro = 'Não foi possível salvar empréstimo.';
+      // ✅ Só adiciona se existir dataDevolucao
+      if (this.emprestimo.dataDevolucao) {
+        novoEmprestimo.dataDevolucao = new Date(this.emprestimo.dataDevolucao).toISOString();
+      }
 
-        if (erro.response) {
-          mensagemErro = `Erro ${erro.response.status}: ${erro.response.statusText}`;
-        } else if (erro.request) {
-          mensagemErro = 'Sem resposta do servidor. Verifique sua conexão.';
-        } else if (erro.message) {
-          mensagemErro = erro.message;
+      console.log('Enviando para a API:', JSON.stringify(novoEmprestimo, null, 2));
+
+      try {
+        if (this.ehEdicao) {
+          await api.put(`/emprestimos/${this.id}`, novoEmprestimo);
+          Toast.fire({ icon: 'success', title: 'Empréstimo atualizado com sucesso!' });
+        } else {
+          await api.post(`/emprestimos`, novoEmprestimo);
+          Toast.fire({ icon: 'success', title: 'Empréstimo cadastrado com sucesso!' });
         }
 
+        this.$router.push('/Devolucao');
+      } catch (erro: any) {
+        console.error('Resposta de erro da API:', JSON.stringify(erro.response?.data, null, 2));
         Swal.fire({
           icon: 'error',
-          title: 'Erro ao cadastrar o empréstimo',
-          text: mensagemErro
+          title: 'Erro ao salvar',
+          text: erro.response?.data?.title || 'Erro inesperado.'
         });
-        console.error('Erro completo:', erro);
       }
-    },
+    }
+    ,
 
     async carregarEmprestimo() {
       try {
-        const resposta = await axios.get('http://localhost:3000/emprestar');
+        const resposta = await api.get('/emprestimos');
         this.emprestimos = resposta.data;
       } catch (erro) {
         console.error('Erro ao carregar Empréstimos:', erro);
@@ -206,70 +235,95 @@ export default defineComponent({
     },
 
     adicionarLivro() {
-      if (this.emprestimo.livros.length < 2) {
-        this.emprestimo.livros.push('');
+      if (this.emprestimo.livrosIds.length < 2) {
+        this.emprestimo.livrosIds.push(null);
       } else {
-        Toast.fire({
-          icon: 'warning',
-          title: 'Máximo de 2 livros por empréstimo.'
-        });
+        Toast.fire({ icon: 'warning', title: 'Máximo de 2 livros por empréstimo.' });
       }
     },
 
     removerLivro(index: number) {
-      if (this.emprestimo.livros.length > 1) {
-        this.emprestimo.livros.splice(index, 1);
+      if (this.emprestimo.livrosIds.length > 1) {
+        this.emprestimo.livrosIds.splice(index, 1);
         this.v$.$touch();
       }
     },
 
     livrosDisponiveis(index: number) {
-      const usados = [...this.emprestimo.livros];
+      const usados = [...this.emprestimo.livrosIds];
       usados.splice(index, 1);
       return this.listarLivros.filter(livro => !usados.includes(livro.id));
     },
 
     async carregarLivros() {
       try {
-        const resposta = await axios.get('http://localhost:3000/livros');
-        this.listarLivros = resposta.data.sort((a: any, b: any) =>
-          a.titulo.localeCompare(b.titulo)
-        );
+        const resposta = await api.get('/livros');
+        this.listarLivros = resposta.data.sort((a: any, b: any) => a.titulo.localeCompare(b.titulo));
       } catch (erro) {
         console.error('Erro ao carregar livros:', erro);
-        Toast.fire({
-          icon: 'error',
-          title: 'Erro ao carregar os livros'
-        });
+        Toast.fire({ icon: 'error', title: 'Erro ao carregar os livros' });
       }
     },
 
     async carregarLeitores() {
       try {
-        const resposta = await axios.get('http://localhost:3000/leitores');
-        this.listarLeitor = resposta.data.sort((a: any, b: any) =>
-          a.nome.localeCompare(b.nome)
-        );
+        const resposta = await api.get('/clientes');
+        this.listarLeitor = resposta.data.sort((a: any, b: any) => a.nome.localeCompare(b.nome));
       } catch (erro) {
         console.error('Erro ao carregar leitores:', erro);
+        Toast.fire({ icon: 'error', title: 'Erro ao carregar os leitores' });
+      }
+    },
+
+    async carregarFuncionarios() {
+      try {
+        const resposta = await api.get('/funcionarios');
+        this.listarFuncionarios = resposta.data.sort((a: any, b: any) => a.nome.localeCompare(b.nome));
+      } catch (erro) {
+        console.error('Erro ao carregar funcionários:', erro);
+        Toast.fire({ icon: 'error', title: 'Erro ao carregar os funcionários' });
+      }
+    },
+
+    async carregarDados() {
+      try {
+        const resposta = await api.get(`/emprestimos/${this.id}`);
+
+        this.emprestimo = {
+          clienteId: resposta.data.cliente?.id || null,
+          funcionarioId: resposta.data.funcionario?.id || null,
+          dataInicio: resposta.data.dataInicio,
+          dataPrevista: resposta.data.dataPrevista,
+          dataDevolucao: resposta.data.dataDevolucao || null,
+          status: resposta.data.status || 'EM_ANDAMENTO',
+          livrosIds: resposta.data.livros?.map((livro: any) => livro.id) || [null]
+        };
+
+        console.log('Empréstimo carregado para edição:', JSON.stringify(this.emprestimo, null, 2));
+      } catch (erro: any) {
+        console.error('Erro ao carregar o empréstimo para edição:', erro.response?.data || erro);
         Toast.fire({
           icon: 'error',
-          title: 'Erro ao carregar os leitores'
+          title: 'Erro ao carregar o empréstimo para edição'
         });
+        this.$router.push('/consultar/livros');
       }
     },
 
     limparCampos() {
       const hoje = new Date().toISOString().split('T')[0];
+
       this.emprestimo = {
-        id: '',
-        leitor: '',
-        livros: [''],
-        data_inicio: hoje,
-        data_validade: '',
-        status: '',
-        data_devolucao: null
+        clienteId: null,
+        funcionarioId: null,
+        dataInicio: hoje,
+        dataPrevista: '',
+        dataDevolucao: null,
+        status: 'EM_ANDAMENTO',
+        livrosIds: [null]
       };
+
+      console.log('Campos resetados:', JSON.stringify(this.emprestimo, null, 2));
       this.v$.$reset();
     }
   },
@@ -277,16 +331,25 @@ export default defineComponent({
   async mounted() {
     await this.carregarLivros();
     await this.carregarLeitores();
-    await this.carregarEmprestimo();
+    await this.carregarFuncionarios();
+
+    if (this.ehEdicao) {
+      await this.carregarDados();
+    }
+  },
+
+  computed: {
+    id() {
+      return this.$route.params.id || null;
+    },
+    ehEdicao() {
+      return !!this.id;
+    }
   }
 });
 </script>
 
 <style>
-.destaque {
-  color: blueviolet;
-}
-
 input[readonly] {
   background-color: #2a2a3c !important;
   color: #c7c7c7 !important;

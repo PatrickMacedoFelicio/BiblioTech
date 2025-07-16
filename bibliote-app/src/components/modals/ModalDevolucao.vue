@@ -2,7 +2,7 @@
   <div v-if="visivel" class="modal-overlay">
     <div class="modal-content">
       <div class="modal-header">
-        <h3 class="modal-title cor">Detalhes da Categoria</h3>
+        <h3 class="modal-title cor">Detalhes do Empréstimo</h3>
         <button class="btn-close" @click="$emit('fechar')">&times;</button>
       </div>
       <div class="modal-body">
@@ -11,19 +11,40 @@
           <div class="grid-item" style="grid-column: 1 / -1;">
             <div class="livros-container mt-2">
               <strong class="cor">Livros: </strong>
-              <span v-for="(titulo, idx) in (emprestar.livrosNomes || emprestar.livros.join(',')).split(' & ')"
-                :key="idx" :class="['badge', idx === 1 ? 'badge-outline-warning' : 'badge-outline-info']">
+              <span
+                v-for="(titulo, idx) in (emprestar.livrosNomes || (emprestar.livros ? emprestar.livros.join(' & ') : '')).split(' & ')"
+                :key="idx"
+                :class="['badge', idx === 1 ? 'badge-outline-warning' : 'badge-outline-info']"
+              >
                 {{ titulo }}
               </span>
             </div>
           </div>
 
-          <div class="grid-item"><strong class="cor">Leitor: </strong> {{ emprestar.leitorNome || emprestar.leitor }}
+          <div class="grid-item">
+            <strong class="cor">Leitor: </strong>
+            {{ emprestar.leitorNome || emprestar.leitor || 'N/D' }}
           </div>
-          <div class="grid-item"><strong class="cor">Data de Emprestimo: </strong> {{ emprestar.data_inicio }}</div>
-          <div class="grid-item"><strong class="cor">Data de Vencimento: </strong> {{ emprestar.data_validade }}</div>
-          <div class="grid-item"><strong class="cor">Devolução: </strong> {{ emprestar.data_devolucao }}</div>
-          <div class="grid-item"><strong class="cor">Status: </strong> {{ emprestar.status }}</div>
+
+          <div class="grid-item">
+            <strong class="cor">Data de Empréstimo: </strong>
+            {{ formatarData(emprestar.data_inicio || emprestar.dataInicio) }}
+          </div>
+
+          <div class="grid-item">
+            <strong class="cor">Data de Vencimento: </strong>
+            {{ formatarData(emprestar.data_validade || emprestar.dataPrevista) }}
+          </div>
+
+          <div class="grid-item">
+            <strong class="cor">Devolução: </strong>
+            {{ formatarData(emprestar.data_devolucao) || 'Não devolvido' }}
+          </div>
+
+          <div class="grid-item">
+            <strong class="cor">Status: </strong>
+            {{ emprestar.status || 'N/D' }}
+          </div>
         </div>
       </div>
 
@@ -38,29 +59,42 @@
 import { defineComponent } from 'vue';
 import type { PropType } from 'vue';
 
-
 export default defineComponent({
   name: 'ModalDevolucao',
   props: {
     visivel: {
       type: Boolean,
-      required: true
+      required: true,
     },
     emprestar: {
-      type: Object as PropType<{
-        id: string;
+      type: Object as PropType<Partial<{
+        id: number;
         leitor: string;
+        leitorNome: string;
         livros: string[];
-        data_inicio: Date;
-        data_validade: Date;
-        data_devolucao: Date;
+        livrosNomes: string;
+        data_inicio: string;
+        data_validade: string;
+        data_devolucao: string | null;
+        dataInicio: string;
+        dataPrevista: string;
         status: string;
-        leitorNome?: string;
-        livrosNomes?: string;
-      }>,
-      required: true
-    }
-  }
+      }>>,
+      required: true,
+    },
+  },
+  methods: {
+    formatarData(data?: string | null) {
+      if (!data) return 'N/D';
+      try {
+        const dt = new Date(data);
+        if (isNaN(dt.getTime())) return 'Data inválida';
+        return dt.toLocaleDateString('pt-BR');
+      } catch {
+        return 'Data inválida';
+      }
+    },
+  },
 });
 </script>
 
@@ -79,11 +113,10 @@ export default defineComponent({
 }
 
 .modal-content {
-  background: #191C24;
+  background: #191c24;
   border-radius: 8px;
   padding: 1.5rem;
   width: 900px;
-  height: auto;
   max-width: 96vw;
   max-height: 90vh;
   overflow-y: auto;
@@ -96,7 +129,6 @@ export default defineComponent({
   gap: 1rem;
   margin-top: 0.5rem;
 }
-
 
 .modal-header,
 .modal-footer {
