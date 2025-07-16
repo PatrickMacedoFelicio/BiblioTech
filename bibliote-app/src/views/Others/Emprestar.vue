@@ -187,7 +187,6 @@ export default defineComponent({
 
       if (!confirmado.isConfirmed) return;
 
-      // ✅ NOVO OBJETO, DE ACORDO COM O SWAGGER
       const novoEmprestimo: any = {
         clienteId: this.emprestimo.clienteId,
         funcionarioId: this.emprestimo.funcionarioId,
@@ -197,7 +196,6 @@ export default defineComponent({
         status: this.emprestimo.status
       };
 
-      // ✅ Só adiciona se existir dataDevolucao
       if (this.emprestimo.dataDevolucao) {
         novoEmprestimo.dataDevolucao = new Date(this.emprestimo.dataDevolucao).toISOString();
       }

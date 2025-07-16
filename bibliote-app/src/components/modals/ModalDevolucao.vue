@@ -1,6 +1,6 @@
 <template>
   <div v-if="visivel" class="modal-overlay">
-    <div class="modal-content">
+    <div v-if="emprestimo" class="modal-content">
       <div class="modal-header">
         <h3 class="modal-title cor">Detalhes do Empréstimo</h3>
         <button class="btn-close" @click="$emit('fechar')">&times;</button>
@@ -12,9 +12,9 @@
             <div class="livros-container mt-2">
               <strong class="cor">Livros: </strong>
               <span
-                v-for="(titulo, idx) in (emprestar.livrosNomes || (emprestar.livros ? emprestar.livros.join(' & ') : '')).split(' & ')"
+                v-for="(titulo, idx) in (emprestimo.livrosNomes || '').split(', ')"
                 :key="idx"
-                :class="['badge', idx === 1 ? 'badge-outline-warning' : 'badge-outline-info']"
+                class="badge badge-outline-info"
               >
                 {{ titulo }}
               </span>
@@ -23,31 +23,39 @@
 
           <div class="grid-item">
             <strong class="cor">Leitor: </strong>
-            {{ emprestar.leitorNome || emprestar.leitor || 'N/D' }}
+            {{ emprestimo.clienteNome || 'N/D' }}
           </div>
 
           <div class="grid-item">
             <strong class="cor">Data de Empréstimo: </strong>
-            {{ formatarData(emprestar.data_inicio || emprestar.dataInicio) }}
+            {{ formatarData(emprestimo.dataInicio) }}
           </div>
 
           <div class="grid-item">
-            <strong class="cor">Data de Vencimento: </strong>
-            {{ formatarData(emprestar.data_validade || emprestar.dataPrevista) }}
+            <strong class="cor">Data Prevista: </strong>
+            {{ formatarData(emprestimo.dataPrevista) }}
           </div>
 
           <div class="grid-item">
-            <strong class="cor">Devolução: </strong>
-            {{ formatarData(emprestar.data_devolucao) || 'Não devolvido' }}
+            <strong class="cor">Data de Devolução: </strong>
+            {{ formatarData(emprestimo.dataDevolucao) || 'Não devolvido' }}
           </div>
 
           <div class="grid-item">
             <strong class="cor">Status: </strong>
-            {{ emprestar.status || 'N/D' }}
+            <span :class="['badge', getBadgeClass(emprestimo.status)]">
+              {{ emprestimo.status || 'N/D' }}
+            </span>
           </div>
         </div>
       </div>
 
+      <div class="modal-footer">
+        <button class="btn btn-secondary" @click="$emit('fechar')">Fechar</button>
+      </div>
+    </div>
+    <div v-else-if="visivel" class="modal-content">
+      <p>Carregando detalhes do empréstimo...</p>
       <div class="modal-footer">
         <button class="btn btn-secondary" @click="$emit('fechar')">Fechar</button>
       </div>
@@ -59,6 +67,19 @@
 import { defineComponent } from 'vue';
 import type { PropType } from 'vue';
 
+interface Emprestimo {
+  id: number;
+  clienteId: number | null; // CORRIGIDO: Pode ser number ou null
+  clienteNome: string;
+  funcionarioId: number | null; // CORRIGIDO: Pode ser number ou null
+  dataInicio: string;
+  dataPrevista: string;
+  dataDevolucao: string | null;
+  status: string;
+  livrosIds: number[];
+  livrosNomes: string;
+}
+
 export default defineComponent({
   name: 'ModalDevolucao',
   props: {
@@ -66,21 +87,10 @@ export default defineComponent({
       type: Boolean,
       required: true,
     },
-    emprestar: {
-      type: Object as PropType<Partial<{
-        id: number;
-        leitor: string;
-        leitorNome: string;
-        livros: string[];
-        livrosNomes: string;
-        data_inicio: string;
-        data_validade: string;
-        data_devolucao: string | null;
-        dataInicio: string;
-        dataPrevista: string;
-        status: string;
-      }>>,
-      required: true,
+    emprestimo: {
+      type: Object as PropType<Emprestimo | null>,
+      required: false, 
+      default: null, 
     },
   },
   methods: {
@@ -92,6 +102,21 @@ export default defineComponent({
         return dt.toLocaleDateString('pt-BR');
       } catch {
         return 'Data inválida';
+      }
+    },
+    getBadgeClass(status: string): string {
+      switch (status.toLowerCase()) { // Adicionado .toLowerCase() para consistência
+        case 'devolvido':
+          return 'badge-success';
+        case 'cancelado':
+          return 'badge-danger';
+        case 'ativo':
+        case 'em_andamento':
+          return 'badge-warning';
+        case 'vencido': // Adicionado caso para "Vencido" se você quiser um estilo específico no modal
+          return 'badge-danger'; // Ou 'badge-warning' se quiser o mesmo do "Em Andamento"
+        default:
+          return 'badge-secondary';
       }
     },
   },
@@ -149,8 +174,37 @@ export default defineComponent({
   color: #c3a3ff;
 }
 
-p {
-  font-size: 1rem;
+.badge {
+  padding: 0.3em 0.6em;
+  border-radius: 0.3rem;
+  font-size: 0.85rem;
+  color: #fff;
+}
+
+.badge-success {
+  background-color: #28a745;
+}
+
+.badge-danger {
+  background-color: #dc3545;
+}
+
+.badge-warning {
+  background-color: #ffc107;
+  color: #212529;
+}
+
+.badge-secondary {
+  background-color: #6c757d;
+}
+
+.badge-outline-info {
+  color: #17a2b8;
+  border: 1px solid #17a2b8;
+  background-color: transparent;
+  padding: 0.25em 0.5em;
+  border-radius: 0.25rem;
+  font-size: 0.9rem;
 }
 
 .grid-container {
