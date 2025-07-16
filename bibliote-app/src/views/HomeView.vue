@@ -4,7 +4,6 @@
     <h2 class="text-success mb-0 gap1">Patrick Macêdo Felicio!</h2>
   </div>
 
-  <!-- Cards de status -->
   <div class="row">
     <div class="col-sm-4 grid-margin">
       <div class="card">
@@ -67,14 +66,76 @@
     </div>
   </div>
 
-  <!-- Gráfico e lista -->
+  <div class="row">
+    <div class="col-12 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex flex-row justify-content-between align-items-center mb-2">
+            <h4 class="card-title mb-0">Empréstimos Vencidos (a partir de hoje)</h4>
+          </div>
+
+          <div v-if="vencidosHoje.length > 0" class="table-responsive">
+            <table class="table table-dark table-striped custom-table">
+              <thead>
+                <tr>
+                  <th>Detalhes</th>
+                  <th>Leitor</th>
+                  <th>Livro(s)</th>
+                  <th>Vencimento</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="emp in paginaAtualVencidos" :key="emp.id">
+                  <td>
+                    <button class="btn btn-sm btn-info" @click="abrirModal(emp)">
+                      <i class="mdi mdi-magnify"></i>
+                    </button>
+                  </td>
+                  <td>{{ emp.clienteNome }}</td>
+                  <td>
+                    <span v-for="(livro, i) in emp.livros" :key="i" class="badge bg-primary me-1">
+                      {{ livro.titulo }}
+                    </span>
+                  </td>
+                  <td>
+                    <span class="badge bg-secondary">
+                      {{ formatarData(emp.dataPrevista || emp.data_validade) }}
+                    </span>
+                  </td>
+                  <td><span class="badge bg-danger">Vencido</span></td>
+                </tr>
+              </tbody>
+            </table>
+
+            <!-- Paginação -->
+            <div class="d-flex justify-content-between mt-2">
+              <button class="btn btn-sm btn-secondary" :disabled="paginaAtual === 1" @click="paginaAtual--">
+                ⬅️ Anterior
+              </button>
+              <span>Página {{ paginaAtual }} / {{ totalPaginas }}</span>
+              <button class="btn btn-sm btn-secondary" :disabled="paginaAtual === totalPaginas" @click="paginaAtual++">
+                Próximo ➡️
+              </button>
+            </div>
+          </div>
+
+          <div v-else class="text-muted">
+            Nenhum empréstimo vencido hoje 🎉
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gráfico e tabela abaixo -->
   <div class="row">
     <!-- Gêneros mais emprestados -->
     <div class="col-md-4 grid-margin stretch-card">
       <div class="card">
         <div class="card-body text-center">
           <h4 class="card-title">10 Gêneros Mais Emprestados</h4>
-          <div class="chart-container">
+          <div class="chart-container" style="max-width:500px; margin:auto;">
             <canvas id="transaction-history"></canvas>
           </div>
 
@@ -87,219 +148,196 @@
         </div>
       </div>
     </div>
-
-    <!-- Empréstimos vencidos hoje -->
-    <div class="col-md-8 grid-margin stretch-card">
-      <div class="card">
-        <div class="card-body">
-          <div class="d-flex flex-row justify-content-between align-items-center mb-2">
-            <h4 class="card-title mb-0">Empréstimos Vencidos Hoje</h4>
-          </div>
-
-          <div v-if="vencidosHoje.length > 0">
-            <ul class="list-group">
-              <li v-for="emp in paginaAtualVencidos" :key="emp.id"
-                  class="list-group-item d-flex justify-content-between align-items-center">
-                <div>
-                  <strong>{{ emp.leitorNome || emp.leitor }}</strong> -
-                  <span class="text-warning">{{ emp.livros?.[0]?.titulo || 'Livro não informado' }}</span>
-                  <small class="text-muted">
-                    (Venceu: {{ formatarData(emp.dataPrevista || emp.data_validade) }})
-                  </small>
-                </div>
-                <button class="btn btn-sm btn-info" @click="abrirModal(emp)">🔍</button>
-              </li>
-            </ul>
-
-            <!-- Paginação -->
-            <div class="d-flex justify-content-between mt-2">
-              <button class="btn btn-sm btn-secondary" 
-                      :disabled="paginaAtual === 1" 
-                      @click="paginaAtual--">⬅️ Anterior</button>
-
-              <span>Página {{ paginaAtual }} / {{ totalPaginas }}</span>
-
-              <button class="btn btn-sm btn-secondary" 
-                      :disabled="paginaAtual === totalPaginas" 
-                      @click="paginaAtual++">Próximo ➡️</button>
-            </div>
-          </div>
-
-          <div v-else class="text-muted">
-            Nenhum empréstimo vencido hoje 🎉
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 
-  <!-- ✅ Modal fora do .row -->
-  <ModalDevolucao 
-    v-if="modalVisivel" 
-    :visivel="modalVisivel" 
-    :emprestar="emprestimoSelecionado"
-    @fechar="modalVisivel = false" 
-  />
+  <!-- Modal -->
+  <ModalVencido v-if="modalVisivel" :visivel="modalVisivel" :emprestimo="emprestimoSelecionado"
+    @fechar="modalVisivel = false" />
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref, computed } from 'vue'
-import Chart from 'chart.js/auto'
-import { api } from '@/common/http'
-import ModalDevolucao from '@/components/modals/ModalDevolucao.vue'
+import { defineComponent, onMounted, ref, computed } from "vue";
+import Chart from "chart.js/auto";
+import { api } from "@/common/http";
+import ModalVencido from "@/components/modals/ModalVencido.vue";
+
 
 export default defineComponent({
-  name: 'IndexView',
-  components: { ModalDevolucao },
+  name: "IndexView",
+  components: { ModalVencido },
 
   setup() {
-    const totalLeitores = ref(0)
-    const totalEmprAtivo = ref(0)
-    const totalEmprVencido = ref(0)
+    const totalLeitores = ref(0);
+    const totalEmprAtivo = ref(0);
+    const totalEmprVencido = ref(0);
 
-    const labels = ref<string[]>([])
-    const valores = ref<number[]>([])
+    const labels = ref<string[]>([]);
+    const valores = ref<number[]>([]);
 
     const colors = [
-      '#f13678', '#00e5ff', '#ffea00', '#ff3d00',
-      '#00ff6a', '#8c00ff', '#ff00c8', '#1de9b6',
-      '#ff9100', '#2979ff'
-    ]
+      "#f13678",
+      "#00e5ff",
+      "#ffea00",
+      "#ff3d00",
+      "#00ff6a",
+      "#8c00ff",
+      "#ff00c8",
+      "#1de9b6",
+      "#ff9100",
+      "#2979ff",
+    ];
 
-    // --- VENCIDOS HOJE ---
-    const vencidosHoje = ref<any[]>([])
-    const paginaAtual = ref(1)
-    const itensPorPagina = 5
+    const vencidosHoje = ref<any[]>([]);
+    const paginaAtual = ref(1);
+    const itensPorPagina = 5;
 
     const totalPaginas = computed(() =>
       Math.ceil(vencidosHoje.value.length / itensPorPagina)
-    )
+    );
 
     const paginaAtualVencidos = computed(() => {
-      const start = (paginaAtual.value - 1) * itensPorPagina
-      return vencidosHoje.value.slice(start, start + itensPorPagina)
-    })
+      const start = (paginaAtual.value - 1) * itensPorPagina;
+      return vencidosHoje.value.slice(start, start + itensPorPagina);
+    });
 
-    const modalVisivel = ref(false)
-    const emprestimoSelecionado = ref<any>(null)
+    const modalVisivel = ref(false);
+    const emprestimoSelecionado = ref<any>(null);
 
     const abrirModal = (emp: any) => {
-      emprestimoSelecionado.value = emp
-      modalVisivel.value = true
-    }
+      emprestimoSelecionado.value = emp;
+      modalVisivel.value = true;
+    };
 
     const formatarData = (data?: string | null) => {
-      if (!data) return 'N/D'
-      const dt = new Date(data)
-      if (isNaN(dt.getTime())) return 'Inválida'
-      return dt.toLocaleDateString('pt-BR')
-    }
+      if (!data) return "N/D";
+      const dt = new Date(data);
+      if (isNaN(dt.getTime())) return "Inválida";
+      return dt.toLocaleDateString("pt-BR");
+    };
 
     const carregarLeitores = async () => {
       try {
-        const resposta = await api.get('/clientes')
-        totalLeitores.value = resposta.data.length
+        const resposta = await api.get("/clientes");
+        totalLeitores.value = resposta.data.length;
       } catch (erro) {
-        console.error('Erro ao carregar leitores:', erro)
+        console.error("Erro ao carregar leitores:", erro);
       }
-    }
+    };
 
     const carregarEmprestimo = async () => {
       try {
-        const resposta = await api.get('/emprestimos')
-        const ativos = resposta.data.filter((emp: any) => emp.status === 'EM_ANDAMENTO')
-        const vencido = resposta.data.filter((emp: any) => emp.status === 'Vencido')
-        totalEmprAtivo.value = ativos.length
-        totalEmprVencido.value = vencido.length
+        const resposta = await api.get("/emprestimos");
 
-        const hoje = new Date().toISOString().split('T')[0]
-        vencidosHoje.value = resposta.data.filter((emp: any) => {
-          const dataPrevista = (emp.dataPrevista || emp.data_validade || '').split('T')[0]
-          return dataPrevista === hoje && emp.status === 'Vencido'
-        })
+        // Contagem
+        totalEmprAtivo.value = resposta.data.filter((e: any) => e.status === "EM_ANDAMENTO").length;
+        totalEmprVencido.value = resposta.data.filter((e: any) => e.status === "Vencido").length;
+
+        const hoje = new Date().toISOString().split("T")[0];
+
+        // Montagem igual ao todos-emprestimos
+        vencidosHoje.value = resposta.data
+          .filter((e: any) => {
+            const dataPrevista = (e.dataPrevista || e.data_validade || "").split("T")[0];
+            return e.status === "Vencido" && dataPrevista <= hoje;
+          })
+          .map((e: any) => ({
+            id: e.id,
+            clienteId: e.cliente?.id ?? null,
+            clienteNome: e.cliente?.nome || "Leitor não encontrado",
+            dataPrevista: e.dataPrevista,
+            status: e.status,
+            livros: e.livros
+              ? e.livros.map((l: any) => ({ id: l.id, titulo: l.titulo }))
+              : [],
+          }));
       } catch (erro) {
-        console.error('Erro ao carregar Emprestimos:', erro)
+        console.error("Erro ao carregar Emprestimos:", erro);
       }
-    }
+    };
+
 
     const carregarGraficoGeneros = async () => {
       try {
         const [emprestimosRes, livrosRes] = await Promise.all([
-          api.get('/emprestimos'),
-          api.get('/livros')
-        ])
+          api.get("/emprestimos"),
+          api.get("/livros"),
+        ]);
 
-        const emprestimos = emprestimosRes.data
-        const livros = livrosRes.data
+        const emprestimos = emprestimosRes.data;
+        const livros = livrosRes.data;
 
-        const mapaGeneros: Record<number, string> = {}
+        const mapaGeneros: Record<number, string> = {};
         livros.forEach((livro: any) => {
           const genero =
             livro.genero?.nome ||
             livro.generoNome ||
             livro.genero ||
-            'Desconhecido'
-          mapaGeneros[livro.id] = genero
-        })
+            "Desconhecido";
+          mapaGeneros[livro.id] = genero;
+        });
 
-        const contagem: Record<string, number> = {}
+        const contagem: Record<string, number> = {};
         emprestimos.forEach((emp: any) => {
           if (emp.livros) {
             emp.livros.forEach((livro: any) => {
-              const genero = mapaGeneros[livro.id] || 'Desconhecido'
-              contagem[genero] = (contagem[genero] || 0) + 1
-            })
+              const genero = mapaGeneros[livro.id] || "Desconhecido";
+              contagem[genero] = (contagem[genero] || 0) + 1;
+            });
           }
-        })
+        });
 
         const generosOrdenados = Object.entries(contagem)
           .sort((a, b) => b[1] - a[1])
-          .slice(0, 10)
+          .slice(0, 10);
 
-        labels.value = generosOrdenados.map(([nome]) => nome)
-        valores.value = generosOrdenados.map(([, total]) => total)
+        labels.value = generosOrdenados.map(([nome]) => nome);
+        valores.value = generosOrdenados.map(([, total]) => total);
       } catch (erro) {
-        console.error('Erro ao carregar gráfico de gêneros:', erro)
+        console.error("Erro ao carregar gráfico de gêneros:", erro);
       }
-    }
+    };
 
     onMounted(async () => {
-      await carregarLeitores()
-      await carregarEmprestimo()
-      await carregarGraficoGeneros()
+      await carregarLeitores();
+      await carregarEmprestimo();
+      await carregarGraficoGeneros();
 
-      const canvas = document.getElementById('transaction-history') as HTMLCanvasElement
+      const canvas = document.getElementById(
+        "transaction-history"
+      ) as HTMLCanvasElement;
       if (canvas && labels.value.length > 0) {
         new Chart(canvas, {
-          type: 'doughnut',
+          type: "doughnut",
           data: {
             labels: labels.value,
-            datasets: [{
-              data: valores.value,
-              backgroundColor: colors.slice(0, labels.value.length),
-              borderWidth: 0
-            }]
+            datasets: [
+              {
+                data: valores.value,
+                backgroundColor: colors.slice(0, labels.value.length),
+                borderWidth: 0,
+              },
+            ],
           },
           options: {
             responsive: true,
             maintainAspectRatio: false,
-            cutout: '65%',
+            cutout: "65%",
             plugins: {
               legend: { display: false },
               tooltip: {
                 callbacks: {
                   label: (context) => {
-                    const label = context.label || ''
-                    const value = context.formattedValue || ''
-                    return `${label}: ${value} empréstimos`
-                  }
-                }
-              }
-            }
-          }
-        })
+                    const label = context.label || "";
+                    const value = context.formattedValue || "";
+                    return `${label}: ${value} empréstimos`;
+                  },
+                },
+              },
+            },
+          },
+        });
       }
-    })
+    });
 
     return {
       totalLeitores,
@@ -315,15 +353,30 @@ export default defineComponent({
       abrirModal,
       modalVisivel,
       emprestimoSelecionado,
-      formatarData
-    }
-  }
-})
+      formatarData,
+    };
+  },
+});
 </script>
 
 <style scoped>
 h4 {
   color: #e7e8ee;
+}
+
+.card {
+  background-color: #191c24;
+  color: white;
+}
+
+.card-body {
+  padding: 16px 18px;
+}
+
+.card-title {
+  color: #e7e8ee;
+  font-weight: bold;
+  font-size: 18px;
 }
 
 .chart-container {
@@ -332,11 +385,6 @@ h4 {
   max-width: 300px;
   height: 200px;
   margin: 0 auto;
-}
-
-.card {
-  background-color: #191C24;
-  color: white;
 }
 
 .custom-legend {
@@ -364,29 +412,92 @@ h4 {
   font-size: 14px;
 }
 
-.list-group {
-  background-color: transparent;
+.table.custom-table {
+  color: #e7e8ee;
+  font-size: 15px;
+  margin-bottom: 0;
 }
 
-.list-group-item {
+.table.custom-table thead {
   background-color: #1f2232;
-  color: #f1f1f1;
-  border: none;
-  margin-bottom: 5px;
-  border-radius: 5px;
+  color: #e7e8ee;
 }
 
-.list-group-item small {
+.table.custom-table thead th {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.table.custom-table tbody td {
+  font-size: 15px;
+}
+
+.table.custom-table tbody tr {
+  background-color: #191c24;
+  transition: all 0.2s ease;
+}
+
+.table.custom-table tbody tr:hover {
+  background-color: #1f2232;
+  transform: translateY(-2px);
+}
+
+.badge.bg-primary {
+  background-color: #2979ff !important;
+  color: white;
   font-size: 12px;
+  padding: 6px 8px;
+  border-radius: 4px;
+}
+
+.badge.bg-secondary {
+  background-color: #2c2f3f !important;
+  color: #e7e8ee;
+  font-size: 12px;
+  padding: 6px 8px;
+}
+
+.badge.bg-danger {
+  background-color: #f13636 !important;
+  color: white;
+  font-size: 12px;
+  padding: 6px 8px;
 }
 
 .btn-info {
-  background-color: #00e5ff;
   border: none;
-  color: #191C24;
+  color: #191c24;
+  border-radius: 5px;
+  padding: 4px 8px;
+  font-size: 12px;
+  transition: background 0.2s ease;
 }
 
 .btn-info:hover {
-  background-color: #00bcd4;
+  background-color: #c848f0;
+}
+
+.d-flex.justify-content-between.mt-2 {
+  background-color: #191c24;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+button.btn.btn-sm.btn-secondary {
+  background-color: #2c2f3f;
+  border: none;
+  color: #e7e8ee;
+  border-radius: 6px;
+  transition: background 0.2s ease;
+}
+
+button.btn.btn-sm.btn-secondary:hover:not(:disabled) {
+  background-color: #3a3d4d;
+}
+
+button.btn.btn-sm.btn-secondary:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
 }
 </style>
