@@ -1,14 +1,14 @@
 <template>
   <div class="d-flex align-items-center gap-2 flex-wrap mb-4">
-    <h2 class="fw-bold mb-0">Bem-vindo</h2>
-    <h2 class="text-success mb-0 gap1">Patrick Macêdo Felicio!</h2>
+    <h2 class="fw-bold mb-0">Bem-vindos</h2>
+    <h2 class="text-success mb-0 gap1">Patrick, Lucas e Samuel!</h2>
   </div>
 
   <div class="row">
     <div class="col-sm-4 grid-margin">
       <div class="card">
         <div class="card-body">
-          <h4>Núemro de Leitores</h4>
+          <h4>Número de Leitores</h4>
           <div class="row">
             <div class="col-8 col-sm-12 col-xl-8 my-auto">
               <div class="d-flex d-sm-block d-md-flex align-items-center">
